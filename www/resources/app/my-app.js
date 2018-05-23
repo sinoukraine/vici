@@ -44,7 +44,7 @@ function guid() {
 
 var inBrowser = 0;
 var notificationChecked = 0;
-
+var watchID = null;
 
 if( navigator.userAgent.match(/Windows/i) ){    
     inBrowser = 1;
@@ -85,31 +85,39 @@ function onPlusReady(){
     document.addEventListener("backbutton", backFix, false); 
 
     navigator.geolocation.getCurrentPosition(locationOnSuccess, locationOnError);
+    
 }
 
 // onSuccess Callback
     // This method accepts a Position object, which contains the
     // current GPS coordinates
     //
-    var locationOnSuccess = function(position) {
-        alert('Latitude: '          + position.coords.latitude          + '\n' +
-              'Longitude: '         + position.coords.longitude         + '\n' +
-              'Altitude: '          + position.coords.altitude          + '\n' +
-              'Accuracy: '          + position.coords.accuracy          + '\n' +
-              'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-              'Heading: '           + position.coords.heading           + '\n' +
-              'Speed: '             + position.coords.speed             + '\n' +
-              'Timestamp: '         + position.timestamp                + '\n');
-    };
+function locationOnSuccess (position) {
+    /*alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');*/
+    localStorage.tracker_lat = position.coords.latitude;
+    localStorage.tracker_lng = position.coords.longitude;
+    if (!window.PosMarker.ME) {
+        window.PosMarker.ME = L.marker([position.coords.latitude, position.coords.longitude], {icon: marker}); 
+    }  
+    window.PosMarker.ME.setLatLng([position.coords.latitude, position.coords.longitude]); 
+    addressFromLatLng({'lat':position.coords.latitude,'lng':position.coords.longitude});
+}
 
     // onError Callback receives a PositionError object
     //
-    function locationOnError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-        console.log('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-    }
+function locationOnError(error) {
+    alert('code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');
+    console.log('code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');
+}
 
 function onAppPause(){ 
     if ($hub) {
@@ -756,7 +764,7 @@ App.onPageInit('asset.track', function(page){
 App.onPageInit('user.location', function(page){
     showMap(); 
 
-    var myPosition = {'lat':0,'lng':0}; //default
+    /*var myPosition = {'lat':0,'lng':0}; //default
 
     $$('.refreshTrack').on('click', function(){
         myPosition = getMyPosition();   
@@ -766,7 +774,7 @@ App.onPageInit('user.location', function(page){
     trackTimer = setInterval(function(){
                 myPosition = getMyPosition();   
                 updateMarkerPositionMe(myPosition);
-            }, 10000);    
+            }, 10000);   */ 
 });
 
 App.onPageBeforeRemove('user.location', function(page){
@@ -1249,11 +1257,22 @@ function loadTimingPage(){
 
 function getMyPosition(){
     var latlng = {
-        'lat': 0,
-        'lng': 0,
+        'lat': -32.1388548,
+        'lng': 136.198141,
     };
 
-    if (window.plus && plus.geolocation) {
+    if (localStorage.tracker_lat && localStorage.tracker_lng) {
+        if (!window.PosMarker.ME) {
+            window.PosMarker.ME = L.marker([localStorage.tracker_lat, localStorage.tracker_lng], {icon: marker}); 
+        }        
+        
+        window.PosMarker.ME.setLatLng([localStorage.tracker_lat, localStorage.tracker_lng]); 
+        latlng.lat = localStorage.tracker_lat;
+        latlng.lng = localStorage.tracker_lng;
+        addressFromLatLng(latlng);  
+    }
+
+    /*if (window.plus && plus.geolocation) {
         plus.geolocation.getCurrentPosition(function(p) {
             localStorage.tracker_lat = latlng.lat = p.coords.latitude;
             localStorage.tracker_lng = latlng.lng = p.coords.longitude;                
@@ -1261,7 +1280,11 @@ function getMyPosition(){
             //App.alert('Geolocation error: ' + e.message);
             App.alert(JSON.stringify(e));
         });
-    }        
+    }   */     
+
+
+    //navigator.geolocation.getCurrentPosition(locationOnSuccess, locationOnError);
+    watchID = navigator.geolocation.watchPosition(locationOnSuccess, locationOnError, { timeout: 30000 });
 
     return  latlng;
 }
@@ -1331,8 +1354,9 @@ function loadUserLocationPage(){
             popupAnchor:  [0, -50] // point from which the popup should open relative to the iconAnchor    
         });   
 
-        window.PosMarker.ME = L.marker([myPosition.lat, myPosition.lng], {icon: marker}); 
-        window.PosMarker.ME.setLatLng([myPosition.lat, myPosition.lng]);    
+        //window.PosMarker.ME = L.marker([myPosition.lat, myPosition.lng], {icon: marker}); 
+        //window.PosMarker.ME.setLatLng([myPosition.lat, myPosition.lng]);   
+
         //var speed = 0;
         //var mileage = '-';
         //if (typeof asset.Unit !== "undefined" && typeof asset.posInfo.speed !== "undefined") {
@@ -1360,7 +1384,7 @@ function loadUserLocationPage(){
             }
         });        
 
-        addressFromLatLng(myPosition);  
+        //addressFromLatLng(myPosition);  
 
     }else{
         App.alert(LANGUAGE.COM_MSG18);
