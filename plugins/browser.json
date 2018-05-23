@@ -22,6 +22,15 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.sinopacific.testpush"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
         }
     },
     "dependent_plugins": {}

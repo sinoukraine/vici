@@ -104,9 +104,12 @@ function locationOnSuccess (position) {
     localStorage.tracker_lat = position.coords.latitude;
     localStorage.tracker_lng = position.coords.longitude;
     if (!window.PosMarker.ME) {
-        window.PosMarker.ME = L.marker([position.coords.latitude, position.coords.longitude], {icon: marker}); 
+        window.PosMarker.ME = L.marker([position.coords.latitude, position.coords.longitude], {icon: Protocol.MarkerIcon[0]}); 
     }  
     window.PosMarker.ME.setLatLng([position.coords.latitude, position.coords.longitude]); 
+    if (MapTrack) {
+        window.PosMarker.ME.addTo(MapTrack);   
+    }
     addressFromLatLng({'lat':position.coords.latitude,'lng':position.coords.longitude});
 }
 
@@ -762,7 +765,7 @@ App.onPageInit('asset.track', function(page){
 });
 
 App.onPageInit('user.location', function(page){
-    showMap(); 
+    showMap({'user':true}); 
 
     /*var myPosition = {'lat':0,'lng':0}; //default
 
@@ -1256,20 +1259,22 @@ function loadTimingPage(){
 }
 
 function getMyPosition(){
-    var latlng = {
+    /*var latlng = {
         'lat': -32.1388548,
         'lng': 136.198141,
-    };
+    };*/
 
     if (localStorage.tracker_lat && localStorage.tracker_lng) {
+
         if (!window.PosMarker.ME) {
-            window.PosMarker.ME = L.marker([localStorage.tracker_lat, localStorage.tracker_lng], {icon: marker}); 
+
+            window.PosMarker.ME = L.marker([localStorage.tracker_lat, localStorage.tracker_lng], {icon: Protocol.MarkerIcon[0]}); 
         }        
         
         window.PosMarker.ME.setLatLng([localStorage.tracker_lat, localStorage.tracker_lng]); 
-        latlng.lat = localStorage.tracker_lat;
-        latlng.lng = localStorage.tracker_lng;
-        addressFromLatLng(latlng);  
+        /*latlng.lat = localStorage.tracker_lat;
+        latlng.lng = localStorage.tracker_lng;*/
+        //addressFromLatLng(latlng);  
     }
 
     /*if (window.plus && plus.geolocation) {
@@ -1286,7 +1291,7 @@ function getMyPosition(){
     //navigator.geolocation.getCurrentPosition(locationOnSuccess, locationOnError);
     watchID = navigator.geolocation.watchPosition(locationOnSuccess, locationOnError, { timeout: 30000 });
 
-    return  latlng;
+    //return  latlng;
 }
 
 function loadPageTrack() {
@@ -1295,14 +1300,8 @@ function loadPageTrack() {
         //console.log(asset);
     if (asset && parseFloat(asset.posInfo.lat) !== 0 && parseFloat(asset.posInfo.lng) !== 0) {            
             
-        var marker = L.icon({
-            iconUrl: 'resources/images/marker.svg',                       
-            iconSize:     [50, 50], // size of the icon                        
-            iconAnchor:   [25, 49], // point of the icon which will correspond to marker's location                        
-            popupAnchor:  [0, -50] // point from which the popup should open relative to the iconAnchor    
-        });
-
-        window.PosMarker[TargetAsset.IMEI] = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: marker}); 
+        
+        window.PosMarker[TargetAsset.IMEI] = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: Protocol.MarkerIcon[0]}); 
         window.PosMarker[TargetAsset.IMEI].setLatLng([asset.posInfo.lat, asset.posInfo.lng]);    
         var speed = 0;
         var mileage = '-';
@@ -1343,16 +1342,13 @@ function loadPageTrack() {
 }
 
 function loadUserLocationPage(){
-    var myPosition = getMyPosition();   
+    //var myPosition = getMyPosition();   
 
-    if (myPosition && parseFloat(myPosition.lat) !== 0 && parseFloat(myPosition.lng) !== 0) {   
+    getMyPosition();   
 
-        var marker = L.icon({
-            iconUrl: 'resources/images/marker.svg',                       
-            iconSize:     [50, 50], // size of the icon                        
-            iconAnchor:   [25, 49], // point of the icon which will correspond to marker's location                        
-            popupAnchor:  [0, -50] // point from which the popup should open relative to the iconAnchor    
-        });   
+    //if (myPosition && parseFloat(myPosition.lat) !== 0 && parseFloat(myPosition.lng) !== 0) {   
+
+        
 
         //window.PosMarker.ME = L.marker([myPosition.lat, myPosition.lng], {icon: marker}); 
         //window.PosMarker.ME.setLatLng([myPosition.lat, myPosition.lng]);   
@@ -1386,17 +1382,27 @@ function loadUserLocationPage(){
 
         //addressFromLatLng(myPosition);  
 
-    }else{
+    /*}else{
         App.alert(LANGUAGE.COM_MSG18);
-    }
+    }*/
 }
 
 
-function showMap(){    
-    var asset = TargetAsset.IMEI;   
-    var latlng = [POSINFOASSETLIST[asset].posInfo.lat, POSINFOASSETLIST[asset].posInfo.lng];
-    MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 15 });        
-    window.PosMarker[TargetAsset.IMEI].addTo(MapTrack);   
+function showMap(params){ 
+    var latlng = [-32.1388548,136.198141]; 
+    if (params.user) {
+        if (localStorage.tracker_lat && localStorage.tracker_lng) {
+            latlng = [localStorage.tracker_lat,localStorage.tracker_lng]; 
+        }
+        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 10 }); 
+        //window.PosMarker.ME.addTo(MapTrack);   
+    }else{
+        var asset = TargetAsset.IMEI;   
+        latlng = [POSINFOASSETLIST[asset].posInfo.lat, POSINFOASSETLIST[asset].posInfo.lng];
+        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 15 });        
+        window.PosMarker[TargetAsset.IMEI].addTo(MapTrack);   
+    }
+        
 }
 function checkMapExisting(){
     if ($$('#map')) {

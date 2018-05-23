@@ -9,6 +9,20 @@ CustomerInfo = {};
 CustomerInfo.TimeZone = moment().utcOffset() / 60;
 
 Protocol = {
+    MarkerIcon: [
+        L.icon({
+            iconUrl: 'resources/images/marker.svg',                       
+            iconSize:     [50, 50], // size of the icon                        
+            iconAnchor:   [25, 49], // point of the icon which will correspond to marker's location                        
+            popupAnchor:  [0, -50] // point from which the popup should open relative to the iconAnchor    
+        }),
+        L.icon({
+            iconUrl: 'resources/images/marker2.svg',                       
+            iconSize:     [60, 60], // size of the icon                        
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location                        
+            popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
+        })
+    ],
     PositionTypes: {
         "NONE": 0,
         "GPS": 1,
