@@ -1,0 +1,37 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "phonegap-plugin-push": {
+            "SENDER_ID": "XXXXXXX",
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.sinopacific.quiktrak"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "com.sinopacific.quiktrak"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "com.sinopacific.quiktrak"
+        }
+    },
+    "dependent_plugins": {}
+}

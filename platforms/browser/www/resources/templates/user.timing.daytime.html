@@ -1,0 +1,41 @@
+<div class="page bg-color-page page_timing_daytime" data-page="user.timing.daytime">
+	<div class="navbar">
+        <div class="navbar-inner">
+            <div class="left">
+                <a href="#" class="back link "> <i class="f7-icons icon-arrow-back"></i></a>
+            </div>
+            <div class="left navbar_title">{{@global.LANGUAGE.USER_TIMING_MSG06}}</div>     
+            <div class="right">
+                <a href="#" class="link applyDaytime" ><i class="f7-icons icon-apply"></i></a>
+            </div> 
+        </div>
+    </div>
+	<div class="page-content " >
+        <div class="list-block no-hairlines daytimeList">
+            <ul>
+                <li>
+                    <a href="#" class="item-content item-link with_arrow">                        
+                        <div class="item-inner">
+                          <div class="item-title ">{{@global.LANGUAGE.USER_TIMING_MSG17}}</div>
+                          <div class="item-input">
+                            <input type="text" placeholder="Start" value="{{Start}}" name="startTime" class="startTime" readonly>
+                          </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="item-content item-link with_arrow">                        
+                        <div class="item-inner">
+                          <div class="item-title ">{{@global.LANGUAGE.USER_TIMING_MSG18}}</div>
+                          <div class="item-input">
+                            <input type="text" placeholder="End" value="{{End}}" name="endTime" class="endTime" readonly>
+                          </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    
+    </div>
+</div>
+
