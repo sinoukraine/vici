@@ -1,8 +1,8 @@
 {
-    "name": "com.sinopacific.phonetrack",
+    "name": "com.sinopacific.testpush",
     "version": "1.0.0",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "displayName": "PhoneTrack"
+    "displayName": "test push"
 }

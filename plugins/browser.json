@@ -8,29 +8,20 @@
     },
     "installed_plugins": {
         "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+            "PACKAGE_NAME": "com.sinopacific.testpush"
         },
         "phonegap-plugin-push": {
             "SENDER_ID": "XXXXXXX",
-            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+            "PACKAGE_NAME": "com.sinopacific.testpush"
         },
         "cordova-plugin-console": {
-            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+            "PACKAGE_NAME": "com.sinopacific.testpush"
         },
         "cordova-plugin-dialogs": {
-            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+            "PACKAGE_NAME": "com.sinopacific.testpush"
         },
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.sinopacific.phonetrack"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.sinopacific.quiktrak"
-        },
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "com.sinopacific.quiktrak"
-        },
-        "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "com.sinopacific.quiktrak"
+            "PACKAGE_NAME": "com.sinopacific.testpush"
         }
     },
     "dependent_plugins": {}
