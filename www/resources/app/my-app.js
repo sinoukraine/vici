@@ -62,7 +62,7 @@ function onPlusReady(){
     } */
 
     if (!inBrowser) {
-        if(getUserinfo().code) {
+        if(getUserinfo().MinorToken) {
             login();    
         }
         else {
@@ -1405,11 +1405,11 @@ function loadUserLocationPage(){
 
 function showMap(params){ 
     var latlng = [-32.1388548,136.198141]; 
-    if (params.user) {
+    if (params && params.user) {
         if (localStorage.tracker_lat && localStorage.tracker_lng) {
             latlng = [localStorage.tracker_lat,localStorage.tracker_lng]; 
         }
-        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 10 }); 
+        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 6 }); 
         //window.PosMarker.ME.addTo(MapTrack);   
     }else{
         var asset = TargetAsset.IMEI;   

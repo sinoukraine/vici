@@ -649,7 +649,11 @@ select{
 /* PAGE TRACK */
 .position_map{
 	height: 60%;
+	height: calc(100% - 197px);
 	position: relative;
+}
+[data-page="user.location"] .position_map{
+	height: calc(100% - 88px);
 }
 	.map{
 		width: 100%;
