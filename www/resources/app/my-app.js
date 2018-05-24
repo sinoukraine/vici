@@ -121,7 +121,7 @@ function locationOnSuccess (position) {
 
     window.PosMarker.ME.setLatLng([position.coords.latitude, position.coords.longitude]); 
 
-    alert(MapTrack.hasLayer(window.PosMarker.ME));
+    //alert(MapTrack.hasLayer(window.PosMarker.ME));
     if (!MapTrack.hasLayer(window.PosMarker.ME)) {
         window.PosMarker.ME.addTo(MapTrack);   
     }
@@ -1408,19 +1408,24 @@ function showMap(params){
     var latlng = [-32.1388548,136.198141]; 
     if (params && params.user) {
         if (localStorage.tracker_lat && localStorage.tracker_lng) {
-            latlng = [localStorage.tracker_lat,localStorage.tracker_lng]; 
+            latlng = [localStorage.tracker_lat,localStorage.tracker_lng];             
         }
-        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 6 }); 
+        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 8 }); 
+        if (localStorage.tracker_lat && localStorage.tracker_lng) {
+            window.PosMarker.ME.addTo(MapTrack); 
+        }
+        
+       
         //window.PosMarker.ME.addTo(MapTrack);   
     }else{
         var asset = TargetAsset.IMEI;   
         latlng = [POSINFOASSETLIST[asset].posInfo.lat, POSINFOASSETLIST[asset].posInfo.lng];
         MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 15 }); 
 
-        console.log(MapTrack.hasLayer(window.PosMarker[TargetAsset.IMEI]));       
+        
         window.PosMarker[TargetAsset.IMEI].addTo(MapTrack);   
 
-        console.log(MapTrack.hasLayer(window.PosMarker[TargetAsset.IMEI]));
+        
     }
         
 }
