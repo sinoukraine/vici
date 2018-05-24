@@ -121,6 +121,7 @@ function locationOnSuccess (position) {
 
     window.PosMarker.ME.setLatLng([position.coords.latitude, position.coords.longitude]); 
 
+    alert(MapTrack.hasLayer(window.PosMarker.ME));
     if (!MapTrack.hasLayer(window.PosMarker.ME)) {
         window.PosMarker.ME.addTo(MapTrack);   
     }
@@ -130,8 +131,8 @@ function locationOnSuccess (position) {
     // onError Callback receives a PositionError object
     //
 function locationOnError(error) {
-    alert('code: '    + error.code    + '\n' +
-          'message: ' + error.message + '\n');
+    /*alert('code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');*/
     console.log('code: '    + error.code    + '\n' +
           'message: ' + error.message + '\n');
 }
@@ -1414,8 +1415,12 @@ function showMap(params){
     }else{
         var asset = TargetAsset.IMEI;   
         latlng = [POSINFOASSETLIST[asset].posInfo.lat, POSINFOASSETLIST[asset].posInfo.lng];
-        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 15 });        
+        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 15 }); 
+
+        console.log(MapTrack.hasLayer(window.PosMarker[TargetAsset.IMEI]));       
         window.PosMarker[TargetAsset.IMEI].addTo(MapTrack);   
+
+        console.log(MapTrack.hasLayer(window.PosMarker[TargetAsset.IMEI]));
     }
         
 }
