@@ -84,7 +84,7 @@ function onPlusReady(){
 
     document.addEventListener("backbutton", backFix, false); 
 
-    navigator.geolocation.getCurrentPosition(locationOnSuccess, locationOnError);
+    navigator.geolocation.getCurrentPosition(locationOnSuccessFirst, locationOnError);
     
 }
 
@@ -92,7 +92,7 @@ function onPlusReady(){
     // This method accepts a Position object, which contains the
     // current GPS coordinates
     //
-function locationOnSuccess (position) {
+function locationOnSuccessFirst (position) {
     /*alert('Latitude: '          + position.coords.latitude          + '\n' +
           'Longitude: '         + position.coords.longitude         + '\n' +
           'Altitude: '          + position.coords.altitude          + '\n' +
@@ -103,16 +103,30 @@ function locationOnSuccess (position) {
           'Timestamp: '         + position.timestamp                + '\n');*/
     localStorage.tracker_lat = position.coords.latitude;
     localStorage.tracker_lng = position.coords.longitude;
-    if (!window.PosMarker.ME) {
+    /*if (!window.PosMarker.ME) {
         window.PosMarker.ME = L.marker([position.coords.latitude, position.coords.longitude], {icon: Protocol.MarkerIcon[0]}); 
     }  
     window.PosMarker.ME.setLatLng([position.coords.latitude, position.coords.longitude]); 
     if (MapTrack) {
         window.PosMarker.ME.addTo(MapTrack);   
     }
+    addressFromLatLng({'lat':position.coords.latitude,'lng':position.coords.longitude});*/
+}
+function locationOnSuccess (position) {    
+    localStorage.tracker_lat = position.coords.latitude;
+    localStorage.tracker_lng = position.coords.longitude;
+    if (!window.PosMarker.ME) {
+        window.PosMarker.ME = L.marker([position.coords.latitude, position.coords.longitude], {icon: Protocol.MarkerIcon[0]}); 
+    }  
+
+    window.PosMarker.ME.setLatLng([position.coords.latitude, position.coords.longitude]); 
+
+    if (!MapTrack.hasLayer(window.PosMarker.ME)) {
+        window.PosMarker.ME.addTo(MapTrack);   
+    }
+    MapTrack.setView([position.coords.latitude, position.coords.longitude]);
     addressFromLatLng({'lat':position.coords.latitude,'lng':position.coords.longitude});
 }
-
     // onError Callback receives a PositionError object
     //
 function locationOnError(error) {
@@ -781,8 +795,9 @@ App.onPageInit('user.location', function(page){
 });
 
 App.onPageBeforeRemove('user.location', function(page){
-    clearInterval(trackTimer);
-    trackTimer = false;
+    /*clearInterval(trackTimer);
+    trackTimer = false;*/
+    navigator.geolocation.clearWatch(watchID);
 });
 
 App.onPageBeforeRemove('asset.track', function(page){
@@ -1289,7 +1304,7 @@ function getMyPosition(){
 
 
     //navigator.geolocation.getCurrentPosition(locationOnSuccess, locationOnError);
-    watchID = navigator.geolocation.watchPosition(locationOnSuccess, locationOnError, { timeout: 30000 });
+    watchID = navigator.geolocation.watchPosition(locationOnSuccess, locationOnError, { timeout: 30000, enableHighAccuracy: true });
 
     //return  latlng;
 }
