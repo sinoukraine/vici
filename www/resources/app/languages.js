@@ -19,15 +19,17 @@ window.LanguagePackages= {
 		"COM_MSG16": "show",
 		"COM_MSG17": "Wrong password",
 		"COM_MSG18": "Can't get coordinates",
+		"COM_MSG19": "Yes",
+		"COM_MSG20": "No",
 
 		"PROMPT_MSG001": "The login(email) or password you entered is incorrect.",
-		"PROMPT_MSG002": "",
+		"PROMPT_MSG002": "Fill in IMEI field, please.",
 		"PROMPT_MSG003": "Password has been changed. Please, login with new credential",
 		"PROMPT_MSG004": "No data position for this device",
 		"PROMPT_MSG005": "Error. Please, try again later",
 		"PROMPT_MSG006": "Tracking started.",
 		"PROMPT_MSG007": "Tracking stopped.",
-		"PROMPT_MSG008": "",
+		"PROMPT_MSG008": "Adding New Asset has been successful?",
 		"PROMPT_MSG009": "",
 		"PROMPT_MSG010": "Are you sure you want to delete asset",
 		"PROMPT_MSG011": "In this section, you can edit the timing for tracking the device.",
@@ -37,10 +39,11 @@ window.LanguagePackages= {
 		"PROMPT_MSG015": "Are you sure you want to close the application?",	
 		"PROMPT_MSG016": "Are you sure you want to delete all notifications?",	
 		"PROMPT_MSG017": "Are you sure you want to delete selected notifications?",	
-		"PROMPT_MSG018": "",
-		"PROMPT_MSG019": "",
-		"PROMPT_MSG020": "",
+		"PROMPT_MSG018": "Login name or password incorrect. Relogin and try again, please.",
+		"PROMPT_MSG019": "Incorrect IMEI or IMEI already added.",
+		"PROMPT_MSG020": "This function in development yet",
 		"PROMPT_MSG021": "",
+
 
 		"LOGIN_MSG00": "Login",
 		"LOGIN_MSG01": "Registration",
@@ -63,7 +66,7 @@ window.LanguagePackages= {
 		"HOME_MSG00": "Asset List",
 		"HOME_MSG01": "Asset Name",
 		"HOME_MSG02": "Tracking",
-		"HOME_MSG03": "",
+		"HOME_MSG03": "Timing",
 		"HOME_MSG04": "Settings",
 		"HOME_MSG05": "Delete",
 
@@ -75,7 +78,10 @@ window.LanguagePackages= {
 		"USER_PROFILE_MSG06": "Password",
 		"USER_PROFILE_MSG07": "New Password",
 		"USER_PROFILE_MSG08": "Confirm Password",
-		"USER_PROFILE_MSG09": "User Profile",		
+		"USER_PROFILE_MSG09": "User Profile",
+
+		"ADD_NEW_MSG00": "Name",
+		"ADD_NEW_MSG01": "IMEI",		
 
 		"ASSET_EDIT_MSG00": "Tag",
 		"ASSET_EDIT_MSG01": "Name",
@@ -89,7 +95,14 @@ window.LanguagePackages= {
 		"ASSET_EDIT_MSG09": "Color",
 		"ASSET_EDIT_MSG10": "Year",
 		"ASSET_EDIT_MSG11": "Edit photo",
-		"ASSET_EDIT_MSG12": "Edit",
+		"ASSET_EDIT_MSG12": "Asset Name",
+		"ASSET_EDIT_MSG13": "First Name",
+		"ASSET_EDIT_MSG14": "Last Name",
+		"ASSET_EDIT_MSG15": "Email",
+		"ASSET_EDIT_MSG16": "Phone Number",
+		"ASSET_EDIT_MSG17": "Phone Type",
+		"ASSET_EDIT_MSG18": "IMEI",
+		
 
 		"ASSET_TRACK_MSG00": 'Tracking',
 		"ASSET_TRACK_MSG01": 'IMEI',
@@ -118,7 +131,7 @@ window.LanguagePackages= {
 		"USER_TIMING_MSG17": "Start Time",
 		"USER_TIMING_MSG18": "GPSUploader not supported",
 		"USER_TIMING_MSG19": "End Time",
-		"USER_TIMING_MSG20": "End Time",
+		"USER_TIMING_MSG20": "",
 		"USER_TIMING_MSG21": "None",
 
 

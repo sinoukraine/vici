@@ -1,5 +1,5 @@
 <div class="page position_page" data-page="asset.track">
-	<div class="navbar">
+	<div class="navbar  bg-dealer">
         <div class="navbar-inner">
             <div class="left">
                 <a href="#" class="back link  "> <i class="f7-icons icon-arrow-back"></i></a>
@@ -13,7 +13,12 @@
 	<div class="page-content " >
         <div class="position_map">
             <div class="map" id="map"></div>
-            <div class="route_button_wrapper bg-dealer">
+            <div class="float_button_wrapper pano_button_wrapper bg-blue">
+                <a href="#" class="link color-white pano_button" data-lat="{{Lat}}" data-lng="{{Lng}}">
+                    <i class="pano_preview_img"></i>                                   
+                </a>
+            </div>
+            <div class="float_button_wrapper route_button_wrapper bg-dealer">
                 <a href="{{DirLink}}"  class="link external color-white route_button">
                     <i class="f7-icons icon-route color-white"></i>
                     <span>{{@global.LANGUAGE.ASSET_TRACK_MSG05}}</span>                    
@@ -21,10 +26,10 @@
             </div>
         </div>
         <div class="position_bottom">
-            <div class="list-block media-list list-block-readonly list-block-first no-hairlines-between no-margin">           
+            <div class="list-block media-list list-block-readonly no-hairlines-between no-margin">           
                 <ul>   
                     {{#if AssetName}} 
-                    <li class="item-content">                  
+                    <li class="item-content color-dealer">                  
                         <div class="item-media">{{@global.LANGUAGE.ASSET_TRACK_MSG03}}:</div>
                         <div class="item-inner">
                             <div class="item-title">{{AssetName}}</div>                        
@@ -32,7 +37,7 @@
                     </li>
                     {{/if}}   
                     {{#if IMEI}}             
-                    <li class="item-content color-dealer">                  
+                    <li class="item-content ">                  
                         <div class="item-media">{{@global.LANGUAGE.ASSET_TRACK_MSG01}}:</div>
                         <div class="item-inner">
                             <div class="item-title">{{IMEI}}</div>                        

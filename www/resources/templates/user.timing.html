@@ -1,5 +1,5 @@
 <div class="page bg-color-page page_timing" data-page="user.timing">
-	<div class="navbar">
+	<div class="navbar  bg-dealer">
         <div class="navbar-inner">
             <div class="left">
                 <a href="#" class="back link "> <i class="f7-icons icon-arrow-back"></i></a>
@@ -17,8 +17,9 @@
         </div>
 
         <div class="list-block media-list list-block-readonly no-hairlines-between">           
-            <ul>                 
-                <li class="item-content">                  
+            <ul>  
+                {{#if Name}}               
+                <li class="item-content color-dealer">                  
                     <div class="item-media">
                         {{@global.LANGUAGE.USER_TIMING_MSG01}}
                     </div>
@@ -28,6 +29,8 @@
                         </div>                        
                     </div>                   
                 </li>
+                {{/if}}
+                {{#if Phone}}      
                 <li class="item-content">                  
                     <div class="item-media">
                         {{@global.LANGUAGE.USER_TIMING_MSG02}}
@@ -38,6 +41,7 @@
                         </div>                        
                     </div>                   
                 </li>
+                {{/if}}
                 <li class="item-content">                  
                     <div class="item-media">
                         {{@global.LANGUAGE.USER_TIMING_MSG03}}
@@ -50,32 +54,123 @@
                 </li>
             </ul>
         </div>
-        <div class="content-block-title">
+        <!-- <div class="content-block-title">
             {{@global.LANGUAGE.USER_TIMING_MSG04}}            
-        </div>
+        </div> -->
         <div class="list-block media-list no-hairlines timingList">           
             <ul>  
                 <li>
-                    <a href="#" class="item-content item-link " data-type="1">                            
-                        <div class="item-media"></div>
-                        <div class="item-inner">                            
-                            <div class="item-title ">{{@global.LANGUAGE.USER_TIMING_MSG05}}</div>
-                            <div class="item-input">
-                                <select name="trackingInterval" id="trackingInterval" class="select-fix">
-                                    <option value="0">{{@global.LANGUAGE.USER_TIMING_MSG21}}</option>
+                    <div class="item-content with_arrow_select border_bottom">
+                        <div class="item-media"><i class="f7-icons icon-timing color-dealer"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG05}}</div>
+                            <div class="item-input no-after">                                
+                                <select name="trackingInterval" id="trackingInterval" data-set="{{Interval}}">
+                                    <option value="0" selected>{{@global.LANGUAGE.USER_TIMING_MSG21}}</option>
                                     <option value="20">20 {{@global.LANGUAGE.USER_TIMING_MSG15}}</option>
                                     <option value="60">1 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
-                                    <option value="300" selected>5 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                    <option value="300">5 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                    <option value="600">10 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                    <option value="900">15 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                    <option value="1200">20 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                    <option value="1800">30 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                    <option value="3600">60 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content with_arrow_select border_bottom">
+                        <div class="item-media"><i class="f7-icons icon-day-of-week color-dealer"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG07}}</div>
+                            <div class="item-input no-after">                                
+                                <select multiple name="dayOfWeek" id="dayOfWeek" data-set={{DayOfWeek}}>
+                                    <option value="1">{{@global.LANGUAGE.USER_TIMING_MSG08}}</option>
+                                    <option value="2">{{@global.LANGUAGE.USER_TIMING_MSG09}}</option>
+                                    <option value="3">{{@global.LANGUAGE.USER_TIMING_MSG10}}</option>
+                                    <option value="4">{{@global.LANGUAGE.USER_TIMING_MSG11}}</option>
+                                    <option value="5">{{@global.LANGUAGE.USER_TIMING_MSG12}}</option>
+                                    <option value="6">{{@global.LANGUAGE.USER_TIMING_MSG13}}</option>
+                                    <option value="7">{{@global.LANGUAGE.USER_TIMING_MSG14}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content slider">
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title">
+                                    <span class="slider-val-title">{{@global.LANGUAGE.USER_TIMING_MSG17}}</span><br>
+                                    <span class="startTime" id="startTime" data-set="{{StartTime}}">{{StartTime}}</span>
+                                </div>
+                                <div class="item-after">
+                                    <div class="div">
+                                        <span class="slider-val-title">{{@global.LANGUAGE.USER_TIMING_MSG19}}</span><br>
+                                        <span class="endTime" id="endTime" data-set="{{EndTime}}">{{EndTime}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item-subtitle">                                
+                                <div class="timeOfDay" id="timeOfDay"></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- <li>
+                    <div class="item-content">
+                        <div class="item-media"></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">Tracking server</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="Tracking server" name="Server" value="{{Server}}">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">Tracking port</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="Tracking port" name="Port" value="{{Port}}">
+                            </div>
+                        </div>
+                    </div>
+                </li> -->
+            </ul>
+        </div>
+
+        <!-- <div class="list-block media-list no-hairlines timingList">           
+            <ul>  
+                <li>
+                    <a href="#" class="item-content item-link " data-type="1">                            
+                        <div class="item-media"></div>            
+                        <div class="item-inner">                            
+                            <div class="item-title ">{{@global.LANGUAGE.USER_TIMING_MSG05}}</div>                            
+                            <div class="item-input">
+                                <select name="trackingInterval" id="trackingInterval" data-set="{{Interval}}" class="select-fix">
+                                    <option value="0" selected>{{@global.LANGUAGE.USER_TIMING_MSG21}}</option>
+                                    <option value="20">20 {{@global.LANGUAGE.USER_TIMING_MSG15}}</option>
+                                    <option value="60">1 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                    <option value="300">5 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                     <option value="600">10 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                     <option value="900">15 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                     <option value="1200">20 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                     <option value="1800">30 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                 </select>
-                            </div>                    
+                            </div>
+                            
                         </div> 
                     </a>                      
                 </li> 
-                <!-- <li >
+                <li >
                     <a href="#" class="item-content item-link " data-type="2">                            
                         <div class="item-media"></div>
                         <div class="item-inner">                            
@@ -103,14 +198,10 @@
                             </div>                        
                         </div>  
                     </a>                  
-                </li> -->
-
-               
-                
-                
+                </li>
                 
             </ul>
-        </div>
+        </div> -->
 
 
     

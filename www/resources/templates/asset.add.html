@@ -1,69 +1,43 @@
 <div class="page bg-color-page page_asset_add_edit" data-page="asset.add">
-	<div class="navbar">
+	<div class="navbar  bg-dealer">
         <div class="navbar-inner">
             <div class="left">
                 <a href="#" class="link icon-only open-panel "> <i class="f7-icons icon-menu"></i></a>
             </div>
             <div class="left navbar_title">{{@global.LANGUAGE.MENU_MSG03}}</div>     
             <div class="right">
-                <a href="#" class="link applyUserProfile" ><i class="f7-icons icon-apply"></i></a>
+                <a href="#" class="link saveAssetAdd" ><i class="f7-icons icon-apply"></i></a>
             </div>       
         </div>
     </div>
     
 	<div class="page-content " >
-        <div class="profile_header bg-dealer">
+        <!-- <div class="profile_header bg-dealer">
             <div class="user_img">
                 <img src="{{UserImgSrc}}" alt="">
                 <div class="user_name">{{@global.LANGUAGE.ASSET_EDIT_MSG06}}</div>
             </div>
         
-        </div>
+        </div> -->
         <div class="list-block media-list no-hairlines ">           
             <ul> 
                
                 <li class="item-content">                  
                     <div class="item-media"><i class="f7-icons icon-name color-dealer"></i></div>
                     <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_EDIT_MSG01}}</div>
+                        <div class="item-title label">{{@global.LANGUAGE.ADD_NEW_MSG00}}</div>
                         <div class="item-input">
-                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG01}}" name="FirstName" value="" maxlength="200" class="color-blue">
+                            <input type="text" placeholder="{{@global.LANGUAGE.ADD_NEW_MSG00}}" name="Name" value="" maxlength="200" class="color-blue">
                         </div>
                     </div>
                 </li>
-                <li class="item-content border_bottom">                    
-                    <div class="item-media"><!-- <i class="f7-icons  color-dealer"></i> --></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_EDIT_MSG02}}</div>
-                        <div class="item-input">
-                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG02}}" name="LastName" value="" maxlength="200" class="color-blue">
-                        </div>
-                    </div>                    
-                </li>
-                <li class="item-content border_bottom">                    
-                    <div class="item-media"><i class="f7-icons icon-email color-dealer"></i></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_EDIT_MSG03}}</div>
-                        <div class="item-input">
-                            <input type="email" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG03}}" name="Email" value="" maxlength="200" class="color-blue">
-                        </div>
-                    </div>                    
-                </li>
-                <li class="item-content">                   
-                    <div class="item-media"><i class="f7-icons icon-mobile-phone color-dealer"></i></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_EDIT_MSG04}}</div>
-                        <div class="item-input">
-                            <input type="tel" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG04}}" name="Mobile" value="" maxlength="200" class="only_numbers color-blue">
-                        </div>
-                    </div>                    
-                </li>
-                <li class="item-content border_bottom">                    
+                
+                <li class="item-content ">                    
                     <div class="item-media"><i class="f7-icons icon-imei color-dealer"></i></div>
                     <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.ASSET_EDIT_MSG07}}</div>
+                        <div class="item-title label">{{@global.LANGUAGE.ADD_NEW_MSG01}}</div>
                         <div class="item-input">
-                            <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG07}}" name="imei" value="" maxlength="200" class="color-blue">
+                            <input type="text" placeholder="{{@global.LANGUAGE.ADD_NEW_MSG01}}" name="IMEI" value="{{IMEI}}" maxlength="200" class="color-blue">
                         </div>
                     </div>                    
                 </li>
