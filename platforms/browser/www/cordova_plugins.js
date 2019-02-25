@@ -91,6 +91,14 @@ module.exports = [
         "id": "cordova-plugin-camera.CameraProxy",
         "pluginId": "cordova-plugin-camera",
         "runs": true
+    },
+    {
+        "file": "plugins/cordova-background-geolocation-lt/www/BackgroundGeolocation.js",
+        "id": "cordova-background-geolocation-lt.BackgroundGeolocation",
+        "pluginId": "cordova-background-geolocation-lt",
+        "clobbers": [
+            "window.BackgroundGeolocation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -103,7 +111,8 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.2",
     "cordova-plugin-splashscreen": "5.0.2",
     "cordova-plugin-camera": "4.0.3",
-    "cordova-plugin-geolocation": "4.0.1"
+    "cordova-plugin-geolocation": "4.0.1",
+    "cordova-background-geolocation-lt": "2.8.5"
 }
 // BOTTOM OF METADATA
 });

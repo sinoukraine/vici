@@ -31,6 +31,9 @@
         },
         "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-background-geolocation-lt": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
         }
     },
     "dependent_plugins": {}

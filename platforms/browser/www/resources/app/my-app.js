@@ -44,22 +44,25 @@ function guid() {
 
 var inBrowser = 0;
 var notificationChecked = 0;
-var watchID = null;
+var imeiTimer = 0;
+var bgGeo;
 
 if( navigator.userAgent.match(/Windows/i) ){    
     inBrowser = 1;
 }
 
-//document.addEventListener( "plusready", onPlusReady, false );
-document.addEventListener("deviceready", onPlusReady, false ); 
+document.addEventListener("deviceready", onDeviceReady, false ); 
 
-function onPlusReady(){   
+//function onPlusReady(){   
+function onDeviceReady(){ 
    
-    //getPlusInfo();
-
-    /*if　(!localStorage.ACCOUNT){
-        plus.push.clear();
-    } */
+     //fix app images and text size
+    if (window.MobileAccessibility) {
+        window.MobileAccessibility.usePreferredTextZoom(false);    
+    }
+    if (StatusBar) {
+        StatusBar.styleDefault();
+    } 
 
     if (!inBrowser) {
         if(getUserinfo().MinorToken) {
@@ -70,7 +73,7 @@ function onPlusReady(){
         } 
     }
 
-    //plus.key.addEventListener("backbutton", backFix, false);      
+    document.addEventListener("backbutton", backFix, false); 
     //document.addEventListener("background", onAppBackground, false);
     //document.addEventListener("foreground", onAppForeground, false);    
     //document.addEventListener("resume", onAppReume, false);
@@ -80,98 +83,67 @@ function onPlusReady(){
     //plus.push.addEventListener("receive", onPushRecieve, false );
     //plus.push.addEventListener("click", onPushClick, false );
 
-    //loadGpsUploader();
-
-    document.addEventListener("backbutton", backFix, false); 
-
-    navigator.geolocation.getCurrentPosition(locationOnSuccessFirst, locationOnError);
     
+    sutupGeolocationPlugin();
 }
 
-// onSuccess Callback
-    // This method accepts a Position object, which contains the
-    // current GPS coordinates
-    //
-function locationOnSuccessFirst (position) {
-    /*alert('Latitude: '          + position.coords.latitude          + '\n' +
-          'Longitude: '         + position.coords.longitude         + '\n' +
-          'Altitude: '          + position.coords.altitude          + '\n' +
-          'Accuracy: '          + position.coords.accuracy          + '\n' +
-          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-          'Heading: '           + position.coords.heading           + '\n' +
-          'Speed: '             + position.coords.speed             + '\n' +
-          'Timestamp: '         + position.timestamp                + '\n');*/
-    localStorage.tracker_lat = position.coords.latitude;
-    localStorage.tracker_lng = position.coords.longitude;
-    /*if (!window.PosMarker.ME) {
-        window.PosMarker.ME = L.marker([position.coords.latitude, position.coords.longitude], {icon: Protocol.MarkerIcon[0]}); 
-    }  
-    window.PosMarker.ME.setLatLng([position.coords.latitude, position.coords.longitude]); 
-    if (MapTrack) {
-        window.PosMarker.ME.addTo(MapTrack);   
-    }
-    addressFromLatLng({'lat':position.coords.latitude,'lng':position.coords.longitude});*/
-}
-function locationOnSuccess (position) {    
-    localStorage.tracker_lat = position.coords.latitude;
-    localStorage.tracker_lng = position.coords.longitude;
-    if (!window.PosMarker.ME) {
-        window.PosMarker.ME = L.marker([position.coords.latitude, position.coords.longitude], {icon: Protocol.MarkerIcon[0]}); 
-    }  
 
-    window.PosMarker.ME.setLatLng([position.coords.latitude, position.coords.longitude]); 
-
-    //alert(MapTrack.hasLayer(window.PosMarker.ME));
-    if (!MapTrack.hasLayer(window.PosMarker.ME)) {
-        window.PosMarker.ME.addTo(MapTrack);   
-    }
-    MapTrack.setView([position.coords.latitude, position.coords.longitude]);
-    addressFromLatLng({'lat':position.coords.latitude,'lng':position.coords.longitude});
-}
-    // onError Callback receives a PositionError object
-    //
-function locationOnError(error) {
-    /*alert('code: '    + error.code    + '\n' +
-          'message: ' + error.message + '\n');*/
-    console.log('code: '    + error.code    + '\n' +
-          'message: ' + error.message + '\n');
-}
-
-function onAppPause(){ 
-    if ($hub) {
-        $hub.stop();
-    }
-} 
-function onAppReume(){ 
-    //getNewNotifications(); 
-    if ($hub) {
-        $hub.start();
-    } 
-}  
-function onAppBackground() {
-    if ($hub) {
-        $hub.stop();
-    }
-}
-function onAppForeground() {
-    //getNewNotifications();  
-    if ($hub) {
-        $hub.start();
-    }      
-}
-function onAppNewintent() {
-    //getNewNotifications();
-    if ($hub) {
-        $hub.start();
-    }        
+function sutupGeolocationPlugin(){
+    // 1.  Listen to events
+    bgGeo = window.BackgroundGeolocation;
+     
+    bgGeo.onLocation(function(location) {
+        console.log('[location] -', location);
+    });
+     
+    bgGeo.onMotionChange(function(event) {
+        console.log('[motionchange] -', event.isMoving, event.location);
+    });
+     
+    bgGeo.onHttp(function(response) {
+        console.log('[http] - ', response.success, response.status, response.responseText);
+    });
+     
+    bgGeo.onProviderChange(function(event) {
+        console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
+    });
+     
+      // 2. Execute #ready method:
+    bgGeo.ready({
+        reset: true,
+        debug: true,
+        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
+        desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 10,
+        url: 'http://sinopacificukraine.com/test/prestart/locations.php',
+        autoSync: true,
+        stopOnTerminate: false,
+        startOnBoot: true
+    }, function(state) {    // <-- Current state provided to #configure callback
+        // 3.  Start tracking
+        console.log('BackgroundGeolocation is configured and ready to use');
+        if (!state.enabled) {
+            bgGeo.start().then(function() {
+                alert('BackgroundGeolocation tracking started');
+                console.log('- BackgroundGeolocation tracking started');
+            });
+        }
+    });
+     
+      // NOTE:  Do NOT execute any API methods which will access location-services
+      // until the callback to #ready executes!
+      //
+      // For example, DO NOT do this here:
+      //
+      // bgGeo.getCurrentPosition();   // <-- NO!
+      // bgGeo.start();                // <-- NO!
 }
 
 function backFix(event){
     var page=App.getCurrentView().activePage;        
-    if(page.name=="index"){           
-        var ws=plus.webview.currentWebview();
+    if(page.name=="index"){ 
         App.confirm(LANGUAGE.PROMPT_MSG015, function () {        
-            ws.close();
+            navigator.app.exitApp();
         });
     }else{
         mainView.router.back();
@@ -179,57 +151,13 @@ function backFix(event){
 }
 
 
-/*function loadGpsUploader(){
-    gpsuploader = plus.gpsuploader = (function(){
-        var _GPSUPLOADER = 'gpsuploader';
-        var _B = plus.bridge;
-        return {
-            uploadGPSFunction : function (ip, port, interval, successCallback, errorCallback ) 
-            {
-                var success = typeof successCallback !== 'function' ? null : function(args) 
-                {
-                    successCallback(args);
-                },
-                fail = typeof errorCallback !== 'function' ? null : function(code) 
-                {
-                    errorCallback(code);
-                };
-                callbackID = _B.callbackId(success, fail);
-                return _B.exec(_GPSUPLOADER, "uploadGPSFunction", [callbackID, ip, port, interval]);
-            },
-            endUploadGPSFunction : function (successCallback, errorCallback ) 
-            {
-                var success = typeof successCallback !== 'function' ? null : function(args) 
-                {
-                    successCallback(args);
-                },
-                fail = typeof errorCallback !== 'function' ? null : function(code) 
-                {
-                    errorCallback(code);
-                };
-                callbackID = _B.callbackId(success, fail);            
-                return _B.exec(_GPSUPLOADER, "endUploadGPSFunction", [callbackID]);
-            },
-            getIMEI : function (successCallback, errorCallback ) 
-            {
-                var success = typeof successCallback !== 'function' ? null : function(args) 
-                {
-                    successCallback(args);
-                },
-                fail = typeof errorCallback !== 'function' ? null : function(code) 
-                {
-                    errorCallback(code);
-                };
-                callbackID = _B.callbackId(success, fail);            
-                return _B.exec(_GPSUPLOADER, "getIMEI", [callbackID]);
-            } 
-        };
-    })();
-
-    gpsuploader.getIMEI(function(imei){            
-        localStorage.tracker_imei = imei;
-    });
-}*/
+function setRegLink(){
+    if (localStorage.tracker_imei) {
+        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei='+localStorage.tracker_imei);
+    }else{
+        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei=');
+    }  
+}
 // Initialize your app
 
 
@@ -270,7 +198,10 @@ TargetAsset = {};
 var MapTrack = null;
 window.PosMarker = {};
 
-var API_DOMIAN1 = "";
+var StreetViewService = null;
+var updateAssetsPosInfoTimer = null;
+
+var API_DOMIAN1 = "http://api.m2mglobaltech.com/PhoneProtect/V1/";
 var API_DOMIAN2 = "http://api.m2mglobaltech.com/QuikTrak/V1/";
 var API_ROUTE = "https://www.google.com/maps/dir/?api=1&destination=";
 var API_URL = {};
@@ -279,16 +210,24 @@ API_URL.URL_GET_LOGIN = API_DOMIAN2 + "User/Auth?username={0}&password={1}&appKe
 API_URL.URL_GET_LOGOUT = API_DOMIAN2 + "User/Logoff2?MajorToken={0}&MinorToken={1}&username={2}&mobileToken={3}";
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN2 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN2 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
-API_URL.URL_EDIT_DEVICE = API_DOMIAN1 + "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}";
+API_URL.URL_EDIT_DEVICE = API_DOMIAN2 + "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}";
 
 API_URL.URL_GET_ALL_POSITIONS = API_DOMIAN2 + "Device/GetPosInfos?MinorToken={0}";
 //API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN2 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
 API_URL.URL_PHOTO_UPLOAD = "http://upload.quiktrak.co/image/Upload";
 
+API_URL.URL_ADD_NEW_DEVICE = API_DOMIAN1 + 'Client/Activation';
+API_URL.URL_ADD_NEW_DEVICE2 = 'http://activation.phonetrack.co/activate.php?imei={0}&account={1}';
+API_URL.URL_REGISTER = API_DOMIAN1 + 'Client/Registration';
+API_URL.URL_DEACTIVATE = API_DOMIAN1 + 'Client/Deactivate';
+
 API_URL.URL_TRACKING_IP = "194.247.12.43";
-API_URL.URL_TRACKING_PORT = "5001";
+API_URL.URL_TRACKING_PORT = "50001"; 
+/*API_URL.URL_TRACKING_IP = "test.m2mdata.co";
+API_URL.URL_TRACKING_PORT = "20771";*/
 
-
+//http://api.m2mglobaltech.com/PhoneProtect/V1/Client/Activation
+//http://api.m2mglobaltech.com/PhoneProtect/V1/Client/Registration
 
 var html = Template7.templates.template_Login_Screen();
 $$(document.body).append(html); 
@@ -323,17 +262,16 @@ virtualAssetList = App.virtualList('.assetList', {
     items: [
     ],
     height: function (item) {        
-        var height = 98;         
+        var height = 88;         
         return height; //display the image with 50px height
     },
     // Display the each item using Template7 template parameter
     renderItem: function (index, item) {
 
         var ret = '';
-        var asset = POSINFOASSETLIST[item.IMEI];  
-     
-            var assetFeaturesStatus = Protocol.Helper.getAssetStateInfo(asset);
-            //var assetImg = 'resources/images/svg_asset.svg';
+        //var asset = POSINFOASSETLIST[item.IMEI];     
+        //var assetFeaturesStatus = Protocol.Helper.getAssetStateInfo(asset);
+            
             
 
             var assetImg = getAssetImg(item, {'assetList':true});                    
@@ -364,7 +302,7 @@ virtualAssetList = App.virtualList('.assetList', {
                 ret +=  '</li>';*/
 
 
-                ret +=  '<li class="item-content" data-imei="' + item.IMEI + '" data-imsi="' + item.IMSI + '" data-name="' + item.Name + '">';
+                ret +=  '<li class="item-content" data-imei="' + item.IMEI + '" data-imsi="' + item.IMSI + '" data-name="' + item.Name + '" data-id="' + item.Id + '">';
                 ret +=      '<div class="item-media">' + assetImg + '</div>';
                 ret +=      '<div class="item-inner">';
                 ret +=          '<div class="item-title-row">';
@@ -417,16 +355,38 @@ var cameraButtons = [
     },
 ];
 
-$$('.login-form').on('submit', function (e) {    
+$$(document).on('submit', '.login-form', function (e) {    
     e.preventDefault();     
     login();
     return false;
 });
+
 $$('body').on('change keyup input click', '.only_numbers', function(){
     if (this.value.match(/[^0-9]/g)) {
         this.value = this.value.replace(/[^0-9]/g, '');
     }
 });
+
+$$(document).on('change', '.leaflet-control-layers-selector[type="radio"]', function(){    
+    if (TargetAsset.IMEI) {        
+        var span = $$(this).next();        
+        var switcherWrapper = span.find('.mapSwitcherWrapper');
+        if (switcherWrapper && switcherWrapper.hasClass('satelliteSwitcherWrapper')) {
+            window.PosMarker[TargetAsset.IMEI].setIcon(Protocol.MarkerIcon[1]);
+        }else{
+            window.PosMarker[TargetAsset.IMEI].setIcon(Protocol.MarkerIcon[0]);
+        }
+    }
+});
+
+/*$$(document).on('click', '.navbar_title_index', function(){
+    toDataURLBase64(
+               'https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0',
+                function(dataUrl) {
+                    console.log('RESULT:', dataUrl);
+                }
+            );
+});*/
 
 $$('body').on('click', '#menu li', function () {
     var page = $$(this).data('page');     
@@ -508,7 +468,12 @@ $$('body').on('click', '.menuAsset', function () {
     TargetAsset.IMSI = !parrent.data('imsi')? '' : parrent.data('imsi'); 
     TargetAsset.Name = !parrent.data('name')? '' : parrent.data('name');
     TargetAsset.ID = !parrent.data('id')? '' : parrent.data('id');
+    TargetAsset.ASSET_IMG = '';      
 
+    var disabled = true;   
+    if (localStorage.tracker_imei == TargetAsset.IMEI) {
+        disabled = false;
+    }
     
 
     var tracking =  '<div class="action_button_wrapper">'+
@@ -520,14 +485,14 @@ $$('body').on('click', '.menuAsset', function () {
                         '</div>'+
                     '</div>';
 
-    /*var timing =  '<div class="action_button_wrapper">'+
+    var timing =  '<div class="action_button_wrapper">'+
                         '<div class="action_button_block action_button_media">'+
                             '<i class="f7-icons icon-timing color-dealer "></i>'+
                         '</div>'+
                         '<div class="action_button_block action_button_text">'+
                             LANGUAGE.HOME_MSG03 +
                         '</div>'+
-                    '</div>';*/
+                    '</div>';
 
     var settings =  '<div class="action_button_wrapper">'+
                         '<div class="action_button_block action_button_media">'+
@@ -538,14 +503,14 @@ $$('body').on('click', '.menuAsset', function () {
                         '</div>'+
                     '</div>';
 
-    /*var assetDelete =  '<div class="action_button_wrapper">'+
+    var assetDelete =  '<div class="action_button_wrapper">'+
                         '<div class="action_button_block action_button_media">'+
                             '<i class="f7-icons icon-delete color-red "></i>'+
                         '</div>'+
                         '<div class="action_button_block action_button_text color-red">'+
                             LANGUAGE.HOME_MSG05 +
                         '</div>'+
-                    '</div>';*/
+                    '</div>';
 
     
     
@@ -559,39 +524,41 @@ $$('body').on('click', '.menuAsset', function () {
         
         {
             text: tracking,  
-            onClick: function () {
-                loadPageTrack();
+            onClick: function () {                
+                loadPageTrack();                                
             },          
         },
-        /*{
+        {
             text: timing,
-            onClick: function () {
-                loadTimingPage();
+            //disabled: disabled,
+            onClick: function () {               
+                loadTimingPage();                
             },  
-        },*/
+        },
         {
             text: settings,           
             onClick: function () {
-                loadAssetEditPage();
-               
+                loadAssetEditPage();               
             },  
         },
-        /*{
+        {
             text: assetDelete,           
             onClick: function () {
                 App.confirm(LANGUAGE.PROMPT_MSG010+' - '+TargetAsset.Name+'?', function () {        
                    //removeAllNotifications();
+                   //deleteAsset(TargetAsset.IMEI);
+                   App.alert(LANGUAGE.PROMPT_MSG020);
                 });
                
                
             },  
-        },*/
+        },
        
     ];
     App.actions(buttons);
 });
 
-App.onPageInit('profile', function (page) {     
+App.onPageInit('user.profile', function (page) {     
     $$('.saveProfile').on('click', function(e){
         var user = {
             FirstName: $$(page.container).find('input[name="FirstName"]').val(),
@@ -609,8 +576,9 @@ App.onPageInit('profile', function (page) {
                 user.Phone,
                 user.EMail
             ); 
+
         App.showPreloader();
-        JSONrequest(url, function(result){ 
+        JSON.request(url, function(result){ 
                 console.log(result);                  
                 if (result.MajorCode == '000') {                    
                     userInfo.User = {
@@ -634,7 +602,7 @@ App.onPageInit('profile', function (page) {
     });
 });
 
-App.onPageInit('resetPwd', function (page) {     
+App.onPageInit('user.password', function (page) {     
     $$('.saveResetPwd').on('click', function(e){    
         var password = {
             old: $$(page.container).find('input[name="Password"]').val(),
@@ -651,7 +619,7 @@ App.onPageInit('resetPwd', function (page) {
                     ); 
                 //console.log(url);
                 App.showPreloader();
-                JSONrequest(url, function(result){ 
+                JSON.request(url, function(result){ 
                         //console.log(result);                  
                         if (result.MajorCode == '000') { 
                             App.alert(LANGUAGE.PROMPT_MSG003, function(){
@@ -673,13 +641,66 @@ App.onPageInit('resetPwd', function (page) {
     });
 });
 
+App.onPageInit('asset.add', function (page) { 
+    $$('.saveAssetAdd').on('click', function(){
+        var device = {
+            IMEI: $$(page.container).find('input[name="IMEI"]').val(),
+            Name: $$(page.container).find('input[name="Name"]').val(),
+            Describe1: '',
+            Describe2: '',
+            Describe3: '',
+            Describe4: '',
+            Account: localStorage.ACCOUNT,
+            Password: localStorage.PASSWORD,
+        };
+
+        if (device.IMEI) {
+            App.showPreloader();
+            JSON.requestPost(API_URL.URL_ADD_NEW_DEVICE,device, function(result){ 
+                    App.hidePreloader();
+                    console.log(result);                  
+                    if (result.MajorCode == '000') {
+                        console.log('here1');
+                        //TargetAsset.ASSET_IMG = '';
+                        //updateAssetList(device);
+                        App.showPreloader();
+                        setTimeout(login, 1500);
+                                        
+                    }else{
+                        switch (result.MinorCode){
+                            case '1004':
+                                App.alert(LANGUAGE.PROMPT_MSG018);
+                                break;
+
+                            case '1005':
+                                App.alert(LANGUAGE.PROMPT_MSG019);
+                                break;
+
+                            default:
+                                App.alert(LANGUAGE.PROMPT_MSG013);
+                        }
+                    } 
+                    
+                },
+                function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
+            );        
+        }else{
+            App.alert(LANGUAGE.PROMPT_MSG002);
+        }
+              
+
+    });
+});
+
 App.onPageInit('asset.edit', function (page) { 
-    $$('.upload_photo, .user_img img').on('click', function (e) {        
+    $$('.upload_photo, .asset_img img').on('click', function (e) {        
         App.actions(cameraButtons);        
     }); 
 
-    var selectUnitSpeed = $$('select[name="Unit"]');   
-    selectUnitSpeed.val(selectUnitSpeed.data("set"));
+    var selectUnitSpeed = $$('select[name="Unit"]');
+    if (selectUnitSpeed) {
+        selectUnitSpeed.val(selectUnitSpeed.data("set"));
+    }    
 
     $$('.saveAssetEdit').on('click', function(){ 
                       
@@ -697,7 +718,11 @@ App.onPageInit('asset.edit', function (page) {
             Icon: TargetAsset.ASSET_IMG,                  
         };
 
-        
+        var inputUnit = $$(page.container).find('input[name="Unit"]');
+        if (inputUnit.length > 0) {
+            device.Unit = inputUnit.val();
+        }
+
         var userInfo = getUserinfo();         
         var url = API_URL.URL_EDIT_DEVICE.format(userInfo.MinorToken,
                 TargetAsset.ID,
@@ -711,11 +736,10 @@ App.onPageInit('asset.edit', function (page) {
                 device.Describe4,
                 device.Tag,
                 device.Icon
-            );
-    
+            );    
 
         App.showPreloader();
-        JSONrequest(url, function(result){ 
+        JSON.request(url, function(result){ 
                 console.log(result);                  
                 if (result.MajorCode == '000') {
                     TargetAsset.ASSET_IMG = '';
@@ -754,6 +778,8 @@ App.onPageInit('asset.edit.photo', function (page) {
 });
 
 App.onPageInit('asset.track', function(page){
+
+
     showMap(); 
 
     var posTime = $$(page.container).find('.positionTime');
@@ -762,16 +788,32 @@ App.onPageInit('asset.track', function(page){
     //var posSpeed = $$(page.container).find('.position_speed');
     var posAddress = $$(page.container).find('.address');
     var routeButton = $$(page.container).find('.route_button');
+    var panoButton = $$(page.container).find('.pano_button');
+    var lat = panoButton.data('lat');
+    var lng = panoButton.data('lng');
+    var latlng = new google.maps.LatLng(lat, lng);
+
     var data = {
         'posTime':posTime,
         //'posMileage':posMileage,
         //'posSpeed':posSpeed,
         'posAddress':posAddress,
         'routeButton':routeButton,
+        'panoButton':panoButton,
     };
 
     $$('.refreshTrack').on('click', function(){   
         updateAssetData(data);          
+    });
+    
+    StreetViewService.getPanorama({location:latlng, radius: 50}, processSVData);
+
+    panoButton.on('click', function(){             
+        var params = {
+            'lat': $$(this).data('lat'),
+            'lng': $$(this).data('lng'),
+        };
+        showStreetView(params);        
     });
 
     trackTimer = setInterval(function(){
@@ -780,9 +822,9 @@ App.onPageInit('asset.track', function(page){
 });
 
 App.onPageInit('user.location', function(page){
-    showMap({'user':true}); 
+    showMap(); 
 
-    /*var myPosition = {'lat':0,'lng':0}; //default
+    var myPosition = {'lat':0,'lng':0}; //default
 
     $$('.refreshTrack').on('click', function(){
         myPosition = getMyPosition();   
@@ -792,13 +834,12 @@ App.onPageInit('user.location', function(page){
     trackTimer = setInterval(function(){
                 myPosition = getMyPosition();   
                 updateMarkerPositionMe(myPosition);
-            }, 10000);   */ 
+            }, 10000);    
 });
 
 App.onPageBeforeRemove('user.location', function(page){
-    /*clearInterval(trackTimer);
-    trackTimer = false;*/
-    navigator.geolocation.clearWatch(watchID);
+    clearInterval(trackTimer);
+    trackTimer = false;
 });
 
 App.onPageBeforeRemove('asset.track', function(page){
@@ -807,32 +848,78 @@ App.onPageBeforeRemove('asset.track', function(page){
 });
 
 App.onPageInit('user.timing', function(page){
-    var timingList =  $$(page.container).find('.timingList');
+
     var selectInterval = $$(page.container).find('#trackingInterval');
     var applyUserTiming = $$('body').find('.applyUserTiming');
 
-    $$(timingList).on('click', '.item-link', function() {
-        var type = $$(this).data('type');
-        switch(type){            
+    selectInterval.val(selectInterval.data("set"));
 
-            case '3':  
-                var data = {
-                    'Start': $$(this).data('timeStart'),
-                    'End': $$(this).data('timeEnd'),
-                };
-                console.log(data);
-                loadPageDayTime(data);             
-                
-                break;          
+    var snapSlider = document.getElementById('timeOfDay');
+    var startTimeMinutes = $$(page.container).find('#startTime');
+    var endTimeMinutes = $$(page.container).find('#endTime');
+    var dayOfWeek = $(page.container).find('#dayOfWeek');
 
+    var server = $$(page.container).find('input[name="Server"]');
+    var port = $$(page.container).find('input[name="Port"]');
+    
+      
+
+    var dayOfWeekset = dayOfWeek.data('set').toString();
+    var dayOfWeekArr = [];
+    console.log(dayOfWeekset);
+    if (dayOfWeekset && dayOfWeekset.indexOf(',') != -1) {
+        dayOfWeekArr = dayOfWeekset.split(',');
+    }else if(dayOfWeekset){
+    	dayOfWeekArr = [dayOfWeekset];
+    }
+    if (dayOfWeekArr.length > 0) {
+        $.each(dayOfWeekArr, function(i, v){
+            dayOfWeek.find("option[value='" + v + "']").prop("selected", true);
+        });
+    }
+
+    noUiSlider.create(snapSlider, {
+        start: [parseInt(startTimeMinutes.data('set')), parseInt(endTimeMinutes.data('set'))],
+        connect: true,
+        step: 5,
+        range: {
+            'min': 0,
+            'max': 1439
         }
+    });
+
+    var snapValues = [
+         document.getElementById('startTime'),
+         document.getElementById('endTime')
+    ];
+
+    snapSlider.noUiSlider.on('update', function( values, handle ) {
+        var calculated = values[handle];     
+        var h = calculated / 60 ^ 0;        
+        if (h) {
+            var m = calculated % 60;
+            if (m < 10) m = '0' + m;
+            if (h < 10) h = '0' + h;
+            calculated = h + ':' + m;
+        } else {
+            calculated = '00:' + parseInt(calculated);
+        }
+        snapValues[handle].innerHTML = calculated;
+        $$(snapValues[handle]).data('set',values[handle]);
     });
 
     applyUserTiming.on('click', function(){
         var interval = localStorage.tracker_interval = selectInterval.val();
         localStorage.tracker_ip = API_URL.URL_TRACKING_IP;
-        localStorage.tracker_port = API_URL.URL_TRACKING_PORT;        
-        
+        localStorage.tracker_port = API_URL.URL_TRACKING_PORT;    
+
+        localStorage.tracker_startTimeMinutes = startTimeMinutes.data('set'); 
+        localStorage.tracker_endTimeMinutes = endTimeMinutes.data('set'); 
+        localStorage.tracker_dayOfWeek = !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(); 
+
+
+
+    
         if(window.gpsuploader){
             var errorFunc = function(){
                 App.alert(LANGUAGE.PROMPT_MSG005);
@@ -849,11 +936,25 @@ App.onPageInit('user.timing', function(page){
                 gpsuploader.endUploadGPSFunction(successFunc, errorFunc);
             }
             else
-            { 
-                gpsuploader.uploadGPSFunction(API_URL.URL_TRACKING_IP, API_URL.URL_TRACKING_PORT, interval, successFunc, errorFunc);
+            {   
+                /*if (!server) {
+                    server = API_URL.URL_TRACKING_IP;
+                }else{
+                    server = serve.val();
+                }
+                if (!port) {
+                    port = API_URL.URL_TRACKING_PORT;
+                }else{
+                    port = port.val();
+                }*/
+                //alert(server + ' '+ port);    
+                server = API_URL.URL_TRACKING_IP;
+                port = API_URL.URL_TRACKING_PORT;
+                gpsuploader.uploadGPSFunction(server, port, interval, successFunc, errorFunc);
             }
         }else{
             App.alert(LANGUAGE.USER_TIMING_MSG18);
+            mainView.router.back();
         }
     });
 
@@ -862,177 +963,6 @@ App.onPageInit('user.timing', function(page){
 
 });
 
-App.onPageInit('user.timing.daytime', function(page){
-    var daytimeList = $$(page.container).find('.daytimeList'); 
-    var applyDaytime = $$(page.container).find('.applyDaytime');
-    var startTime = $$(page.container).find('[name="startTime"]').val();
-    var endTime = $$(page.container).find('[name="endTime"]').val();
-
-    var startTimeArr = ['0','00'];
-    var endTimeArr = ['0','00'];
-    if (startTime) {
-        startTimeArr = startTime.split(':');
-    }
-    if (endTime) {
-        endTimeArr = endTime.split(':');
-    }
-       
-    
-    //startTimeArr = null;
-    //endTimeArr =null;
-    //pickerStartTime.setValue(startTimeArr);
-    //pickerEndtTime.setValue(endTimeArr);
-
-    var pickerStartTime = App.picker({
-        input: '.startTime',
-        cssClass: 'custom-picker custom-time',
-        toolbarTemplate:'<div class="toolbar">'+
-                          '<div class="toolbar-inner">'+
-                            '<div class="left"><div class="text">'+LANGUAGE.USER_TIMING_MSG17+'</div></div>'+
-                            '<div class="right">'+
-                             // '<a href="#" class="link close-picker">{{closeText}}</a>'+
-                            '</div>'+
-                          '</div>'+
-                        '</div>',
-        
-        value: startTimeArr, //[today.getHours(), (today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes())],
-     
-        onChange: function (picker, values, displayValues) {
-            /*var daysInMonth = new Date(picker.value[2], picker.value[0]*1 + 1, 0).getDate();
-            if (values[1] > daysInMonth) {
-                picker.cols[1].setValue(daysInMonth);
-            }*/
-        },
-     
-        formatValue: function (p, values, displayValues) {
-            return values[0] + ':' + values[1];
-        },
-     
-        cols: [            
-            // Hours
-            {
-                values: (function () {
-                    var arr = [];
-                    for (var i = 0; i <= 23; i++) { arr.push(i); }
-                    return arr;
-                })(),
-            },
-            // Divider
-            /*{
-                divider: true,
-                content: ':'
-            },*/
-            // Minutes
-            {
-                values: (function () {
-                    var arr = [];
-                    for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
-                    return arr;
-                })(),
-            }
-        ]
-    });
-
-    var pickerEndtTime = App.picker({
-        input: '.endTime',
-        cssClass: 'custom-picker custom-time',
-        toolbarTemplate:'<div class="toolbar">'+
-                          '<div class="toolbar-inner">'+
-                            '<div class="left"><div class="text">'+LANGUAGE.USER_TIMING_MSG18+'</div></div>'+
-                            '<div class="right">'+
-                              //'<a href="#" class="link close-picker">{{closeText}}</a>'+
-                            '</div>'+
-                          '</div>'+
-                        '</div>',
-        
-        value: endTimeArr, // [today.getHours(), (today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes())],
-     
-        onChange: function (picker, values, displayValues) {
-            /*var daysInMonth = new Date(picker.value[2], picker.value[0]*1 + 1, 0).getDate();
-            if (values[1] > daysInMonth) {
-                picker.cols[1].setValue(daysInMonth);
-            }*/
-        },
-     
-        formatValue: function (p, values, displayValues) {
-            return values[0] + ':' + values[1];
-        },
-     
-        cols: [            
-            // Hours
-            {
-                values: (function () {
-                    var arr = [];
-                    for (var i = 0; i <= 23; i++) { arr.push(i); }
-                    return arr;
-                })(),
-            },
-            // Divider
-            /*{
-                divider: true,
-                content: ':'
-            },*/
-            // Minutes
-            {
-                values: (function () {
-                    var arr = [];
-                    for (var i = 0; i <= 59; i++) { arr.push(i < 10 ? '0' + i : i); }
-                    return arr;
-                })(),
-            }
-        ]
-    });
-
-    
-
-    $$(daytimeList).on('click', 'li', function(event){
-        event.stopPropagation();
-        var input = $$(this).find('input');
-
-        if (input) {
-            var name = input.attr('name');            
-            switch(name){
-                case 'startTime':
-                    pickerStartTime.open();
-                    break;
-                case 'endTime':
-                    pickerEndtTime.open();
-                    break;                
-            }
-            
-        }
-    });
-
-    applyDaytime.on('click', function(){
-        var start = $$(page.container).find('[name="startTime"]').val();
-        var end = $$(page.container).find('[name="endTime"]').val();
-        setDayTime({'start':start,'end':end});
-        mainView.router.back();
-    });
-});
-
-App.onPageBeforeRemove('user.timing.daytime', function(page){
-    // fix to close modal calendar if it was opened and default back button pressed
-    App.closeModal('.custom-picker');
-});
-
-function loadPageDayTime(data) {
-    mainView.router.load({
-        url:'resources/templates/user.timing.daytime.html',
-        context:{
-            Start:data.Start,
-            End:data.End,    
-        }
-    });
-}
-function setDayTime(data){    
-    var daytime = $$('body').find('[name="dayTime"]');    
-    daytime.data('timeStart',data.start);
-    daytime.data('timeEnd',data.end);
-    
-    console.log('Start: '+daytime.data('timeStart'));
-    console.log('End: '+daytime.data('timeEnd'));
-}
 
 function clearUserInfo(){
     
@@ -1065,7 +995,7 @@ function clearUserInfo(){
     //}
     
     if(mobileToken){         
-        JSONrequest(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });  
+        JSON.request(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });  
     }   
     $$("input[name='account']").val(userName);    
 
@@ -1089,6 +1019,14 @@ function login(){
     var deviceType = !localStorage.DEVICE_TYPE? 'web' : localStorage.DEVICE_TYPE;
     var account = $$("input[name='account']");
     var password = $$("input[name='password']"); 
+
+    if(window.gpsuploader){
+        gpsuploader.getIMEI(function(imei){            
+            localStorage.tracker_imei = imei;            
+        });
+    }
+        
+        
     //console.log(account.val()+' '+password.val());
     var urlLogin = API_URL.URL_GET_LOGIN.format(!account.val()? localStorage.ACCOUNT: account.val(), 
                                      encodeURIComponent(!password.val()? localStorage.PASSWORD: password.val()), 
@@ -1096,7 +1034,7 @@ function login(){
                                      mobileToken, 
                                      deviceToken, 
                                      deviceType);                                
-    JSONrequest(urlLogin, function(result){
+    JSON.request(urlLogin, function(result){
            console.log(result);
             if(result.MajorCode == '000') {
                 if(!!account.val()) {
@@ -1189,13 +1127,67 @@ function loadResetPwdPage(){
 }
 
 function loadAssetAddPage(){
-    var UserImgSrc = getUserImg();
+    
+    /*if (!localStorage.tracker_imei) {
+        if(window.gpsuploader){
+            gpsuploader.getIMEI(function(imei){            
+                localStorage.tracker_imei = imei;
+            });
+        }else{
+            App.alert(LANGUAGE.USER_TIMING_MSG18);
+        }     
+    }
     mainView.router.load({
         url:'resources/templates/asset.add.html',
         context:{
-            UserImgSrc: UserImgSrc,   
+            //UserImgSrc: UserImgSrc, 
+            IMEI: localStorage.tracker_imei,  
         }
-    });
+    });*/
+
+    if (!localStorage.tracker_imei) {
+        if(window.gpsuploader){
+            gpsuploader.getIMEI(function(imei){            
+                localStorage.tracker_imei = imei;
+            });
+        }else{
+            App.alert(LANGUAGE.USER_TIMING_MSG18);
+            localStorage.tracker_imei = '0123456789012345';
+        }     
+    }
+
+    var href = API_URL.URL_ADD_NEW_DEVICE2.format(localStorage.tracker_imei,localStorage.ACCOUNT); 
+    
+    if (window.plus) {
+        plus.runtime.openURL(href);            
+    } else {
+        window.open(href,'_blank');
+    }
+
+        setTimeout(function(){
+            App.modal({
+                //title: LANGUAGE.PROMPT_MSG016,
+                text: LANGUAGE.PROMPT_MSG008, //LANGUAGE.PROMPT_MSG017
+                buttons: [
+                    {
+                        text: LANGUAGE.COM_MSG19,
+                        onClick: function() {
+                            //myApp.alert('You clicked first button!')
+                            login();
+                            
+                        }
+                    },
+                    {
+                        text: LANGUAGE.COM_MSG20,
+                        onClick: function() {
+                            //mainView.router.back();
+                            //afterRechergeCredits();
+                        }
+                    },
+                ]
+            });
+        }, 3000);
+    
 }
 
 function loadAssetEditPage(){
@@ -1230,8 +1222,12 @@ function loadAssetEditPage(){
         
 
         console.log(asset);
+        var url = 'resources/templates/asset.edit.html';
+        if (asset.PRDTName == "PHONE Tracker") {
+            url = 'resources/templates/asset.edit2.html';
+        }
         mainView.router.load({
-        url:'resources/templates/asset.edit.html',
+        url: url,
             context:{                
                 IMEI: asset.IMEI,
                 PRDTName: asset.PRDTName,
@@ -1250,7 +1246,10 @@ function loadAssetEditPage(){
 }
 
 function loadTimingPage(){  
-    var userInfo = getUserinfo();         
+    var userInfo = getUserinfo();   
+
+    var assetList = getAssetList();  
+    var asset = assetList[TargetAsset.IMEI];       
 
     if (!localStorage.tracker_imei) {
         if(window.gpsuploader){
@@ -1262,52 +1261,50 @@ function loadTimingPage(){
         }     
     }
     
-    var phone = !userInfo.User.Mobile ? userInfo.User.Phone : userInfo.User.Mobile;
+    var phone = !asset.TagName ? '' : asset.TagName;
+    var name = !asset.Name ? '' : asset.Name;
+
+    var currentInterval = localStorage.tracker_interval;
+    var dayOfWeek = !localStorage.tracker_dayOfWeek ? '' : localStorage.tracker_dayOfWeek;
+    var startTimeMinutes = !localStorage.tracker_startTimeMinutes ? 540 : localStorage.tracker_startTimeMinutes; 
+    var endTimeMinutes = !localStorage.tracker_endTimeMinutes ? 1080 : localStorage.tracker_endTimeMinutes; 
     
+
     mainView.router.load({
         url:'resources/templates/user.timing.html',
         context:{
-            Name: userInfo.User.FirstName+' '+userInfo.User.SubName,
+            Name: name,
             Phone: phone,
-            IMEI: localStorage.tracker_imei,            
+            IMEI: localStorage.tracker_imei, 
+            Interval: currentInterval,  
+            DayOfWeek: dayOfWeek,
+            StartTime: startTimeMinutes,
+            EndTime: endTimeMinutes,
+            Server: API_URL.URL_TRACKING_IP,
+            Port: API_URL.URL_TRACKING_PORT,
         }
     });
 }
 
 function getMyPosition(){
-    /*var latlng = {
-        'lat': -32.1388548,
-        'lng': 136.198141,
-    };*/
+    var latlng = {
+        'lat': 0,
+        'lng': 0,
+    };
 
-    if (localStorage.tracker_lat && localStorage.tracker_lng) {
-
-        if (!window.PosMarker.ME) {
-
-            window.PosMarker.ME = L.marker([localStorage.tracker_lat, localStorage.tracker_lng], {icon: Protocol.MarkerIcon[0]}); 
-        }        
-        
-        window.PosMarker.ME.setLatLng([localStorage.tracker_lat, localStorage.tracker_lng]); 
-        /*latlng.lat = localStorage.tracker_lat;
-        latlng.lng = localStorage.tracker_lng;*/
-        //addressFromLatLng(latlng);  
-    }
-
-    /*if (window.plus && plus.geolocation) {
+    if (window.plus && plus.geolocation) {
         plus.geolocation.getCurrentPosition(function(p) {
             localStorage.tracker_lat = latlng.lat = p.coords.latitude;
-            localStorage.tracker_lng = latlng.lng = p.coords.longitude;                
+            localStorage.tracker_lng = latlng.lng = p.coords.longitude;  
+            App.alert(JSON.stringify(p));       
+            App.alert("Lat: "+localStorage.tracker_lat+" Lng: "+localStorage.tracker_lng);             
         }, function(e) {
             //App.alert('Geolocation error: ' + e.message);
             App.alert(JSON.stringify(e));
-        });
-    }   */     
+        }, {provider:'baidu'});
+    }        
 
-
-    //navigator.geolocation.getCurrentPosition(locationOnSuccess, locationOnError);
-    watchID = navigator.geolocation.watchPosition(locationOnSuccess, locationOnError, { timeout: 30000, enableHighAccuracy: true });
-
-    //return  latlng;
+    return  latlng;
 }
 
 function loadPageTrack() {
@@ -1316,7 +1313,13 @@ function loadPageTrack() {
         //console.log(asset);
     if (asset && parseFloat(asset.posInfo.lat) !== 0 && parseFloat(asset.posInfo.lng) !== 0) {            
             
-        
+        /*var marker = L.icon({
+            iconUrl: 'resources/images/marker.svg',                       
+            iconSize:     [50, 50], // size of the icon                        
+            iconAnchor:   [25, 49], // point of the icon which will correspond to marker's location                        
+            popupAnchor:  [0, -50] // point from which the popup should open relative to the iconAnchor    
+        });*/
+
         window.PosMarker[TargetAsset.IMEI] = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: Protocol.MarkerIcon[0]}); 
         window.PosMarker[TargetAsset.IMEI].setLatLng([asset.posInfo.lat, asset.posInfo.lng]);    
         var speed = 0;
@@ -1346,6 +1349,8 @@ function loadPageTrack() {
                 //Speed: speed,                    
                 Address: LANGUAGE.COM_MSG08,
                 DirLink: API_ROUTE+latlng.lat+','+latlng.lng,
+                Lat: latlng.lat,
+                Lng: latlng.lng,
             }
         });
         
@@ -1358,17 +1363,19 @@ function loadPageTrack() {
 }
 
 function loadUserLocationPage(){
-    //var myPosition = getMyPosition();   
+    var myPosition = getMyPosition();   
 
-    getMyPosition();   
+    if (myPosition && parseFloat(myPosition.lat) !== 0 && parseFloat(myPosition.lng) !== 0) {   
 
-    //if (myPosition && parseFloat(myPosition.lat) !== 0 && parseFloat(myPosition.lng) !== 0) {   
+       /* var marker = L.icon({
+            iconUrl: 'resources/images/marker.svg',                       
+            iconSize:     [50, 50], // size of the icon                        
+            iconAnchor:   [25, 49], // point of the icon which will correspond to marker's location                        
+            popupAnchor:  [0, -50] // point from which the popup should open relative to the iconAnchor    
+        });   */
 
-        
-
-        //window.PosMarker.ME = L.marker([myPosition.lat, myPosition.lng], {icon: marker}); 
-        //window.PosMarker.ME.setLatLng([myPosition.lat, myPosition.lng]);   
-
+        window.PosMarker.ME = L.marker([myPosition.lat, myPosition.lng], {icon: Protocol.MarkerIcon[0]}); 
+        window.PosMarker.ME.setLatLng([myPosition.lat, myPosition.lng]);    
         //var speed = 0;
         //var mileage = '-';
         //if (typeof asset.Unit !== "undefined" && typeof asset.posInfo.speed !== "undefined") {
@@ -1396,38 +1403,60 @@ function loadUserLocationPage(){
             }
         });        
 
-        //addressFromLatLng(myPosition);  
+        addressFromLatLng(myPosition);  
 
-    /*}else{
+    }else{
         App.alert(LANGUAGE.COM_MSG18);
-    }*/
+    }
+}
+
+function processSVData(data, status) {
+    var SVButton = $$(document).find('.pano_button');
+    var parrent = SVButton.closest('.pano_button_wrapper');
+    
+    if (SVButton) {
+        if (status === 'OK') {
+            parrent.removeClass('disabled');
+        } else {
+            parrent.addClass('disabled');
+            console.log('Street View data not found for this location.');
+        }
+    }        
+}
+
+function showStreetView(params){ 
+    var dynamicPopup = '<div class="popup">'+
+                              '<div class="float_button_wrapper back_button_wrapper close-popup"><i class="f7-icons">close</i></div>'+
+                              '<div class="pano_map">'+
+                                '<div id="pano" class="pano" ></div>'+                        
+                              '</div>'+
+                            '</div>';            
+    App.popup(dynamicPopup);
+
+    var panoramaOptions = {
+            position: new google.maps.LatLng(params.lat, params.lng),
+            pov: {
+                heading: 0,
+                pitch: 0
+            },
+            linksControl: false,
+            panControl: false,
+            enableCloseButton: false,
+            addressControl: false
+    };
+    var panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'),panoramaOptions);      
 }
 
 
-function showMap(params){ 
-    var latlng = [-32.1388548,136.198141]; 
-    if (params && params.user) {
-        if (localStorage.tracker_lat && localStorage.tracker_lng) {
-            latlng = [localStorage.tracker_lat,localStorage.tracker_lng];             
-        }
-        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 8 }); 
-        if (localStorage.tracker_lat && localStorage.tracker_lng) {
-            window.PosMarker.ME.addTo(MapTrack); 
-        }
-        
-       
-        //window.PosMarker.ME.addTo(MapTrack);   
-    }else{
-        var asset = TargetAsset.IMEI;   
-        latlng = [POSINFOASSETLIST[asset].posInfo.lat, POSINFOASSETLIST[asset].posInfo.lng];
-        MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 15 }); 
+function showMap(){    
+    var asset = TargetAsset.IMEI;   
+    var latlng = [POSINFOASSETLIST[asset].posInfo.lat, POSINFOASSETLIST[asset].posInfo.lng];
+    MapTrack = Protocol.Helper.createMap({ target: 'map', latLng: latlng, zoom: 15 });        
+    window.PosMarker[TargetAsset.IMEI].addTo(MapTrack); 
 
-        
-        window.PosMarker[TargetAsset.IMEI].addTo(MapTrack);   
-
-        
-    }
-        
+    if (!StreetViewService) {
+        StreetViewService = new google.maps.StreetViewService();
+    }  
 }
 function checkMapExisting(){
     if ($$('#map')) {
@@ -1478,39 +1507,63 @@ function setAssetList(list){
     //console.log(ary);
 }
 
+function updateAssetList(asset){
+    var list = getAssetList();    
+    if (!list[asset.IMEI]) {
+        list[asset.IMEI] = {};
+    }
+    if (!POSINFOASSETLIST[asset.IMEI]) {
+        POSINFOASSETLIST[asset.IMEI] = {};
+    }
+       
+    POSINFOASSETLIST[asset.IMEI].IMEI = list[asset.IMEI].IMEI = asset.IMEI;
+    POSINFOASSETLIST[asset.IMEI].Name = list[asset.IMEI].Name = asset.Name;
+    POSINFOASSETLIST[asset.IMEI].TagName = list[asset.IMEI].TagName = asset.Tag;
+    POSINFOASSETLIST[asset.IMEI].Unit = list[asset.IMEI].Unit = asset.Unit;
+    POSINFOASSETLIST[asset.IMEI].InitMileage = list[asset.IMEI].InitMileage = asset.Mileage;
+    POSINFOASSETLIST[asset.IMEI].InitAcconHours = list[asset.IMEI].InitAcconHours = asset.Runtime;
+    POSINFOASSETLIST[asset.IMEI].Describe1 = list[asset.IMEI].Describe1 = asset.Describe1;
+    POSINFOASSETLIST[asset.IMEI].Describe2 = list[asset.IMEI].Describe2 = asset.Describe2;
+    POSINFOASSETLIST[asset.IMEI].Describe3 = list[asset.IMEI].Describe3 = asset.Describe3;
+    POSINFOASSETLIST[asset.IMEI].Describe4 = list[asset.IMEI].Describe4 = asset.Describe4; 
+    if (asset.Icon) {
+        POSINFOASSETLIST[asset.IMEI].Icon = list[asset.IMEI].Icon = asset.Icon +'?'+ new Date().getTime();
+    }
+    
+    localStorage.setItem("COM.QUIKTRAK.PHONETRACK.ASSETLIST", JSON.stringify(list));
+}
+
 function setAssetListPosInfo(listObj){    
     var userInfo = getUserinfo();   
 
     var url = API_URL.URL_GET_ALL_POSITIONS.format(userInfo.MinorToken); 
-    JSONrequest(url, function(result){   
+    JSON.request(url, function(result){  
+            App.hidePreloader();   
             console.log(result);                       
             if (result.MajorCode == '000') {
                 var data = result.Data;    
 
-                if(data && data.length > 1){
+                if(data && data.length > 0){
                     $.each( data, function( key, value ) {  
                         var posData = value;
                         var imei = posData[1];
                         var protocolClass = posData[2];
-                        var deviceInfo = listObj[imei];               
+                        var deviceInfo = listObj[imei];            
+                        console.log(deviceInfo);  
                         
                         POSINFOASSETLIST[imei] = Protocol.ClassManager.get(protocolClass, deviceInfo);
                         POSINFOASSETLIST[imei].initPosInfo(posData); 
                         
                     });
-                }
-                    
-                init_AssetList(); 
-                initSearchbar(); 
-                //console.log(POSINFOASSETLIST);
-
-                App.hidePreloader();               
-            } else if(result.MajorCode == '100' && result.MinorCode == '1004'){
-                init_AssetList(); 
-                initSearchbar(); 
+                }              
+                
+                console.log(POSINFOASSETLIST);
+                             
             } else{
                 console.log(result);
             }
+            init_AssetList(); 
+            initSearchbar(); 
         },
         function(){ }
     ); 
@@ -1540,7 +1593,10 @@ function init_AssetList() {
         virtualAssetList.replaceAllItems(newAssetlist);       
         
         setTimeout(function(){
-            var updateAssetsPosInfoTimer = setInterval(function(){
+            if (updateAssetsPosInfoTimer) {
+                clearInterval(updateAssetsPosInfoTimer);
+            }
+            updateAssetsPosInfoTimer = setInterval(function(){
                 updateAssetsPosInfo();
             }, 10000);
         }, 10000);        
@@ -1580,7 +1636,7 @@ function getAssetList(){
 function updateAssetsPosInfo(){    
     var userInfo = getUserinfo();  
     var url = API_URL.URL_GET_ALL_POSITIONS.format(userInfo.MinorToken); 
-    JSONrequest(url, function(result){ 
+    JSON.request(url, function(result){ 
             //console.log(result);                     
             if (result.MajorCode == '000') {
                 var data = result.Data;  
@@ -1589,8 +1645,11 @@ function updateAssetsPosInfo(){
                 if (data){
                     $.each( data, function( key, value ) {  
                         posData = value;
-                        imei = posData[1];                    
-                        POSINFOASSETLIST[imei].initPosInfo(posData);                    
+                        imei = posData[1];  
+                        if (POSINFOASSETLIST && POSINFOASSETLIST[imei]) {
+                            POSINFOASSETLIST[imei].initPosInfo(posData);      
+                        }                  
+                                      
                     }); 
                     //updateAssetsListStats();
                 }                                
@@ -1606,9 +1665,9 @@ function updateAssetData(parameters){
 
     var container = $$('body');
     if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
-    App.showProgressbar(container);
+    App.showProgressbar(container, 'gray');
 
-    JSONrequest(url, function(result){ 
+    JSON.request(url, function(result){ 
             //console.log(result);                     
             if (result.MajorCode == '000') {
                 var data = result.Data;  
@@ -1634,6 +1693,22 @@ function updateAssetData(parameters){
     ); 
 }
 
+function deleteAsset(IMEI){
+    if (IMEI) {
+        var data = {
+            IMEI : IMEI,
+        }
+        App.showPreloader();
+        JSON.request(API_URL.URL_DEACTIVATE, data, function(result){
+                console.log(result);
+            },
+            function(){ 
+                App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02);
+            }
+        );
+    }
+}
+
 function updateMarkerPositionTrack(data){
         var asset = POSINFOASSETLIST[TargetAsset.IMEI];
         
@@ -1652,7 +1727,11 @@ function updateMarkerPositionTrack(data){
             if (data.routeButton) {
                 data.routeButton.attr('href',API_ROUTE+latlng.lat+','+latlng.lng);
             }
-           
+            if (data.panoButton) {
+                data.panoButton.data('lat',latlng.lat);
+                data.panoButton.data('lng',latlng.lng);
+            }
+
             Protocol.Helper.getAddressByGeocoder(latlng,function(address){
                 data.posAddress.html(address);
             });
@@ -1718,7 +1797,7 @@ function getAssetImg(params, imgFor){
         var url = API_URL.URL_GET_NEW_NOTIFICATIONS.format(MinorToken,deviceToken); 
         notificationChecked = 0;
 
-        JSONrequest(url, function(result){
+        JSON.request(url, function(result){
                 App.hideProgressbar();            
                 notificationChecked = 1;
                 if(window.plus) {
@@ -1934,11 +2013,26 @@ function getImage() {
         cmr.captureImage( function (p) {
             plus.io.resolveLocalFileSystemURL( p, function ( entry ) {    
                 var localurl = entry.toLocalURL();//
-                GetBase64Code(localurl);
+                //alert(JSON.stringify(localurl));
+                //GetBase64Code(localurl);
+                toDataURLBase64(
+                    localurl,
+                    function(dataUrl) {
+                        //alert(dataUrl);
+
+                        mainView.router.load({
+                            url: 'resources/templates/asset.edit.photo.html',
+                            context: {
+                                imgSrc: dataUrl
+                            }
+                        });
+                    }
+                );
             });
         });
     }else{
         console.log('Plus not found');
+        
     }
         
 }
@@ -1946,18 +2040,38 @@ function getImage() {
 function galleryImgs(){
     if(window.plus){
         plus.gallery.pick( function(e){
-            GetBase64Code(e.files[0]);
+            //alert(JSON.stringify(e.files[0]));
+
+            //GetBase64Code(e.files[0]);
+
+            toDataURLBase64(
+                e.files[0],
+                function(dataUrl) {
+                    //alert(dataUrl);
+                    mainView.router.load({
+                        url: 'resources/templates/asset.edit.photo.html',
+                        context: {
+                            imgSrc: dataUrl
+                        }
+                    });
+                }
+            );
+
         }, function ( e ) {
             //outSet( "CANCEL SELECT" );
+
+            //alert('canceled');
+            //alert(JSON.stringify(e));
         },{filter:"image",multiple:true, maximum:1});
     }else{
-        console.log('Plus not found');
+        console.log('Plus not found');        
     }
         
 }
 
 function GetBase64Code(path) //image path
 {
+    alert(path);
     var bitmap = new plus.nativeObj.Bitmap("test");
     // load image
     bitmap.load(path,function(){
@@ -1970,9 +2084,46 @@ function GetBase64Code(path) //image path
             }
         });
        
-        //console.log('IMAGEЈє'+base4);
+        alert('IMAGEЈ'+base4);
     },function(e){
-        //alert('ERRORЈє'+JSON.stringify(e));
+        alert('ERRORЈ'+JSON.stringify(e));
     });
+}
+
+/*function toDataURLBase64(src, callback, outputFormat) {
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function() {
+        var canvas = document.createElement('CANVAS');
+        var ctx = canvas.getContext('2d');
+        var dataURL;
+        canvas.height = this.naturalHeight;
+        canvas.width = this.naturalWidth;
+        ctx.drawImage(this, 0, 0);
+        dataURL = canvas.toDataURL(outputFormat);
+        callback(dataURL);
+    };
+    img.src = src;
+    if (img.complete || img.complete === undefined) {
+      img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+      img.src = src;
+    }
+}*/
+
+
+
+
+function toDataURLBase64(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      callback(reader.result);
+    }
+    reader.readAsDataURL(xhr.response);
+  };
+  xhr.open('GET', url);
+  xhr.responseType = 'blob';
+  xhr.send();
 }
 

@@ -45,7 +45,7 @@ function guid() {
 var inBrowser = 0;
 var notificationChecked = 0;
 var imeiTimer = 0;
-
+var bgGeo;
 
 if( navigator.userAgent.match(/Windows/i) ){    
     inBrowser = 1;
@@ -73,7 +73,7 @@ function onDeviceReady(){
         } 
     }
 
-    plus.key.addEventListener("backbutton", backFix, false);      
+    document.addEventListener("backbutton", backFix, false); 
     //document.addEventListener("background", onAppBackground, false);
     //document.addEventListener("foreground", onAppForeground, false);    
     //document.addEventListener("resume", onAppReume, false);
@@ -90,7 +90,7 @@ function onDeviceReady(){
 
 function sutupGeolocationPlugin(){
     // 1.  Listen to events
-      var bgGeo = window.BackgroundGeolocation;
+    bgGeo = window.BackgroundGeolocation;
      
     bgGeo.onLocation(function(location) {
         console.log('[location] -', location);

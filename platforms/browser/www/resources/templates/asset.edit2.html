@@ -1,0 +1,116 @@
+<div class="page bg-color-page page_asset_add_edit" data-page="asset.edit">
+	<div class="navbar  bg-dealer">
+        <div class="navbar-inner">
+            <div class="left">
+                <a href="#" class="back link "> <i class="f7-icons icon-arrow-back"></i></a>
+            </div>
+            <div class="left navbar_title">{{@global.LANGUAGE.HOME_MSG04}}</div>     
+            <div class="right">
+                <a href="#" class="link saveAssetEdit" ><i class="f7-icons icon-apply"></i></a>
+            </div>       
+        </div>
+    </div>
+    
+	<div class="page-content " >
+        <div class="profile_header bg-dealer">
+            <div class="asset_img">
+                <img src="{{UserImgSrc}}" alt="">
+                <!-- <div class="user_name">{{FirstName}} {{LastName}}</div> -->
+            </div>
+        
+        </div>
+        <div class="list-block media-list no-hairlines mt-0">           
+            <input type="hidden" name="Unit" value="{{Unit}}">
+            <input type="hidden" name="Milage" value="{{Milage}}">
+            <input type="hidden" name="Runtime" value="{{Runtime}}">          
+            <ul>    
+                <!-- <li class="item-divider">IMEI: {{IMEI}} ({{PRDTName}})</li>         -->
+                
+                <li>
+                    <div class="item-content border_bottom">
+                        <div class="item-media">
+                            <i class="f7-icons icon-asset-name color-dealer"></i>
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title label ">{{@global.LANGUAGE.ASSET_EDIT_MSG12}}</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG12}}" name="Name" value="{{Name}}">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"><i class="f7-icons icon-name color-dealer"></i></div>
+                        <div class="item-inner">                            
+                            <div class="item-title label ">{{@global.LANGUAGE.ASSET_EDIT_MSG13}}</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG13}}" name="Describe3" value="{{Describe3}}"> <!-- first name --> 
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content border_bottom">
+                        <div class="item-media"></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">{{@global.LANGUAGE.ASSET_EDIT_MSG14}}</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG14}}" name="Describe4" value="{{Describe4}}" class=""> <!-- last name -->
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content border_bottom">
+                        <div class="item-media"><i class="f7-icons icon-email color-dealer"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">{{@global.LANGUAGE.ASSET_EDIT_MSG15}}</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG15}}" name="Describe2" value="{{Describe2}}"> <!-- email -->
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"><i class="f7-icons icon-mobile-phone color-dealer"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">{{@global.LANGUAGE.ASSET_EDIT_MSG16}}</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG16}}" name="Tag" value="{{Tag}}"> <!-- mobile -->
+                            </div>
+                        </div>
+                    </div>
+                </li>                
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">{{@global.LANGUAGE.ASSET_EDIT_MSG17}}</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG17}}" name="Describe1" value="{{Describe1}}"> <!-- make -->
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"><i class="f7-icons icon-imei color-dealer"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title label ">{{@global.LANGUAGE.ASSET_EDIT_MSG18}}</div>
+                            <div class="item-input">
+                                <input type="text" placeholder="{{@global.LANGUAGE.ASSET_EDIT_MSG18}}" name="IMEI" readonly value="{{IMEI}}">
+                            </div>
+                        </div>
+                    </div>
+                </li> 
+                
+                
+                    
+                        
+            </ul>
+        </div>
+    </div>
+</div>
+
