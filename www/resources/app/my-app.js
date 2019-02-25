@@ -85,60 +85,64 @@ function onDeviceReady(){
 
     
     sutupGeolocationPlugin();
+
+
+    function sutupGeolocationPlugin(){
+        // 1.  Listen to events
+        bgGeo = window.BackgroundGeolocation;
+       // alert(JSON.stringify(window.BackgroundGeolocation) );
+         
+        bgGeo.onLocation(function(location) {
+            console.log('[location] -', location);
+        });
+         
+        bgGeo.onMotionChange(function(event) {
+            console.log('[motionchange] -', event.isMoving, event.location);
+        });
+         
+        bgGeo.onHttp(function(response) {
+            console.log('[http] - ', response.success, response.status, response.responseText);
+        });
+         
+        bgGeo.onProviderChange(function(event) {
+            console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
+        });
+         
+          // 2. Execute #ready method:
+        bgGeo.ready({
+            reset: true,
+            debug: true,
+            logLevel: bgGeo.LOG_LEVEL_VERBOSE,
+            desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
+            distanceFilter: 10,
+            url: 'http://sinopacificukraine.com/test/prestart/locations.php',
+            autoSync: true,
+            stopOnTerminate: false,
+            startOnBoot: true
+        }, function(state) {    // <-- Current state provided to #configure callback
+            // 3.  Start tracking
+            console.log('BackgroundGeolocation is configured and ready to use');
+            alert('BackgroundGeolocation is configured and ready to use');
+            if (!state.enabled) {
+                bgGeo.start().then(function() {
+                    alert('BackgroundGeolocation tracking started');
+                    console.log('- BackgroundGeolocation tracking started');
+                });
+            }
+        });
+         
+          // NOTE:  Do NOT execute any API methods which will access location-services
+          // until the callback to #ready executes!
+          //
+          // For example, DO NOT do this here:
+          //
+          // bgGeo.getCurrentPosition();   // <-- NO!
+          // bgGeo.start();                // <-- NO!
+    }
 }
 
 
-function sutupGeolocationPlugin(){
-    // 1.  Listen to events
-    bgGeo = window.BackgroundGeolocation;
-     
-    bgGeo.onLocation(function(location) {
-        console.log('[location] -', location);
-    });
-     
-    bgGeo.onMotionChange(function(event) {
-        console.log('[motionchange] -', event.isMoving, event.location);
-    });
-     
-    bgGeo.onHttp(function(response) {
-        console.log('[http] - ', response.success, response.status, response.responseText);
-    });
-     
-    bgGeo.onProviderChange(function(event) {
-        console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
-    });
-     
-      // 2. Execute #ready method:
-    bgGeo.ready({
-        reset: true,
-        debug: true,
-        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
-        desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 10,
-        url: 'http://sinopacificukraine.com/test/prestart/locations.php',
-        autoSync: true,
-        stopOnTerminate: false,
-        startOnBoot: true
-    }, function(state) {    // <-- Current state provided to #configure callback
-        // 3.  Start tracking
-        console.log('BackgroundGeolocation is configured and ready to use');
-        alert('BackgroundGeolocation is configured and ready to use');
-        if (!state.enabled) {
-            bgGeo.start().then(function() {
-                alert('BackgroundGeolocation tracking started');
-                console.log('- BackgroundGeolocation tracking started');
-            });
-        }
-    });
-     
-      // NOTE:  Do NOT execute any API methods which will access location-services
-      // until the callback to #ready executes!
-      //
-      // For example, DO NOT do this here:
-      //
-      // bgGeo.getCurrentPosition();   // <-- NO!
-      // bgGeo.start();                // <-- NO!
-}
+
 
 function backFix(event){
     var page=App.getCurrentView().activePage;        
