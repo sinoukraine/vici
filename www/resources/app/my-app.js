@@ -89,31 +89,32 @@ function onDeviceReady(){
 
     //function sutupGeolocationPlugin(){
         // 1.  Listen to events
-        bgGeo = window.BackgroundGeolocation;
-       // alert(JSON.stringify(window.BackgroundGeolocation) );
+        bgGeo = BackgroundGeolocation;
+
+        alert(JSON.stringify(BackgroundGeolocation) );
          
-        bgGeo.on('location', function(location) {
+        BackgroundGeolocation.on('location', function(location) {
             console.log('[location] -', location);
         });
          
-        bgGeo.on('motionchange', function(event) {
+        BackgroundGeolocation.on('motionchange', function(event) {
             console.log('[motionchange] -', event.isMoving, event.location);
         });
          
-        /*bgGeo.onHttp(function(response) {
+        /*BackgroundGeolocation.onHttp(function(response) {
             console.log('[http] - ', response.success, response.status, response.responseText);
         });
          
-        bgGeo.onProviderChange(function(event) {
+        BackgroundGeolocation.onProviderChange(function(event) {
             console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
         });*/
          
           // 2. Execute #ready method:
-        bgGeo.ready({
+        BackgroundGeolocation.ready({
             reset: true,
             debug: true,
-            logLevel: bgGeo.LOG_LEVEL_VERBOSE,
-            desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
+            logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+            desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
             distanceFilter: 10,
             url: 'http://sinopacificukraine.com/test/prestart/locations.php',
             autoSync: true,
@@ -123,12 +124,12 @@ function onDeviceReady(){
             // 3.  Start tracking
             console.log('BackgroundGeolocation is configured and ready to use');
             alert('BackgroundGeolocation is configured and ready to use');
-            if (!state.enabled) {
-                bgGeo.start().then(function() {
+            /*if (!state.enabled) {
+                BackgroundGeolocation.start().then(function() {
                     alert('BackgroundGeolocation tracking started');
                     console.log('- BackgroundGeolocation tracking started');
                 });
-            }
+            }*/
         });
          
           // NOTE:  Do NOT execute any API methods which will access location-services
