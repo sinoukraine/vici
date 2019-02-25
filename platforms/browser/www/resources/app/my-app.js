@@ -84,29 +84,29 @@ function onDeviceReady(){
     //plus.push.addEventListener("click", onPushClick, false );
 
     
-    sutupGeolocationPlugin();
+    //sutupGeolocationPlugin();
 
 
-    function sutupGeolocationPlugin(){
+    //function sutupGeolocationPlugin(){
         // 1.  Listen to events
         bgGeo = window.BackgroundGeolocation;
        // alert(JSON.stringify(window.BackgroundGeolocation) );
          
-        bgGeo.onLocation(function(location) {
+        bgGeo.on('location', function(location) {
             console.log('[location] -', location);
         });
          
-        bgGeo.onMotionChange(function(event) {
+        bgGeo.on('motionchange', function(event) {
             console.log('[motionchange] -', event.isMoving, event.location);
         });
          
-        bgGeo.onHttp(function(response) {
+        /*bgGeo.onHttp(function(response) {
             console.log('[http] - ', response.success, response.status, response.responseText);
         });
          
         bgGeo.onProviderChange(function(event) {
             console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
-        });
+        });*/
          
           // 2. Execute #ready method:
         bgGeo.ready({
@@ -138,7 +138,7 @@ function onDeviceReady(){
           //
           // bgGeo.getCurrentPosition();   // <-- NO!
           // bgGeo.start();                // <-- NO!
-    }
+    //}
 }
 
 
