@@ -69,7 +69,7 @@
        <variable name="LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION" value="Background location-tracking is required" />
        <variable name="MOTION_USAGE_DESCRIPTION" value="Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving" />
     </plugin> -->
-    <plugin name="cordova-background-geolocation" source="npm">
+    <plugin name="cordova-background-geolocation-lt" spec="2.14.0" source="npm">
         <variable name="LICENSE" value="YOUR_LICENSE_KEY" />
         <variable name="GOOGLE_API_VERSION" value="16.0.0" />
         <variable name="APPCOMPAT_VERSION" value="27.1.1" />
