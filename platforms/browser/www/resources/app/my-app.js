@@ -55,7 +55,7 @@ document.addEventListener("deviceready", onDeviceReady, false );
 
 //function onPlusReady(){   
 function onDeviceReady(){ 
-   
+   alert('onDeviceReady');
      //fix app images and text size
     /*if (window.MobileAccessibility) {
         window.MobileAccessibility.usePreferredTextZoom(false);    
