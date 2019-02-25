@@ -55,15 +55,15 @@ document.addEventListener("deviceready", onDeviceReady, false );
 
 //function onPlusReady(){   
 function onDeviceReady(){ 
-   alert('onDeviceReady');
+   
      //fix app images and text size
-    /*if (window.MobileAccessibility) {
+    if (window.MobileAccessibility) {
         window.MobileAccessibility.usePreferredTextZoom(false);    
     }
     if (StatusBar) {
         StatusBar.styleDefault();
-    } */
-/*
+    } 
+
     if (!inBrowser) {
         if(getUserinfo().MinorToken) {
             login();    
@@ -72,8 +72,8 @@ function onDeviceReady(){
             logout();
         } 
     }
-*/
-    //document.addEventListener("backbutton", backFix, false); 
+
+    document.addEventListener("backbutton", backFix, false); 
     //document.addEventListener("background", onAppBackground, false);
     //document.addEventListener("foreground", onAppForeground, false);    
     //document.addEventListener("resume", onAppReume, false);
@@ -84,66 +84,61 @@ function onDeviceReady(){
     //plus.push.addEventListener("click", onPushClick, false );
 
     
-    //sutupGeolocationPlugin();
-
-
-    //function sutupGeolocationPlugin(){
-        // 1.  Listen to events
-        //bgGeo = BackgroundGeolocation;
-
-        alert(JSON.stringify(BackgroundGeolocation) );
-         
-        BackgroundGeolocation.on('location', function(location) {
-            console.log('[location] -', location);
-        });
-         
-        BackgroundGeolocation.on('motionchange', function(event) {
-            console.log('[motionchange] -', event.isMoving, event.location);
-        });
-         
-        /*BackgroundGeolocation.onHttp(function(response) {
-            console.log('[http] - ', response.success, response.status, response.responseText);
-        });
-         
-        BackgroundGeolocation.onProviderChange(function(event) {
-            console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
-        });*/
-         
-          // 2. Execute #ready method:
-        BackgroundGeolocation.ready({
-            reset: true,
-            debug: true,
-            logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-            desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-            distanceFilter: 10,
-            url: 'http://sinopacificukraine.com/test/prestart/locations.php',
-            autoSync: true,
-            stopOnTerminate: false,
-            startOnBoot: true
-        }, function(state) {    // <-- Current state provided to #configure callback
-            // 3.  Start tracking
-            console.log('BackgroundGeolocation is configured and ready to use');
-            alert('BackgroundGeolocation is configured and ready to use');
-            /*if (!state.enabled) {
-                BackgroundGeolocation.start().then(function() {
-                    alert('BackgroundGeolocation tracking started');
-                    console.log('- BackgroundGeolocation tracking started');
-                });
-            }*/
-        });
-         
-          // NOTE:  Do NOT execute any API methods which will access location-services
-          // until the callback to #ready executes!
-          //
-          // For example, DO NOT do this here:
-          //
-          // bgGeo.getCurrentPosition();   // <-- NO!
-          // bgGeo.start();                // <-- NO!
-    //}
+    sutupGeolocationPlugin();
 }
 
 
-
+function sutupGeolocationPlugin(){
+    // 1.  Listen to events
+    bgGeo = window.BackgroundGeolocation;
+     
+    bgGeo.on('location', function(location) {
+        console.log('[location] -', location);
+    });
+     
+    bgGeo.on('motionchange', function(event) {
+        console.log('[motionchange] -', event.isMoving, event.location);
+    });
+     
+    /*bgGeo.onHttp(function(response) {
+        console.log('[http] - ', response.success, response.status, response.responseText);
+    });
+     
+    bgGeo.onProviderChange(function(event) {
+        console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
+    });*/
+     
+      // 2. Execute #ready method:
+    bgGeo.ready({
+        reset: true,
+        debug: true,
+        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
+        desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 10,
+        url: 'http://sinopacificukraine.com/test/prestart/locations.php',
+        autoSync: true,
+        stopOnTerminate: false,
+        startOnBoot: true
+    }, function(state) {    // <-- Current state provided to #configure callback
+        // 3.  Start tracking
+        console.log('BackgroundGeolocation is configured and ready to use');
+        alert('BackgroundGeolocation is configured and ready to use');
+        if (!state.enabled) {
+            bgGeo.start().then(function() {
+                alert('BackgroundGeolocation tracking started');
+                console.log('- BackgroundGeolocation tracking started');
+            });
+        }
+    });
+     
+      // NOTE:  Do NOT execute any API methods which will access location-services
+      // until the callback to #ready executes!
+      //
+      // For example, DO NOT do this here:
+      //
+      // bgGeo.getCurrentPosition();   // <-- NO!
+      // bgGeo.start();                // <-- NO!
+}
 
 function backFix(event){
     var page=App.getCurrentView().activePage;        

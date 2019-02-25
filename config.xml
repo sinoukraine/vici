@@ -74,7 +74,7 @@
         <variable name="LICENSE" value="YOUR_LICENSE_KEY" />
         <variable name="GOOGLE_API_VERSION" value="16.0.0" />
         <variable name="APPCOMPAT_VERSION" value="27.1.1" />
-        <variable name="BACKGROUND_MODE_LOCATION" value="&lt;string&gt;location&lt;/string&gt;" />
+        <!-- <variable name="BACKGROUND_MODE_LOCATION" value="&lt;string&gt;location&lt;/string&gt;" /> -->
         <variable name="LOCATION_ALWAYS_AND_WHEN_IN_USE_USAGE_DESCRIPTION" value="Always use is required for constant background location-tracking" />
         <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="Background location-tracking is required" />
         <variable name="LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION" value="Background location-tracking is required" />
