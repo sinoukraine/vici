@@ -73,7 +73,7 @@ function onDeviceReady(){
         } 
     }
 */
-    document.addEventListener("backbutton", backFix, false); 
+    //document.addEventListener("backbutton", backFix, false); 
     //document.addEventListener("background", onAppBackground, false);
     //document.addEventListener("foreground", onAppForeground, false);    
     //document.addEventListener("resume", onAppReume, false);
@@ -89,7 +89,7 @@ function onDeviceReady(){
 
     //function sutupGeolocationPlugin(){
         // 1.  Listen to events
-        bgGeo = BackgroundGeolocation;
+        //bgGeo = BackgroundGeolocation;
 
         alert(JSON.stringify(BackgroundGeolocation) );
          
