@@ -126,8 +126,8 @@ function sutupGeolocationPlugin(){
         // 3.  Start tracking
         console.log('BackgroundGeolocation is configured and ready to use');
         //alert('BackgroundGeolocation is configured and ready to use');
-        alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
-        alert(JSON.stringify(state));
+        App.alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
+        //alert(JSON.stringify(state));
         if (!state.enabled) {
             /*bgGeo.start().then(function() {
                 alert('BackgroundGeolocation tracking started');
@@ -369,13 +369,13 @@ $$(document).on('submit', '.login-form', function (e) {
 
 $$(document).on('click', '.bTrackingStart', function(){
     bgGeo.start().then(function() {
-        alert('BackgroundGeolocation tracking started');
+        App.alert('BackgroundGeolocation tracking started');
         console.log('- BackgroundGeolocation tracking started');
     });
 });
 $$(document).on('click', '.bTrackingStop', function(){
     bgGeo.stop().then(function() {
-        alert('BackgroundGeolocation tracking stopped');
+        App.alert('BackgroundGeolocation tracking stopped');
         console.log('- BackgroundGeolocation tracking started');
     });
 });
