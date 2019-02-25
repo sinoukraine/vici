@@ -115,14 +115,17 @@ function sutupGeolocationPlugin(){
         logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
         distanceFilter: 10,
-        url: 'http://sinopacificukraine.com/test/prestart/locations.php',
+        url: 'http://sinopacificukraine.com/test/prestart/locations.php',        
         autoSync: true,
         stopOnTerminate: false,
-        startOnBoot: true
+        startOnBoot: true,
+        params: {
+            "user_id": 123
+        },
     }, function(state) {    // <-- Current state provided to #configure callback
         // 3.  Start tracking
         console.log('BackgroundGeolocation is configured and ready to use');
-        alert('BackgroundGeolocation is configured and ready to use');
+        //alert('BackgroundGeolocation is configured and ready to use');
         if (!state.enabled) {
             bgGeo.start().then(function() {
                 alert('BackgroundGeolocation tracking started');
