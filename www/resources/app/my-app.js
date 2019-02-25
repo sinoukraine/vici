@@ -122,6 +122,7 @@ function sutupGeolocationPlugin(){
     }, function(state) {    // <-- Current state provided to #configure callback
         // 3.  Start tracking
         console.log('BackgroundGeolocation is configured and ready to use');
+        alert('BackgroundGeolocation is configured and ready to use');
         if (!state.enabled) {
             bgGeo.start().then(function() {
                 alert('BackgroundGeolocation tracking started');
