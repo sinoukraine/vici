@@ -126,11 +126,13 @@ function sutupGeolocationPlugin(){
         // 3.  Start tracking
         console.log('BackgroundGeolocation is configured and ready to use');
         //alert('BackgroundGeolocation is configured and ready to use');
+        alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
+        alert(JSON.stringify(state));
         if (!state.enabled) {
-            bgGeo.start().then(function() {
+            /*bgGeo.start().then(function() {
                 alert('BackgroundGeolocation tracking started');
                 console.log('- BackgroundGeolocation tracking started');
-            });
+            });*/
         }
     });
      
@@ -364,6 +366,20 @@ $$(document).on('submit', '.login-form', function (e) {
     login();
     return false;
 });
+
+$$(document).on('click', '.bTrackingStart', function(){
+    bgGeo.start().then(function() {
+        alert('BackgroundGeolocation tracking started');
+        console.log('- BackgroundGeolocation tracking started');
+    });
+});
+$$(document).on('click', '.bTrackingStop', function(){
+    bgGeo.stop().then(function() {
+        alert('BackgroundGeolocation tracking stopped');
+        console.log('- BackgroundGeolocation tracking started');
+    });
+});
+
 
 $$('body').on('change keyup input click', '.only_numbers', function(){
     if (this.value.match(/[^0-9]/g)) {
@@ -874,7 +890,7 @@ App.onPageInit('user.timing', function(page){
     if (dayOfWeekset && dayOfWeekset.indexOf(',') != -1) {
         dayOfWeekArr = dayOfWeekset.split(',');
     }else if(dayOfWeekset){
-    	dayOfWeekArr = [dayOfWeekset];
+        dayOfWeekArr = [dayOfWeekset];
     }
     if (dayOfWeekArr.length > 0) {
         $.each(dayOfWeekArr, function(i, v){

@@ -60,16 +60,7 @@
             <string>Need photo library access to save pictures there</string>
         </edit-config>
     </platform>
-    <!-- <plugin name="cordova-plugin-geolocation" source="npm" spec="4.0.1" /> -->
-    <!-- <plugin name="cordova-background-geolocation-lt" source="npm">
-       <variable name="LICENSE" value="" />
-       <variable name="GOOGLE_API_VERSION" value="15.0.1" />
-       <variable name="APPCOMPAT_VERSION" value="27.1.1" />
-       <variable name="LOCATION_ALWAYS_AND_WHEN_IN_USE_USAGE_DESCRIPTION" value="Always use is required for background location tracking" />
-       <variable name="LOCATION_ALWAYS_USAGE_DESCRIPTION" value="Background location-tracking is required" />
-       <variable name="LOCATION_WHEN_IN_USE_USAGE_DESCRIPTION" value="Background location-tracking is required" />
-       <variable name="MOTION_USAGE_DESCRIPTION" value="Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving" />
-    </plugin> -->
+    
     <plugin name="cordova-background-geolocation-lt" spec="2.14.2" source="npm">
         <variable name="LICENSE" value="YOUR_LICENSE_KEY" />
         <variable name="GOOGLE_API_VERSION" value="16.0.0" />
