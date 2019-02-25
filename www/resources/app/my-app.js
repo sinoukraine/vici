@@ -57,13 +57,13 @@ document.addEventListener("deviceready", onDeviceReady, false );
 function onDeviceReady(){ 
    
      //fix app images and text size
-    if (window.MobileAccessibility) {
+    /*if (window.MobileAccessibility) {
         window.MobileAccessibility.usePreferredTextZoom(false);    
     }
     if (StatusBar) {
         StatusBar.styleDefault();
-    } 
-
+    } */
+/*
     if (!inBrowser) {
         if(getUserinfo().MinorToken) {
             login();    
@@ -72,7 +72,7 @@ function onDeviceReady(){
             logout();
         } 
     }
-
+*/
     document.addEventListener("backbutton", backFix, false); 
     //document.addEventListener("background", onAppBackground, false);
     //document.addEventListener("foreground", onAppForeground, false);    
