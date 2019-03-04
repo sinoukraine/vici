@@ -47,7 +47,9 @@
     <plugin name="cordova-plugin-camera" source="npm" spec="4.0.3"  />
     <plugin spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" source="git" />
     
-    <plugin name="cordova-plugin-imei" source="npm" />
+    <plugin spec="https://github.com/hygieiasoft/cordova-plugin-uid" source="git" />
+    <!-- <plugin name="cordova-plugin-imei" source="npm" spec="0.0.1"/> -->
+    
    
     <platform name="ios">
         <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">

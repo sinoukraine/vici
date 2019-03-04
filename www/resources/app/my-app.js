@@ -382,26 +382,24 @@ $$(document).on('click', '.bTrackingStop', function(){
 $$(document).on('click', '.bTrackingStatus', function(){
     bgGeo.ready(
         {}, 
-        function(state) {    // <-- Current state provided to #configure callback
-       
-        if (state.enabled) {
-            App.alert('BackgroundGeolocation is: Tracking');
-        }else{
-            App.alert('BackgroundGeolocation is: Not Tracking');
+        function(state) {    // <-- Current state provided to #configure callback       
+            if (state.enabled) {
+                App.alert('Tracking enabled');
+            }else{
+                App.alert('Tracking disabled');
+            }
         }
-    });   
+    );   
 });
 
 
 $$(document).on('click', '.getIMEI', function(){
-    window.plugins.imei.get(
-        function(imei) {
-            App.alert("got imei: " + imei);
-        },
-        function() {
-            App.alert("error loading imei");
-        }
-    );
+    if (cordova.plugins.uid.IMEI) {
+        App.alert('Your Imei is: '+cordova.plugins.uid.IMEI);
+    }else{
+        App.alert('Can\'t get IMEI');
+    }
+    
 });
 
 
