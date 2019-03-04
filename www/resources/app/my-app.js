@@ -379,6 +379,31 @@ $$(document).on('click', '.bTrackingStop', function(){
         console.log('- BackgroundGeolocation tracking started');
     });
 });
+$$(document).on('click', '.bTrackingStatus', function(){
+    bgGeo.ready(
+        {}, 
+        function(state) {    // <-- Current state provided to #configure callback
+       
+        if (state.enabled) {
+            App.alert('BackgroundGeolocation is: Tracking');
+        }else{
+            App.alert('BackgroundGeolocation is: Not Tracking');
+        }
+    });   
+});
+
+
+$$(document).on('click', '.getIMEI', function(){
+    window.plugins.imei.get(
+        function(imei) {
+            App.alert("got imei: " + imei);
+        },
+        function() {
+            App.alert("error loading imei");
+        }
+    );
+});
+
 
 
 $$('body').on('change keyup input click', '.only_numbers', function(){
