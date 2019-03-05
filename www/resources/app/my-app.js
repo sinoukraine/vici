@@ -86,7 +86,7 @@ function onDeviceReady(){
     
     sutupGeolocationPlugin();
 
-    checkTelephonyPermissions();
+    //checkTelephonyPermissions();
 }
 
 function checkTelephonyPermissions(){
@@ -121,15 +121,13 @@ function getSimInfo(){
 				}else{
 					App.alert('Unable to get device IMEI');
 				}
-				
-
 			}else{
 				App.alert('Unable to get sim card list');
 			}						
 		}	
 
 		if (localStorage.tracker_imei) {
-			App.alert('localStorage.tracker_imei');
+			App.alert('Your IMEI is: '+localStorage.tracker_imei);
 		}	
 
 	}, function(err){
