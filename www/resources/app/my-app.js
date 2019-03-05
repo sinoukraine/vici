@@ -403,23 +403,41 @@ $$(document).on('click', '.getIMEI', function(){
 });
 
 $$(document).on('click', '.getSimInfo', function(){
-	window.plugins.sim.getSimInfo().then(
-	  	(info) => App.alert('Sim info: ', JSON.stringify(info) ),
-	  	(err) => App.alert('Unable to get sim info: ', JSON.stringify(err))
-	);
+	if (window.plugins.sim) {
+		window.plugins.sim.getSimInfo(function(info){
+			 App.alert('Sim info: ', JSON.stringify(info) );
+	    }, function(err){
+	    	App.alert('Unable to get sim info: ', JSON.stringify(err) );
+	    });	
+	}else{
+		App.alert('Sim Plugin not supported');
+	}
+		
 });
 
 $$(document).on('click', '.hasReadPermission', function(){
-	window.plugins.sim.hasReadPermission().then(
-	  	(info) => App.alert('Has permission:', JSON.stringify(info) )
-	);
+	if (window.plugins.sim) {
+		window.plugins.sim.hasReadPermission(function(info){
+			App.alert('Has permission:', JSON.stringify(info) );
+    	});	
+	}else{
+		App.alert('Sim Plugin not supported');
+	}
+	
+	
 });
 
 $$(document).on('click', '.requestReadPermission', function(){
-	window.plugins.sim.requestReadPermission().then(
-	  	() => App.alert('Permission granted'),
-	  	() => App.alert('Permission denied')
-	);
+	if (window.plugins.sim) {
+		window.plugins.sim.requestReadPermission(function(){
+			App.alert('Permission granted');
+	    }, function(){
+	    	App.alert('Permission denied');
+	    });	
+	}else{
+		App.alert('Sim Plugin not supported');
+	}
+			
 });
 	
 	 
