@@ -78,7 +78,9 @@ select{
 .bg-color-page{
 	/* background-color: #333; */
 }
-
+.modal-text{
+	word-break: break-all;
+}
 .bg-dealer{
 	background: #42B2AA !important;
 	background-image: -moz-linear-gradient( 180deg, rgb(66,178,170) 0%, rgb(86,193,188) 100%) !important;

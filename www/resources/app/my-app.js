@@ -413,7 +413,7 @@ $$(document).on('click', '.getSimInfo', function(){
 		window.plugins.sim.getSimInfo(function(info){
 			 App.alert('Sim info: ', JSON.stringify(info) );
 	    }, function(err){
-	    	App.alert('Unable to get sim info: ', JSON.stringify(err) );
+	    	App.alert('Unable to get sim info: '+ JSON.stringify(err) );
 	    });	
 	}else{
 		App.alert('Sim Plugin not supported');
@@ -424,7 +424,7 @@ $$(document).on('click', '.getSimInfo', function(){
 $$(document).on('click', '.hasReadPermission', function(){
 	if (window.plugins.sim) {
 		window.plugins.sim.hasReadPermission(function(info){
-			App.alert('Has permission:', JSON.stringify(info) );
+			App.alert('Has permission:'+ JSON.stringify(info) );
     	});	
 	}else{
 		App.alert('Sim Plugin not supported');
