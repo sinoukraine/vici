@@ -85,6 +85,56 @@ function onDeviceReady(){
 
     
     sutupGeolocationPlugin();
+
+    checkTelephonyPermissions();
+}
+
+function checkTelephonyPermissions(){
+	if (window.plugins.sim) {
+		window.plugins.sim.hasReadPermission(function(state){
+			if (!state) {
+				window.plugins.sim.requestReadPermission(function(){
+					//App.alert('Permission granted');
+					getSimInfo();	
+			    }, function(){
+			    	App.alert('Permission denied');
+			    });	
+			}else{
+				getSimInfo();				
+			}			
+    	});	
+	}else{
+		App.alert('Sim Plugin not supported');
+	}
+}
+
+function getSimInfo(){
+	window.plugins.sim.getSimInfo(function(info){					
+		if (info.deviceId) {
+			localStorage.tracker_imei = info.deviceId;
+		}else{
+			if (info.cards && info.cards.length) {
+				if (info.cards[0] && info.cards[0].deviceId) {
+					localStorage.tracker_imei = info.cards[0].deviceId;
+				}else if(info.cards[1] && info.cards[1].deviceId){
+					localStorage.tracker_imei = info.cards[1].deviceId;
+				}else{
+					App.alert('Unable to get device IMEI');
+				}
+				
+
+			}else{
+				App.alert('Unable to get sim card list');
+			}						
+		}	
+
+		if (localStorage.tracker_imei) {
+			App.alert('localStorage.tracker_imei');
+		}	
+
+	}, function(err){
+		App.alert('Unable to get sim info');
+	});	
 }
 
 
@@ -119,30 +169,25 @@ function sutupGeolocationPlugin(){
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
-        params: {
-            "user_id": 123
-        },
+        /*params: {
+            "IMEI": 123
+        },*/
     }, function(state) {    // <-- Current state provided to #configure callback
         // 3.  Start tracking
-        console.log('BackgroundGeolocation is configured and ready to use');
+        //console.log('BackgroundGeolocation is configured and ready to use');
         //alert('BackgroundGeolocation is configured and ready to use');
         App.alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
         //alert(JSON.stringify(state));
-        if (!state.enabled) {
-            /*bgGeo.start().then(function() {
+         /*if (!state.enabled) {
+           bgGeo.start().then(function() {
                 alert('BackgroundGeolocation tracking started');
                 console.log('- BackgroundGeolocation tracking started');
-            });*/
-        }
+            });
+        }*/
     });
-
-    
+ 
      
-    /*window.plugins.sim.getSimInfo(function(){
-
-    }, function(){
-
-    });*/
+    
 }
 
 function backFix(event){
@@ -394,21 +439,14 @@ $$(document).on('click', '.bTrackingStatus', function(){
 
 
 $$(document).on('click', '.getIMEI', function(){
-    /*if (cordova.plugins.uid.IMEI) {
-        App.alert('Your Imei is: '+cordova.plugins.uid.IMEI);
+    if (localStorage.tracker_imei) {
+        App.alert('Your Imei is: '+localStorage.tracker_imei);
     }else{
-        App.alert('Can\'t get IMEI');
-    }*/
-
-    if (window.plugins.uid) {
-    	App.alert(JSON.stringify(window.plugins.uid));
-    }else{
-    	App.alert('window.plugins.uid not supported');
-    }
-    
+        checkTelephonyPermissions();
+    }    
 });
 
-$$(document).on('click', '.getSimInfo', function(){
+/*$$(document).on('click', '.getSimInfo', function(){
 	if (window.plugins.sim) {
 		window.plugins.sim.getSimInfo(function(info){
 			 App.alert('Sim info: ', JSON.stringify(info) );
@@ -444,8 +482,10 @@ $$(document).on('click', '.requestReadPermission', function(){
 		App.alert('Sim Plugin not supported');
 	}
 			
-});
+});*/
 	
+
+
 	 
 	
 	 
