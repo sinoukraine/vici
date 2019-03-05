@@ -394,10 +394,16 @@ $$(document).on('click', '.bTrackingStatus', function(){
 
 
 $$(document).on('click', '.getIMEI', function(){
-    if (cordova.plugins.uid.IMEI) {
+    /*if (cordova.plugins.uid.IMEI) {
         App.alert('Your Imei is: '+cordova.plugins.uid.IMEI);
     }else{
         App.alert('Can\'t get IMEI');
+    }*/
+
+    if (window.plugins.uid) {
+    	App.alert(JSON.stringify(window.plugins.uid));
+    }else{
+    	App.alert('window.plugins.uid not supported');
     }
     
 });
