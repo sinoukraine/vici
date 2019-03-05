@@ -115,7 +115,7 @@ function sutupGeolocationPlugin(){
         logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
         distanceFilter: 10,
-        url: 'http://sinopacificukraine.com/test/prestart/locations.php',        
+        url: 'http://sinopacificukraine.com/test/phonetrack/locations.php',        
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
@@ -135,14 +135,14 @@ function sutupGeolocationPlugin(){
             });*/
         }
     });
+
+    
      
-      // NOTE:  Do NOT execute any API methods which will access location-services
-      // until the callback to #ready executes!
-      //
-      // For example, DO NOT do this here:
-      //
-      // bgGeo.getCurrentPosition();   // <-- NO!
-      // bgGeo.start();                // <-- NO!
+    /*window.plugins.sim.getSimInfo(function(){
+
+    }, function(){
+
+    });*/
 }
 
 function backFix(event){
@@ -402,7 +402,30 @@ $$(document).on('click', '.getIMEI', function(){
     
 });
 
+$$(document).on('click', '.getSimInfo', function(){
+	window.plugins.sim.getSimInfo().then(
+	  	(info) => App.alert('Sim info: ', JSON.stringify(info) ),
+	  	(err) => App.alert('Unable to get sim info: ', JSON.stringify(err))
+	);
+});
 
+$$(document).on('click', '.hasReadPermission', function(){
+	window.plugins.sim.hasReadPermission().then(
+	  	(info) => App.alert('Has permission:', JSON.stringify(info) )
+	);
+});
+
+$$(document).on('click', '.requestReadPermission', function(){
+	window.plugins.sim.requestReadPermission().then(
+	  	() => App.alert('Permission granted'),
+	  	() => App.alert('Permission denied')
+	);
+});
+	
+	 
+	
+	 
+	
 
 $$('body').on('change keyup input click', '.only_numbers', function(){
     if (this.value.match(/[^0-9]/g)) {
