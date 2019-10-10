@@ -187,9 +187,9 @@ function sutupGeolocationPlugin(){
 
 
     bgGeo.onHttp(response => {
-        alert( JSON.stringify(response.success) );
+        /*alert( JSON.stringify(response.success) );
         alert( JSON.stringify(response.status) );
-        alert( JSON.stringify(response.responseText) );
+        alert( JSON.stringify(response.responseText) );*/
         console.log('[http] response: ', response.success, response.status, response.responseText);
     });
 }
