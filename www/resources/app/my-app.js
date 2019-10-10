@@ -164,7 +164,7 @@ function sutupGeolocationPlugin(){
         logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
         distanceFilter: 10,
-        url: 'http://sinopacificukraine.com/test/phonetrack/locations.php',        
+        url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
@@ -186,8 +186,12 @@ function sutupGeolocationPlugin(){
     });
 
 
-     
-    
+    bgGeo.onHttp(response => {
+        alert( JSON.stringify(response.success) );
+        alert( JSON.stringify(response.status) );
+        alert( JSON.stringify(response.responseText) );
+        console.log('[http] response: ', response.success, response.status, response.responseText);
+    });
 }
 
 function backFix(event){
