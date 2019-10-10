@@ -116,8 +116,18 @@ function getSimInfo(){
 			if (info.cards && info.cards.length) {
 				if (info.cards[0] && info.cards[0].deviceId) {
 					localStorage.tracker_imei = info.cards[0].deviceId;
+					if (bgGeo){
+                        bgGeo.setConfig({
+                            params: {IMEI: localStorage.tracker_imei },
+                        })
+                    }
 				}else if(info.cards[1] && info.cards[1].deviceId){
 					localStorage.tracker_imei = info.cards[1].deviceId;
+                    if (bgGeo){
+                        bgGeo.setConfig({
+                            params: {IMEI: localStorage.tracker_imei },
+                        })
+                    }
 				}else{
 					App.alert('Unable to get device IMEI');
 				}
@@ -160,7 +170,7 @@ function sutupGeolocationPlugin(){
       // 2. Execute #ready method:
     bgGeo.ready({
         reset: true,
-        debug: true,
+        debug: false,
         logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
         distanceFilter: 10,
@@ -168,9 +178,9 @@ function sutupGeolocationPlugin(){
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
-        /*params: {
-            "IMEI": 123
-        },*/
+        params: {
+            IMEI: localStorage.tracker_imei ? localStorage.tracker_imei : '',
+        },
     }, function(state) {    // <-- Current state provided to #configure callback
         // 3.  Start tracking
         //console.log('BackgroundGeolocation is configured and ready to use');
