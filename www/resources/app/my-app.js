@@ -141,13 +141,13 @@ function sutupGeolocationPlugin(){
     // 1.  Listen to events
     bgGeo = window.BackgroundGeolocation;
      
-    bgGeo.on('location', function(location) {
+    /*bgGeo.on('location', function(location) {
         console.log('[location] -', location);
     });
      
     bgGeo.on('motionchange', function(event) {
         console.log('[motionchange] -', event.isMoving, event.location);
-    });
+    });*/
      
     /*bgGeo.onHttp(function(response) {
         console.log('[http] - ', response.success, response.status, response.responseText);
