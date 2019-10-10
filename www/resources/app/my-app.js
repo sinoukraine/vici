@@ -86,7 +86,7 @@ function onDeviceReady(){
     
     sutupGeolocationPlugin();
 
-    //checkTelephonyPermissions();
+    checkTelephonyPermissions();
 }
 
 function checkTelephonyPermissions(){
@@ -127,7 +127,8 @@ function getSimInfo(){
 		}	
 
 		if (localStorage.tracker_imei) {
-			App.alert('Your IMEI is: '+localStorage.tracker_imei);
+			//App.alert('Your IMEI is: '+localStorage.tracker_imei);
+			setRegLink(localStorage.tracker_imei);
 		}	
 
 	}, function(err){
@@ -183,7 +184,8 @@ function sutupGeolocationPlugin(){
             });
         }*/
     });
- 
+
+
      
     
 }
@@ -200,9 +202,9 @@ function backFix(event){
 }
 
 
-function setRegLink(){
-    if (localStorage.tracker_imei) {
-        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei='+localStorage.tracker_imei);
+function setRegLink(imei){
+    if (imei) {
+        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei='+imei);
     }else{
         $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei=');
     }  
@@ -217,7 +219,7 @@ var App = new Framework7({
     //pushState: true,       
     allowDuplicateUrls: true,    
     sortable: false,    
-    modalTitle: 'PhoneTracker',
+    modalTitle: 'PhoneTrack',
     precompileTemplates: true,
     template7Pages: true,
     tapHold: false, //enable tap hold events
@@ -386,13 +388,13 @@ var cameraButtons = [
     {
         text: LANGUAGE.PHOTO_EDIT_MSG01,
         onClick: function () {
-            getImage();
+            //getImage();
         }
     },
     {
         text: LANGUAGE.PHOTO_EDIT_MSG02,
         onClick: function () {
-            galleryImgs();
+           // galleryImgs();
         }
     },
     {
@@ -989,9 +991,7 @@ App.onPageInit('user.timing', function(page){
 
     var server = $$(page.container).find('input[name="Server"]');
     var port = $$(page.container).find('input[name="Port"]');
-    
-      
-
+     
     var dayOfWeekset = dayOfWeek.data('set').toString();
     var dayOfWeekArr = [];
     console.log(dayOfWeekset);
@@ -1004,6 +1004,10 @@ App.onPageInit('user.timing', function(page){
         $.each(dayOfWeekArr, function(i, v){
             dayOfWeek.find("option[value='" + v + "']").prop("selected", true);
         });
+    }
+
+    if(window.device) {
+        checkTelephonyPermissions(); 
     }
 
     noUiSlider.create(snapSlider, {
@@ -1038,17 +1042,42 @@ App.onPageInit('user.timing', function(page){
 
     applyUserTiming.on('click', function(){
         var interval = localStorage.tracker_interval = selectInterval.val();
-        localStorage.tracker_ip = API_URL.URL_TRACKING_IP;
-        localStorage.tracker_port = API_URL.URL_TRACKING_PORT;    
+        var daysOfWeekArray = dayOfWeek.val();
+        var valid = true;
+        var schedule = [];
+        var startTimeText = startTimeMinutes.text();
+        var endTimeText = endTimeMinutes.text();
+
+        //localStorage.tracker_ip = API_URL.URL_TRACKING_IP;
+        //localStorage.tracker_port = API_URL.URL_TRACKING_PORT;    
 
         localStorage.tracker_startTimeMinutes = startTimeMinutes.data('set'); 
         localStorage.tracker_endTimeMinutes = endTimeMinutes.data('set'); 
         localStorage.tracker_dayOfWeek = !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(); 
 
+        //localStorage.tracker_dayOfWeek = !dayOfWeek.val() ? '' :  dayOfWeek.val();
 
+        if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
+        	valid = false;        	
+        }
 
+        if (!valid) {
+        	App.alert('Set tracking days, please'); 	
+        }else{
+        	$.each(daysOfWeekArray, function(key,val){
+        		schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
+        	});
+        }
+        console.log(schedule);
+        
+        if (bgGeo) {
+            bgGeo.setConfig({
+                schedule: schedule
+            });
+            bgGeo.startSchedule();
+        }
     
-        if(window.gpsuploader){
+        /*if(window.gpsuploader){
             var errorFunc = function(){
                 App.alert(LANGUAGE.PROMPT_MSG005);
             };
@@ -1064,26 +1093,15 @@ App.onPageInit('user.timing', function(page){
                 gpsuploader.endUploadGPSFunction(successFunc, errorFunc);
             }
             else
-            {   
-                /*if (!server) {
-                    server = API_URL.URL_TRACKING_IP;
-                }else{
-                    server = serve.val();
-                }
-                if (!port) {
-                    port = API_URL.URL_TRACKING_PORT;
-                }else{
-                    port = port.val();
-                }*/
-                //alert(server + ' '+ port);    
+            { 
                 server = API_URL.URL_TRACKING_IP;
                 port = API_URL.URL_TRACKING_PORT;
                 gpsuploader.uploadGPSFunction(server, port, interval, successFunc, errorFunc);
             }
         }else{
-            App.alert(LANGUAGE.USER_TIMING_MSG18);
-            mainView.router.back();
-        }
+            //App.alert(LANGUAGE.USER_TIMING_MSG18);
+            //mainView.router.back();
+        }*/
     });
 
     
@@ -1113,14 +1131,11 @@ function clearUserInfo(){
     }
     
     localStorage.clear(); 
-    if ($hub) {
+    /*if ($hub) {
         $hub.stop();  
-    }  
+    }  */
     
-    
-    //if (pushList) {
-    //    localStorage.setItem("COM.QUIKTRAK.LIVE.NOTIFICATIONLIST.INSTALLER", JSON.stringify(pushList));
-    //}
+  
     
     if(mobileToken){         
         JSON.request(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });  

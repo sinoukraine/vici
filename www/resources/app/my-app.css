@@ -66,6 +66,9 @@ select{
 .pr-16{
 	padding-right: 16px;
 }
+.mt-8{
+	margin-top: 8px;
+}
 .mt-16{
 	margin-top: 16px;
 }
@@ -855,7 +858,7 @@ select{
 	margin-top: -34px !important;
 }
 
-.timingList.list-block .item-inner:after{
+/* .timingList.list-block .item-inner:after{
 	content: '';
     position: absolute;
     left: 0;
@@ -869,7 +872,7 @@ select{
     z-index: 15;
     -webkit-transform-origin: 50% 100%;
     transform-origin: 50% 100%;
-}
+} */
 .daytimeList {
 	margin: 0;
 }

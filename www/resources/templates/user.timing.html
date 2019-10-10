@@ -60,14 +60,31 @@
         <div class="list-block media-list no-hairlines timingList">           
             <ul>  
                 <li>
+                    <div class="item-content border_bottom">                               
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title mt-8">Turn On / Off Tracking</div>  
+                                <div class="item-after">   
+                                    <div class="item-input">                   
+                                        <label class="label-switch">
+                                            <input type="checkbox" name="tracking-enabled" {{#if trackingEnabled}}checked="checked"{{/if}}>
+                                            <div class="checkbox"></div>
+                                        </label>       
+                                    </div> 
+                                </div>       
+                            </div>         
+                        </div>
+                    </div>
+                </li>
+                <li>
                     <div class="item-content with_arrow_select border_bottom">
                         <div class="item-media"><i class="f7-icons icon-timing color-dealer"></i></div>
                         <div class="item-inner">
                             <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG05}}</div>
                             <div class="item-input no-after">                                
                                 <select name="trackingInterval" id="trackingInterval" data-set="{{Interval}}">
-                                    <option value="0" selected>{{@global.LANGUAGE.USER_TIMING_MSG21}}</option>
-                                    <option value="20">20 {{@global.LANGUAGE.USER_TIMING_MSG15}}</option>
+                                    <!-- <option value="0" >{{@global.LANGUAGE.USER_TIMING_MSG21}}</option> -->
+                                    <option value="20" selected>20 {{@global.LANGUAGE.USER_TIMING_MSG15}}</option>
                                     <option value="60">1 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                     <option value="300">5 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                     <option value="600">10 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
@@ -87,13 +104,13 @@
                             <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG07}}</div>
                             <div class="item-input no-after">                                
                                 <select multiple name="dayOfWeek" id="dayOfWeek" data-set={{DayOfWeek}}>
-                                    <option value="1">{{@global.LANGUAGE.USER_TIMING_MSG08}}</option>
-                                    <option value="2">{{@global.LANGUAGE.USER_TIMING_MSG09}}</option>
-                                    <option value="3">{{@global.LANGUAGE.USER_TIMING_MSG10}}</option>
-                                    <option value="4">{{@global.LANGUAGE.USER_TIMING_MSG11}}</option>
-                                    <option value="5">{{@global.LANGUAGE.USER_TIMING_MSG12}}</option>
-                                    <option value="6">{{@global.LANGUAGE.USER_TIMING_MSG13}}</option>
-                                    <option value="7">{{@global.LANGUAGE.USER_TIMING_MSG14}}</option>
+                                    <option value="1">{{@global.LANGUAGE.USER_TIMING_MSG14}}</option>
+                                    <option value="2">{{@global.LANGUAGE.USER_TIMING_MSG08}}</option>
+                                    <option value="3">{{@global.LANGUAGE.USER_TIMING_MSG09}}</option>
+                                    <option value="4">{{@global.LANGUAGE.USER_TIMING_MSG10}}</option>
+                                    <option value="5">{{@global.LANGUAGE.USER_TIMING_MSG11}}</option>
+                                    <option value="6">{{@global.LANGUAGE.USER_TIMING_MSG12}}</option>
+                                    <option value="7">{{@global.LANGUAGE.USER_TIMING_MSG13}}</option>
                                 </select>
                             </div>
                         </div>
