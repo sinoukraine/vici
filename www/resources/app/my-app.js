@@ -116,18 +116,8 @@ function getSimInfo(){
 			if (info.cards && info.cards.length) {
 				if (info.cards[0] && info.cards[0].deviceId) {
 					localStorage.tracker_imei = info.cards[0].deviceId;
-					if (bgGeo){
-                        bgGeo.setConfig({
-                            params: {IMEI: localStorage.tracker_imei },
-                        })
-                    }
 				}else if(info.cards[1] && info.cards[1].deviceId){
 					localStorage.tracker_imei = info.cards[1].deviceId;
-                    if (bgGeo){
-                        bgGeo.setConfig({
-                            params: {IMEI: localStorage.tracker_imei },
-                        })
-                    }
 				}else{
 					App.alert('Unable to get device IMEI');
 				}
@@ -137,8 +127,12 @@ function getSimInfo(){
 		}	
 
 		if (localStorage.tracker_imei) {
-			//App.alert('Your IMEI is: '+localStorage.tracker_imei);
 			setRegLink(localStorage.tracker_imei);
+            if (bgGeo){
+                bgGeo.setConfig({
+                    params: { IMEI: localStorage.tracker_imei },
+                })
+            }
 		}	
 
 	}, function(err){
@@ -173,19 +167,22 @@ function sutupGeolocationPlugin(){
         debug: false,
         logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 10,
-        url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
+        distanceFilter: 0,
+        locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
+        url: API_URL.UPLOAD_LINK, //'https://sinopacificukraine.com/test/phonetrack/locations.php',
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
-        params: {
+        /*params: {
             IMEI: localStorage.tracker_imei ? localStorage.tracker_imei : '',
-        },
+        },*/
     }, function(state) {    // <-- Current state provided to #configure callback
+        localStorage.tracker_state = state;
         // 3.  Start tracking
         //console.log('BackgroundGeolocation is configured and ready to use');
         //alert('BackgroundGeolocation is configured and ready to use');
-        App.alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
+        //App.alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
+
         //alert(JSON.stringify(state));
          /*if (!state.enabled) {
            bgGeo.start().then(function() {
@@ -266,8 +263,9 @@ window.PosMarker = {};
 var StreetViewService = null;
 var updateAssetsPosInfoTimer = null;
 
-var API_DOMIAN1 = "http://api.m2mglobaltech.com/PhoneProtect/V1/";
-var API_DOMIAN2 = "http://api.m2mglobaltech.com/QuikTrak/V1/";
+var API_DOMIAN1 = "https://api.m2mglobaltech.com/PhoneProtect/V1/";
+var API_DOMIAN2 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
+var API_DOMIAN3 = "https://api.m2mglobaltech.com/PhoneTrack/V1/";
 var API_ROUTE = "https://www.google.com/maps/dir/?api=1&destination=";
 var API_URL = {};
 
@@ -285,6 +283,8 @@ API_URL.URL_ADD_NEW_DEVICE = API_DOMIAN1 + 'Client/Activation';
 API_URL.URL_ADD_NEW_DEVICE2 = 'http://activation.phonetrack.co/activate.php?imei={0}&account={1}';
 API_URL.URL_REGISTER = API_DOMIAN1 + 'Client/Registration';
 API_URL.URL_DEACTIVATE = API_DOMIAN1 + 'Client/Deactivate';
+
+API_URL.UPLOAD_LINK = API_DOMIAN3 + 'Client/UploadGPS';
 
 API_URL.URL_TRACKING_IP = "194.247.12.43";
 API_URL.URL_TRACKING_PORT = "50001"; 
@@ -432,14 +432,19 @@ $$(document).on('click', '.bTrackingStart', function(){
         console.log('- BackgroundGeolocation tracking started');
     });
 });
+
 $$(document).on('click', '.bTrackingStop', function(){
     bgGeo.stop().then(function() {
         App.alert('BackgroundGeolocation tracking stopped');
         console.log('- BackgroundGeolocation tracking started');
     });
 });
+
 $$(document).on('click', '.bTrackingStatus', function(){
-    bgGeo.ready(
+
+    App.alert(bgGeo.enabled());
+
+    /*bgGeo.ready(
         {}, 
         function(state) {    // <-- Current state provided to #configure callback       
             if (state.enabled) {
@@ -448,7 +453,14 @@ $$(document).on('click', '.bTrackingStatus', function(){
                 App.alert('Tracking disabled');
             }
         }
-    );   
+    );   */
+});
+
+$$(document).on('click', '.bTrackingStop', function(){
+    bgGeo.stop().then(function() {
+        App.alert('BackgroundGeolocation tracking stopped');
+        console.log('- BackgroundGeolocation tracking started');
+    });
 });
 
 
@@ -1002,9 +1014,10 @@ App.onPageInit('user.timing', function(page){
     var startTimeMinutes = $$(page.container).find('#startTime');
     var endTimeMinutes = $$(page.container).find('#endTime');
     var dayOfWeek = $(page.container).find('#dayOfWeek');
+    var trackingStateEl = $$(page.container).find('input[name="tracking-enabled"]');
 
-    var server = $$(page.container).find('input[name="Server"]');
-    var port = $$(page.container).find('input[name="Port"]');
+    /*var server = $$(page.container).find('input[name="Server"]');
+    var port = $$(page.container).find('input[name="Port"]');*/
      
     var dayOfWeekset = dayOfWeek.data('set').toString();
     var dayOfWeekArr = [];
@@ -1054,8 +1067,12 @@ App.onPageInit('user.timing', function(page){
         $$(snapValues[handle]).data('set',values[handle]);
     });
 
+    /*trackingStateEl.on('change', function () {
+        console.log(this.checked);
+    });*/
+
     applyUserTiming.on('click', function(){
-        var interval = localStorage.tracker_interval = selectInterval.val();
+        var interval = localStorage.tracker_interval = parseInt(selectInterval.val()) * 1000;
         var daysOfWeekArray = dayOfWeek.val();
         var valid = true;
         var schedule = [];
@@ -1083,12 +1100,25 @@ App.onPageInit('user.timing', function(page){
         	});
         }
         console.log(schedule);
-        
+        console.log(trackingStateEl.prop('checked'));
         if (bgGeo) {
             bgGeo.setConfig({
+                distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+                locationUpdateInterval: interval,  // Get a location every 5 seconds
                 schedule: schedule
             });
-            bgGeo.startSchedule();
+            if (trackingStateEl.prop('checked')){
+                bgGeo.startSchedule();
+            }else{
+                bgGeo.stopSchedule(function() {
+                    console.info('- Scheduler stopped');
+                    // You must explicitly stop tracking if currently enabled
+                    BackgroundGeolocation.stop();
+                });
+            }
+
+
+
         }
     
         /*if(window.gpsuploader){
@@ -1439,6 +1469,7 @@ function loadTimingPage(){
             EndTime: endTimeMinutes,
             Server: API_URL.URL_TRACKING_IP,
             Port: API_URL.URL_TRACKING_PORT,
+            TrackingState: localStorage.tracker_state,
         }
     });
 }
