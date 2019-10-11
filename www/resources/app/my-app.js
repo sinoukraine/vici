@@ -442,7 +442,9 @@ $$(document).on('click', '.bTrackingStop', function(){
 
 $$(document).on('click', '.bTrackingStatus', function(){
 
-    App.alert(bgGeo.enabled());
+    bgGeo.enabled().then(function (enabled) {
+        App.alert( enabled  )
+    });
 
     /*bgGeo.ready(
         {}, 
