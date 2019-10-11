@@ -441,12 +441,7 @@ $$(document).on('click', '.bTrackingStop', function(){
 });
 
 $$(document).on('click', '.bTrackingStatus', function(){
-
-    bgGeo.enabled().then(function (enabled) {
-        App.alert( enabled  )
-    });
-
-    /*bgGeo.ready(
+    bgGeo.ready(
         {}, 
         function(state) {    // <-- Current state provided to #configure callback       
             if (state.enabled) {
@@ -455,14 +450,20 @@ $$(document).on('click', '.bTrackingStatus', function(){
                 App.alert('Tracking disabled');
             }
         }
-    );   */
+    );
 });
 
-$$(document).on('click', '.bTrackingStop', function(){
-    bgGeo.stop().then(function() {
-        App.alert('BackgroundGeolocation tracking stopped');
-        console.log('- BackgroundGeolocation tracking started');
-    });
+$$(document).on('click', '.bTrackingStatusScheduler', function(){
+    bgGeo.ready(
+        {},
+        function(state) {    // <-- Current state provided to #configure callback
+            if (state.schedulerEnabled) {
+                App.alert('Scheduler enabled');
+            }else{
+                App.alert('Scheduler disabled');
+            }
+        }
+    );
 });
 
 
