@@ -170,8 +170,8 @@ function sutupGeolocationPlugin(){
         distanceFilter: 10,
         //distanceFilter: 0,
         //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
-        url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
-        //url: API_URL.UPLOAD_LINK,
+        //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
+        url: API_URL.UPLOAD_LINK,
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
@@ -1465,7 +1465,7 @@ function loadTimingPage(){
             EndTime: endTimeMinutes,
             Server: API_URL.URL_TRACKING_IP,
             Port: API_URL.URL_TRACKING_PORT,
-            TrackingState: localStorage.tracker_state,
+            TrackingState: !!localStorage.tracker_state,
         }
     });
 }
