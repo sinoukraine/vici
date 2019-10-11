@@ -167,9 +167,11 @@ function sutupGeolocationPlugin(){
         debug: false,
         logLevel: bgGeo.LOG_LEVEL_VERBOSE,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 0,
-        locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
-        url: API_URL.UPLOAD_LINK, //'https://sinopacificukraine.com/test/phonetrack/locations.php',
+        distanceFilter: 5,
+        //distanceFilter: 0,
+        //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
+        url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
+        //url: API_URL.UPLOAD_LINK,
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
@@ -1090,20 +1092,34 @@ App.onPageInit('user.timing', function(page){
         localStorage.tracker_dayOfWeek = !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(); 
 
         //localStorage.tracker_dayOfWeek = !dayOfWeek.val() ? '' :  dayOfWeek.val();
-
+        console.log(interval);
         if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
         	valid = false;        	
         }
 
-        if (!valid) {
+
+        if (trackingStateEl.prop('checked')){
+            bgGeo.setConfig({
+                params: {
+                    IMEI: localStorage.tracker_imei,
+                }
+            });
+            bgGeo.start().then(function() {
+                App.alert('Geolocation tracking started');
+            });
+        }else{
+            bgGeo.stop().then(function() {
+                App.alert('Geolocation tracking stopped');
+            });
+        }
+
+        /*if (!valid) {
         	App.alert('Set tracking days, please'); 	
         }else{
         	$.each(daysOfWeekArray, function(key,val){
         		schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
         	});
         }
-        console.log(schedule);
-        console.log(trackingStateEl.prop('checked'));
         if (bgGeo) {
             bgGeo.setConfig({
                 distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
@@ -1112,43 +1128,18 @@ App.onPageInit('user.timing', function(page){
             });
             if (trackingStateEl.prop('checked')){
                 bgGeo.startSchedule();
+                mainView.router.back();
             }else{
                 bgGeo.stopSchedule(function() {
                     console.info('- Scheduler stopped');
                     // You must explicitly stop tracking if currently enabled
-                    BackgroundGeolocation.stop();
+                    bgGeo.stop();
+                    mainView.router.back();
                 });
             }
-
-
-
-        }
-    
-        /*if(window.gpsuploader){
-            var errorFunc = function(){
-                App.alert(LANGUAGE.PROMPT_MSG005);
-            };
-            var successFunc = function(params){
-                App.alert(LANGUAGE.PROMPT_MSG006);
-                mainView.router.back();
-            };
-            if(interval == "0"){
-                successFunc = function(params){
-                    App.alert(LANGUAGE.PROMPT_MSG007);
-                    mainView.router.back();
-                };
-                gpsuploader.endUploadGPSFunction(successFunc, errorFunc);
-            }
-            else
-            { 
-                server = API_URL.URL_TRACKING_IP;
-                port = API_URL.URL_TRACKING_PORT;
-                gpsuploader.uploadGPSFunction(server, port, interval, successFunc, errorFunc);
-            }
-        }else{
-            //App.alert(LANGUAGE.USER_TIMING_MSG18);
-            //mainView.router.back();
         }*/
+    
+
     });
 
     
@@ -1454,7 +1445,7 @@ function loadTimingPage(){
     var phone = !asset.TagName ? '' : asset.TagName;
     var name = !asset.Name ? '' : asset.Name;
 
-    var currentInterval = localStorage.tracker_interval;
+    var currentInterval = localStorage.tracker_interval ? parseInt(localStorage.tracker_interval) / 1000 : 20 ;
     var dayOfWeek = !localStorage.tracker_dayOfWeek ? '' : localStorage.tracker_dayOfWeek;
     var startTimeMinutes = !localStorage.tracker_startTimeMinutes ? 540 : localStorage.tracker_startTimeMinutes; 
     var endTimeMinutes = !localStorage.tracker_endTimeMinutes ? 1080 : localStorage.tracker_endTimeMinutes; 
