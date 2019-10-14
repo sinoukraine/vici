@@ -267,7 +267,7 @@ var updateAssetsPosInfoTimer = null;
 
 var API_DOMIAN1 = "https://api.m2mglobaltech.com/PhoneProtect/V1/";
 var API_DOMIAN2 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
-var API_DOMIAN3 = "https://api.m2mglobaltech.com/PhoneTrack/V1/";
+var API_DOMIAN3 = "http://api.m2mglobaltech.com/PhoneTrack/V1/";
 var API_ROUTE = "https://www.google.com/maps/dir/?api=1&destination=";
 var API_URL = {};
 
@@ -286,7 +286,8 @@ API_URL.URL_ADD_NEW_DEVICE2 = 'http://activation.phonetrack.co/activate.php?imei
 API_URL.URL_REGISTER = API_DOMIAN1 + 'Client/Registration';
 API_URL.URL_DEACTIVATE = API_DOMIAN1 + 'Client/Deactivate';
 
-API_URL.UPLOAD_LINK = API_DOMIAN3 + 'Client/UploadGPS';
+//API_URL.UPLOAD_LINK = API_DOMIAN3 + 'Client/UploadGPS';
+API_URL.UPLOAD_LINK = API_DOMIAN2 + 'DEVICE/UploadGPS';
 
 API_URL.URL_TRACKING_IP = "194.247.12.43";
 API_URL.URL_TRACKING_PORT = "50001"; 
@@ -467,6 +468,50 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
         }
     );
 });
+
+$$(document).on('click', '.sendPosition', function(){
+    var data = {
+        "location":
+            {
+                "event":"motionchange",
+                "is_moving":false,
+                "uuid":"bdcc0cb1-3da4-4ccf-a472-70a997839754",
+                "timestamp":"2019-10-10T15:13:13.306Z",
+                "odometer":0,
+                "coords":
+                    {
+                        "latitude":50.428027,
+                        "longitude":30.5962144,
+                        "accuracy":17.5,
+                        "speed":0.11,
+                        "heading":26.19,
+                        "altitude":-1
+                    },
+                "activity":
+                    {
+                        "type":"still",
+                        "confidence":100
+                    },
+                "battery":
+                    {
+                        "is_charging":false,
+                        "level":0.27
+                    },
+                "extras":{}
+             },
+        "IMEI":"868880049399963"
+    };
+    App.showPreloader();
+    JSON.requestPost(API_URL.UPLOAD_LINK,data, function(result) {
+        App.hidePreloader();
+        App.alert("data sent");
+        App.alert(JSON.stringify(result));
+
+    }, function () {
+        App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02);
+    });
+});
+
 
 
 $$(document).on('click', '.getIMEI', function(){
