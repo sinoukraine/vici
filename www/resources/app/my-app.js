@@ -128,13 +128,13 @@ function getSimInfo(){
 
 		if (localStorage.tracker_imei) {
 		    var imei = localStorage.tracker_imei;
-		    if (imei.length !== 16){
+		    /*if (imei.length !== 16){
                 imei = imei.padStart(16, '0');
-            }
+            }*/
 			setRegLink(imei);
             if (bgGeo){
                 bgGeo.setConfig({
-                    params: { IMEI: imei },
+                    params: { IMEI: '0'+imei },
                 })
             }
 		}	
