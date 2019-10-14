@@ -287,7 +287,10 @@ API_URL.URL_REGISTER = API_DOMIAN1 + 'Client/Registration';
 API_URL.URL_DEACTIVATE = API_DOMIAN1 + 'Client/Deactivate';
 
 //API_URL.UPLOAD_LINK = API_DOMIAN3 + 'Client/UploadGPS';
-API_URL.UPLOAD_LINK = API_DOMIAN2 + 'DEVICE/UploadGPS';
+API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Device/UploadGPS';
+
+API_URL.UPLOAD_LINK_TEST = 'https://sinopacificukraine.com/test/phonetrack/locations.php';
+
 
 API_URL.URL_TRACKING_IP = "194.247.12.43";
 API_URL.URL_TRACKING_PORT = "50001"; 
@@ -469,7 +472,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
     );
 });
 
-$$(document).on('click', '.sendPosition', function(){
+/*$$(document).on('click', '.sendPosition', function(){
     var data = {
         "location":
             {
@@ -510,7 +513,7 @@ $$(document).on('click', '.sendPosition', function(){
     }, function () {
         App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02);
     });
-});
+});*/
 
 
 
@@ -1066,6 +1069,8 @@ App.onPageInit('user.timing', function(page){
     var dayOfWeek = $(page.container).find('#dayOfWeek');
     var trackingStateEl = $$(page.container).find('input[name="tracking-enabled"]');
 
+    var trackingServerEl = $$(page.container).find('[name="trackingServer"]');
+
     /*var server = $$(page.container).find('input[name="Server"]');
     var port = $$(page.container).find('input[name="Port"]');*/
      
@@ -1141,10 +1146,15 @@ App.onPageInit('user.timing', function(page){
         if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
         	valid = false;        	
         }
+        var serverURL = API_URL.UPLOAD_LINK;
+        if  (trackingServerEl.val() == '2'){
+            serverURL = API_URL.UPLOAD_LINK_TEST
+        }
 
 
         if (trackingStateEl.prop('checked')){
             bgGeo.setConfig({
+                url: serverURL,
                 //distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
                 //locationUpdateInterval: interval,  // Get a location every 5 seconds
                 params: {
