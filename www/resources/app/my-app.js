@@ -134,7 +134,7 @@ function getSimInfo(){
 			setRegLink(imei);
             if (bgGeo){
                 bgGeo.setConfig({
-                    params: { IMEI: '0'+imei },
+                    params: { IMEI: imei },
                 })
             }
 		}	
@@ -1162,7 +1162,7 @@ App.onPageInit('user.timing', function(page){
                 //distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
                 //locationUpdateInterval: interval,  // Get a location every 5 seconds
                 params: {
-                    IMEI: '0' + localStorage.tracker_imei,
+                    IMEI: localStorage.tracker_imei,
                 }
             });
             bgGeo.start().then(function() {
