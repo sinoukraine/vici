@@ -743,9 +743,9 @@ $$('body').on('click', '.menuAsset', function () {
         },
         {
             text: timing,
-            //disabled: disabled,
+            disabled: disabled,
             onClick: function () {               
-                loadTimingPage();                
+                loadTimingPage();
             },  
         },
         {
@@ -1167,9 +1167,11 @@ App.onPageInit('user.timing', function(page){
             });
             bgGeo.start().then(function() {
                 App.alert('Geolocation tracking started');
+                localStorage.tracker_state = true;
             });
         }else{
             bgGeo.stop().then(function() {
+                localStorage.tracker_state = false;
                 App.alert('Geolocation tracking stopped');
             });
         }
@@ -1524,7 +1526,7 @@ function loadTimingPage(){
             EndTime: endTimeMinutes,
             Server: API_URL.URL_TRACKING_IP,
             Port: API_URL.URL_TRACKING_PORT,
-            TrackingState: !!localStorage.tracker_state,
+            TrackingState: (localStorage.tracker_state === 'true'),
         }
     });
 }
