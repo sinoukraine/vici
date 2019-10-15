@@ -683,8 +683,12 @@ $$('body').on('click', '.menuAsset', function () {
     TargetAsset.ID = !parrent.data('id')? '' : parrent.data('id');
     TargetAsset.ASSET_IMG = '';      
 
-    var disabled = true;   
-    if (localStorage.tracker_imei == TargetAsset.IMEI) {
+    var disabled = true;
+    var imei = localStorage.tracker_imei;
+    if (imei && imei.length !== 16){
+        imei = imei.padStart(16,'0');
+    }
+    if (imei == TargetAsset.IMEI) {
         disabled = false;
     }
     
