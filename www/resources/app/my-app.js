@@ -169,13 +169,15 @@ function sutupGeolocationPlugin(){
     bgGeo.ready({
         reset: true,
         debug: false,
-        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
+        logLevel: bgGeo.LOG_LEVEL_ERROR,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
         distanceFilter: 10,
+        allowIdenticalLocations: true,
         //distanceFilter: 0,
         //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
         //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
         url: API_URL.UPLOAD_LINK,
+        maxDaysToPersist: 3,
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
@@ -1163,8 +1165,8 @@ App.onPageInit('user.timing', function(page){
         if (trackingStateEl.prop('checked')){
             bgGeo.setConfig({
                 url: serverURL,
-                //distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
-                //locationUpdateInterval: interval,  // Get a location every 5 seconds
+                distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+                locationUpdateInterval: interval,  // Get a location every 5 seconds
                 params: {
                     IMEI: localStorage.tracker_imei,
                 }
