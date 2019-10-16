@@ -1137,7 +1137,8 @@ App.onPageInit('user.timing', function(page){
     });*/
 
     applyUserTiming.on('click', function(){
-        var interval = localStorage.tracker_interval = parseInt(selectInterval.val()) * 1000;
+        var interval = parseInt(selectInterval.val()) * 1000;
+        localStorage.tracker_interval = interval;
         var daysOfWeekArray = dayOfWeek.val();
         var valid = true;
         var schedule = [];
@@ -1518,8 +1519,8 @@ function loadTimingPage(){
     var dayOfWeek = !localStorage.tracker_dayOfWeek ? '' : localStorage.tracker_dayOfWeek;
     var startTimeMinutes = !localStorage.tracker_startTimeMinutes ? 540 : localStorage.tracker_startTimeMinutes; 
     var endTimeMinutes = !localStorage.tracker_endTimeMinutes ? 1080 : localStorage.tracker_endTimeMinutes; 
-    
 
+    App.alert((localStorage.tracker_state === 'true'));
     mainView.router.load({
         url:'resources/templates/user.timing.html',
         context:{
