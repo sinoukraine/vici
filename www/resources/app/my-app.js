@@ -109,16 +109,20 @@ function checkTelephonyPermissions(){
 }
 
 function getSimInfo(){
-	window.plugins.sim.getSimInfo(function(info){					
+	window.plugins.sim.getSimInfo(function(info){
+	    var IMEI = false;
 		if (info.deviceId) {
-			localStorage.tracker_imei = info.deviceId;
+			//localStorage.tracker_imei = info.deviceId;
+            IMEI = info.deviceId;
 		}else{
 			if (info.cards && info.cards.length) {
 				if (info.cards[0] && info.cards[0].deviceId) {
-					localStorage.tracker_imei = info.cards[0].deviceId;
-				}else if(info.cards[1] && info.cards[1].deviceId){
-					localStorage.tracker_imei = info.cards[1].deviceId;
-				}else{
+					//localStorage.tracker_imei = info.cards[0].deviceId;
+                    IMEI = info.cards[0].deviceId;
+                }else if(info.cards[1] && info.cards[1].deviceId){
+					//localStorage.tracker_imei = info.cards[1].deviceId;
+                    IMEI = info.cards[1].deviceId;
+                }else{
 					App.alert('Unable to get device IMEI');
 				}
 			}else{
@@ -126,15 +130,12 @@ function getSimInfo(){
 			}						
 		}	
 
-		if (localStorage.tracker_imei) {
-		    var imei = localStorage.tracker_imei;
-		    /*if (imei.length !== 16){
-                imei = imei.padStart(16, '0');
-            }*/
-			setRegLink(imei);
+		if (IMEI) {
+            trackerSaveConfig({IMEI: IMEI});
+			setRegLink(IMEI);
             if (bgGeo){
                 bgGeo.setConfig({
-                    params: { IMEI: imei },
+                    params: { IMEI: IMEI },
                 })
             }
 		}	
@@ -171,9 +172,9 @@ function sutupGeolocationPlugin(){
         debug: false,
         logLevel: bgGeo.LOG_LEVEL_ERROR,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 10,
+        //distanceFilter: 10,
         allowIdenticalLocations: true,
-        //distanceFilter: 0,
+        distanceFilter: 0,
         //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
         //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
         url: API_URL.UPLOAD_LINK,
@@ -185,7 +186,8 @@ function sutupGeolocationPlugin(){
             IMEI: localStorage.tracker_imei ? localStorage.tracker_imei : '',
         },*/
     }, function(state) {    // <-- Current state provided to #configure callback
-        localStorage.tracker_state = state;
+        //localStorage.tracker_state = state;
+        alert(JSON.stringify(state));
         // 3.  Start tracking
         //console.log('BackgroundGeolocation is configured and ready to use');
         //alert('BackgroundGeolocation is configured and ready to use');
@@ -478,54 +480,11 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
     );
 });
 
-/*$$(document).on('click', '.sendPosition', function(){
-    var data = {
-        "location":
-            {
-                "event":"motionchange",
-                "is_moving":false,
-                "uuid":"bdcc0cb1-3da4-4ccf-a472-70a997839754",
-                "timestamp":"2019-10-10T15:13:13.306Z",
-                "odometer":0,
-                "coords":
-                    {
-                        "latitude":50.428027,
-                        "longitude":30.5962144,
-                        "accuracy":17.5,
-                        "speed":0.11,
-                        "heading":26.19,
-                        "altitude":-1
-                    },
-                "activity":
-                    {
-                        "type":"still",
-                        "confidence":100
-                    },
-                "battery":
-                    {
-                        "is_charging":false,
-                        "level":0.27
-                    },
-                "extras":{}
-             },
-        "IMEI":"868880049399963"
-    };
-    App.showPreloader();
-    JSON.requestPost(API_URL.UPLOAD_LINK,data, function(result) {
-        App.hidePreloader();
-        App.alert("data sent");
-        App.alert(JSON.stringify(result));
-
-    }, function () {
-        App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02);
-    });
-});*/
-
-
 
 $$(document).on('click', '.getIMEI', function(){
-    if (localStorage.tracker_imei) {
-        App.alert('Your Imei is: '+localStorage.tracker_imei);
+    var savedConfig = trackerGetSavedConfig();
+    if (savedConfig.IMEI) {
+        App.alert('Your Imei is: '+savedConfig.IMEI);
     }else{
         checkTelephonyPermissions();
     }    
@@ -594,14 +553,6 @@ $$(document).on('change', '.leaflet-control-layers-selector[type="radio"]', func
     }
 });
 
-/*$$(document).on('click', '.navbar_title_index', function(){
-    toDataURLBase64(
-               'https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0',
-                function(dataUrl) {
-                    console.log('RESULT:', dataUrl);
-                }
-            );
-});*/
 
 $$('body').on('click', '#menu li', function () {
     var page = $$(this).data('page');     
@@ -664,10 +615,10 @@ $$('body').on('click', 'a.external', function(event) {
     event.preventDefault();
     var href = this.getAttribute('href');
     if (href) {
-        if (window.plus) {
-            plus.runtime.openURL(href);            
+        if (typeof navigator !== "undefined" && navigator.app) {
+            navigator.app.loadUrl(href, { openExternal: true });
         } else {
-            window.open(href,'_blank');
+            window.open(href, '_blank');
         }
     }
     return false;
@@ -676,7 +627,8 @@ $$('body').on('click', 'a.external', function(event) {
 
 
 $$('body').on('click', '.menuAsset', function () {
-    var parrent = $$(this).closest('.item-content');    
+    var parrent = $$(this).closest('.item-content');
+    var savedConfig = trackerGetSavedConfig();
     //var caption = parrent.data('imei');    
     
     TargetAsset.IMEI = !parrent.data('imei')? '' : parrent.data('imei');   
@@ -686,7 +638,7 @@ $$('body').on('click', '.menuAsset', function () {
     TargetAsset.ASSET_IMG = '';      
 
     var disabled = true;
-    var imei = localStorage.tracker_imei;
+    var imei = savedConfig.IMEI;
     if (imei && imei.length !== 16){
         imei = imei.padStart(16,'0');
     }
@@ -1067,7 +1019,7 @@ App.onPageBeforeRemove('asset.track', function(page){
 });
 
 App.onPageInit('user.timing', function(page){
-
+    console.log(page.context);
     var selectInterval = $$(page.container).find('#trackingInterval');
     var applyUserTiming = $$('body').find('.applyUserTiming');
 
@@ -1079,14 +1031,9 @@ App.onPageInit('user.timing', function(page){
     var dayOfWeek = $(page.container).find('#dayOfWeek');
     var trackingStateEl = $$(page.container).find('input[name="tracking-enabled"]');
 
-    var trackingServerEl = $$(page.container).find('[name="trackingServer"]');
-
-    /*var server = $$(page.container).find('input[name="Server"]');
-    var port = $$(page.container).find('input[name="Port"]');*/
-     
     var dayOfWeekset = dayOfWeek.data('set').toString();
     var dayOfWeekArr = [];
-    console.log(dayOfWeekset);
+
     if (dayOfWeekset && dayOfWeekset.indexOf(',') != -1) {
         dayOfWeekArr = dayOfWeekset.split(',');
     }else if(dayOfWeekset){
@@ -1138,32 +1085,71 @@ App.onPageInit('user.timing', function(page){
 
     applyUserTiming.on('click', function(){
         var interval = parseInt(selectInterval.val()) * 1000;
-        localStorage.tracker_interval = interval;
         var daysOfWeekArray = dayOfWeek.val();
         var valid = true;
         var schedule = [];
         var startTimeText = startTimeMinutes.text();
         var endTimeText = endTimeMinutes.text();
+        var state = trackingStateEl.prop('checked');
 
-        //localStorage.tracker_ip = API_URL.URL_TRACKING_IP;
-        //localStorage.tracker_port = API_URL.URL_TRACKING_PORT;    
+        var trackerConfig = {
+            DayOfWeek: !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(),
+            StartTime: startTimeMinutes.data('set'),
+            EndTime: endTimeMinutes.data('set'),
+            Interval: interval,
+            ScheduleState: state,
+            IMEI: page.context.IMEI
+        };
+        trackerSaveConfig(trackerConfig);
 
-        localStorage.tracker_startTimeMinutes = startTimeMinutes.data('set'); 
-        localStorage.tracker_endTimeMinutes = endTimeMinutes.data('set'); 
-        localStorage.tracker_dayOfWeek = !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(); 
-
-        //localStorage.tracker_dayOfWeek = !dayOfWeek.val() ? '' :  dayOfWeek.val();
-        console.log(interval);
         if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
         	valid = false;        	
         }
-        var serverURL = API_URL.UPLOAD_LINK;
-        if  (trackingServerEl.val() == '2'){
-            serverURL = API_URL.UPLOAD_LINK_TEST
+
+        if (!valid && state) {
+            App.alert('Set tracking days, please');
+            return;
         }
 
+        $.each(daysOfWeekArray, function(key,val){
+            schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
+        });
 
-        if (trackingStateEl.prop('checked')){
+        if (!bgGeo) {
+            App.alert('Tracking not supported');
+            return;
+        }
+
+        bgGeo.setConfig({
+            distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+            locationUpdateInterval: interval,  // Get a location every 5 seconds
+            schedule: valid ? schedule : [],
+            params: {
+                IMEI: trackerConfig.IMEI,
+            }
+        });
+
+        if (state){
+            bgGeo.startSchedule(function() {
+                App.alert('Tracking schedule started');
+                mainView.router.back();
+            });
+        }else{
+            bgGeo.stopSchedule(function() {
+                App.alert('Tracking schedule stopped');
+                // You must explicitly stop tracking if currently enabled
+                bgGeo.stop();
+                mainView.router.back();
+            });
+        }
+
+        /*var serverURL = API_URL.UPLOAD_LINK;
+        if  (trackingServerEl.val() == '2'){
+            serverURL = API_URL.UPLOAD_LINK_TEST
+        }*/
+
+
+        /*if (trackingStateEl.prop('checked')){
             bgGeo.setConfig({
                 url: serverURL,
                 distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
@@ -1181,33 +1167,9 @@ App.onPageInit('user.timing', function(page){
                 localStorage.tracker_state = false;
                 App.alert('Geolocation tracking stopped');
             });
-        }
-
-        /*if (!valid) {
-        	App.alert('Set tracking days, please'); 	
-        }else{
-        	$.each(daysOfWeekArray, function(key,val){
-        		schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
-        	});
-        }
-        if (bgGeo) {
-            bgGeo.setConfig({
-                distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
-                locationUpdateInterval: interval,  // Get a location every 5 seconds
-                schedule: schedule
-            });
-            if (trackingStateEl.prop('checked')){
-                bgGeo.startSchedule();
-                mainView.router.back();
-            }else{
-                bgGeo.stopSchedule(function() {
-                    console.info('- Scheduler stopped');
-                    // You must explicitly stop tracking if currently enabled
-                    bgGeo.stop();
-                    mainView.router.back();
-                });
-            }
         }*/
+
+
     
 
     });
@@ -1217,6 +1179,25 @@ App.onPageInit('user.timing', function(page){
 
 });
 
+function trackerGetSavedConfig() {
+    var ret = {};
+    var str = localStorage.getItem("COM.QUIKTRAK.PHONETRACK.TRACKERCONFIG");
+    if (str){
+        ret = JSON.parse(str);
+    }
+    return ret;
+}
+
+function trackerSaveConfig(config={}) {
+    if (!isObjEmpty(config)){
+        var savedConfig = trackerGetSavedConfig();
+        const keys = Object.keys(config)
+        for (const key of keys) {
+            savedConfig[key] = config[key];
+        }
+        localStorage.setItem("COM.QUIKTRAK.PHONETRACK.TRACKERCONFIG", JSON.stringify(savedConfig));
+    }
+}
 
 function clearUserInfo(){
     
@@ -1228,22 +1209,21 @@ function clearUserInfo(){
     var MinorToken = userInfo.MinorToken;      
     var MajorToken = userInfo.MajorToken;
     var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+    var savedConfig = trackerGetSavedConfig();
     //var pushList = getNotificationList();
 
     window.PosMarker = {};
-    TargetAsset = {}; 
-
+    TargetAsset = {};
 
     if (virtualAssetList) {
         virtualAssetList.deleteAllItems();
     }
     
     localStorage.clear(); 
-    /*if ($hub) {
-        $hub.stop();  
-    }  */
-    
-  
+
+    if (!isObjEmpty(savedConfig)){
+        trackerSaveConfig(savedConfig);
+    }
     
     if(mobileToken){         
         JSON.request(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });  
@@ -1271,11 +1251,6 @@ function login(){
     var account = $$("input[name='account']");
     var password = $$("input[name='password']"); 
 
-    if(window.gpsuploader){
-        gpsuploader.getIMEI(function(imei){            
-            localStorage.tracker_imei = imei;            
-        });
-    }
         
         
     //console.log(account.val()+' '+password.val());
@@ -1378,41 +1353,14 @@ function loadResetPwdPage(){
 }
 
 function loadAssetAddPage(){
-    
-    /*if (!localStorage.tracker_imei) {
-        if(window.gpsuploader){
-            gpsuploader.getIMEI(function(imei){            
-                localStorage.tracker_imei = imei;
-            });
-        }else{
-            App.alert(LANGUAGE.USER_TIMING_MSG18);
-        }     
-    }
-    mainView.router.load({
-        url:'resources/templates/asset.add.html',
-        context:{
-            //UserImgSrc: UserImgSrc, 
-            IMEI: localStorage.tracker_imei,  
-        }
-    });*/
+    var savedConfig = trackerGetSavedConfig();
 
-    if (!localStorage.tracker_imei) {
-        if(window.gpsuploader){
-            gpsuploader.getIMEI(function(imei){            
-                localStorage.tracker_imei = imei;
-            });
-        }else{
-            App.alert(LANGUAGE.USER_TIMING_MSG18);
-            localStorage.tracker_imei = '0123456789012345';
-        }     
-    }
+    var href = API_URL.URL_ADD_NEW_DEVICE2.format(savedConfig.IMEI,localStorage.ACCOUNT);
 
-    var href = API_URL.URL_ADD_NEW_DEVICE2.format(localStorage.tracker_imei,localStorage.ACCOUNT); 
-    
-    if (window.plus) {
-        plus.runtime.openURL(href);            
+    if (typeof navigator !== "undefined" && navigator.app) {
+        navigator.app.loadUrl(href, { openExternal: true });
     } else {
-        window.open(href,'_blank');
+        window.open(href, '_blank');
     }
 
         setTimeout(function(){
@@ -1500,40 +1448,32 @@ function loadTimingPage(){
     var userInfo = getUserinfo();   
 
     var assetList = getAssetList();  
-    var asset = assetList[TargetAsset.IMEI];       
-
-    if (!localStorage.tracker_imei) {
-        if(window.gpsuploader){
-            gpsuploader.getIMEI(function(imei){            
-                localStorage.tracker_imei = imei;
-            });
-        }else{
-            App.alert(LANGUAGE.USER_TIMING_MSG18);
-        }     
-    }
+    var asset = assetList[TargetAsset.IMEI];
     
     var phone = !asset.TagName ? '' : asset.TagName;
     var name = !asset.Name ? '' : asset.Name;
 
-    var currentInterval = localStorage.tracker_interval ? parseInt(localStorage.tracker_interval) / 1000 : 20 ;
-    var dayOfWeek = !localStorage.tracker_dayOfWeek ? '' : localStorage.tracker_dayOfWeek;
-    var startTimeMinutes = !localStorage.tracker_startTimeMinutes ? 540 : localStorage.tracker_startTimeMinutes; 
-    var endTimeMinutes = !localStorage.tracker_endTimeMinutes ? 1080 : localStorage.tracker_endTimeMinutes; 
+    var savedConfig = trackerGetSavedConfig();
 
-    App.alert((localStorage.tracker_state === 'true'));
+    var currentInterval = !savedConfig.Interval ? 20 : parseInt(savedConfig.Interval) / 1000;
+    var dayOfWeek = !savedConfig.DayOfWeek ? '' : savedConfig.DayOfWeek;
+    var startTimeMinutes = !savedConfig.StartTime ? 540 : savedConfig.StartTime;
+    var endTimeMinutes = !savedConfig.EndTime ? 1080 : savedConfig.EndTime;
+    var scheduleState = !savedConfig.ScheduleState || savedConfig.ScheduleState === 'false' ? false : true
+
+    console.log(savedConfig);
+
     mainView.router.load({
         url:'resources/templates/user.timing.html',
         context:{
             Name: name,
             Phone: phone,
-            IMEI: localStorage.tracker_imei, 
+            IMEI: savedConfig.IMEI,
             Interval: currentInterval,  
             DayOfWeek: dayOfWeek,
             StartTime: startTimeMinutes,
             EndTime: endTimeMinutes,
-            Server: API_URL.URL_TRACKING_IP,
-            Port: API_URL.URL_TRACKING_PORT,
-            TrackingState: (localStorage.tracker_state === 'true'),
+            TrackingState: scheduleState,
         }
     });
 }
@@ -2181,6 +2121,26 @@ function showNotification(list){
             virtualNotificationList.prependItems(newList); 
         }   
     }       
+}
+
+function isObjEmpty(obj) {
+    // null and undefined are "empty"
+    if (obj == null) return true;
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+    // If it isn't an object at this point
+    // it is empty, but it can't be anything *but* empty
+    // Is it empty?  Depends on your application.
+    if (typeof obj !== "object") return true;
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+    return true;
 }
 
 
