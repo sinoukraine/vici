@@ -187,13 +187,13 @@ function sutupGeolocationPlugin(){
         },*/
     }, function(state) {    // <-- Current state provided to #configure callback
         //localStorage.tracker_state = state;
-        alert(JSON.stringify(state));
+        //alert(JSON.stringify(state));
         // 3.  Start tracking
         //console.log('BackgroundGeolocation is configured and ready to use');
         //alert('BackgroundGeolocation is configured and ready to use');
         //App.alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
 
-        //alert(JSON.stringify(state));
+        alert(JSON.stringify(state));
          /*if (!state.enabled) {
            bgGeo.start().then(function() {
                 alert('BackgroundGeolocation tracking started');
@@ -1090,14 +1090,14 @@ App.onPageInit('user.timing', function(page){
         var schedule = [];
         var startTimeText = startTimeMinutes.text();
         var endTimeText = endTimeMinutes.text();
-        var state = trackingStateEl.prop('checked');
+        var scheduleState = trackingStateEl.prop('checked');
 
         var trackerConfig = {
             DayOfWeek: !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(),
             StartTime: startTimeMinutes.data('set'),
             EndTime: endTimeMinutes.data('set'),
             Interval: interval,
-            ScheduleState: state,
+            ScheduleState: scheduleState,
             IMEI: page.context.IMEI
         };
         trackerSaveConfig(trackerConfig);
@@ -1111,15 +1111,18 @@ App.onPageInit('user.timing', function(page){
             return;
         }
 
+
+
         $.each(daysOfWeekArray, function(key,val){
             schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
         });
+
+        console.log(schedule);
 
         if (!bgGeo) {
             App.alert('Tracking not supported');
             return;
         }
-
         bgGeo.setConfig({
             distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
             locationUpdateInterval: interval,  // Get a location every 5 seconds
@@ -1127,21 +1130,24 @@ App.onPageInit('user.timing', function(page){
             params: {
                 IMEI: trackerConfig.IMEI,
             }
+        }, function (state) {
+            App.alert(state.schedulerEnabled);
+            if (scheduleState){
+                bgGeo.startSchedule(function() {
+                    App.alert('Tracking schedule started');
+                    mainView.router.back();
+                });
+            }else{
+                bgGeo.stopSchedule(function() {
+                    App.alert('Tracking schedule stopped');
+                    // You must explicitly stop tracking if currently enabled
+                    bgGeo.stop();
+                    mainView.router.back();
+                });
+            }
         });
 
-        if (state){
-            bgGeo.startSchedule(function() {
-                App.alert('Tracking schedule started');
-                mainView.router.back();
-            });
-        }else{
-            bgGeo.stopSchedule(function() {
-                App.alert('Tracking schedule stopped');
-                // You must explicitly stop tracking if currently enabled
-                bgGeo.stop();
-                mainView.router.back();
-            });
-        }
+
 
         /*var serverURL = API_URL.UPLOAD_LINK;
         if  (trackingServerEl.val() == '2'){
