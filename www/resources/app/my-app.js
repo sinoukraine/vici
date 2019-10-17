@@ -193,7 +193,7 @@ function sutupGeolocationPlugin(){
         //alert('BackgroundGeolocation is configured and ready to use');
         //App.alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
 
-        alert(JSON.stringify(state));
+        //alert(JSON.stringify(state));
          /*if (!state.enabled) {
            bgGeo.start().then(function() {
                 alert('BackgroundGeolocation tracking started');
@@ -1133,6 +1133,11 @@ App.onPageInit('user.timing', function(page){
         }, function (state) {
             App.alert(JSON.stringify(state));
             if (scheduleState){
+                /*bgGeo.requestPermission().then((status) => {
+                    console.log('[requestPermission] SUCCESS');
+                }).catch((status) => {
+                    console.log('[requestPermission] REJECTED', status);
+                });*/
                 bgGeo.startSchedule(function() {
                     App.alert('Tracking schedule started');
                     mainView.router.back();
