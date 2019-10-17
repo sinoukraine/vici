@@ -149,23 +149,7 @@ function getSimInfo(){
 function sutupGeolocationPlugin(){
     // 1.  Listen to events
     bgGeo = window.BackgroundGeolocation;
-     
-    /*bgGeo.on('location', function(location) {
-        console.log('[location] -', location);
-    });
-     
-    bgGeo.on('motionchange', function(event) {
-        console.log('[motionchange] -', event.isMoving, event.location);
-    });*/
-     
-    /*bgGeo.onHttp(function(response) {
-        console.log('[http] - ', response.success, response.status, response.responseText);
-    });
-     
-    bgGeo.onProviderChange(function(event) {
-        console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
-    });*/
-     
+
       // 2. Execute #ready method:
     bgGeo.ready({
         reset: true,
@@ -188,27 +172,15 @@ function sutupGeolocationPlugin(){
     }, function(state) {    // <-- Current state provided to #configure callback
         //localStorage.tracker_state = state;
         //alert(JSON.stringify(state));
-        // 3.  Start tracking
-        //console.log('BackgroundGeolocation is configured and ready to use');
-        //alert('BackgroundGeolocation is configured and ready to use');
-        //App.alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
+        alert(state.schedulerEnabled);
 
-        //alert(JSON.stringify(state));
-         /*if (!state.enabled) {
-           bgGeo.start().then(function() {
-                alert('BackgroundGeolocation tracking started');
-                console.log('- BackgroundGeolocation tracking started');
-            });
-        }*/
+        trackerSaveConfig({ScheduleState: state.schedulerEnabled});
     });
 
 
-    bgGeo.onHttp(response => {
-        /*alert( JSON.stringify(response.success) );
-        alert( JSON.stringify(response.status) );
-        alert( JSON.stringify(response.responseText) );*/
+    /*bgGeo.onHttp(response => {
         console.log('[http] response: ', response.success, response.status, response.responseText);
-    });
+    });*/
 }
 
 function backFix(event){
