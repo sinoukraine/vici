@@ -1131,7 +1131,7 @@ App.onPageInit('user.timing', function(page){
                 IMEI: trackerConfig.IMEI,
             }
         }, function (state) {
-            App.alert(state.schedulerEnabled);
+            App.alert(JSON.stringify(state));
             if (scheduleState){
                 bgGeo.startSchedule(function() {
                     App.alert('Tracking schedule started');
