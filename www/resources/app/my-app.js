@@ -1117,7 +1117,7 @@ App.onPageInit('user.timing', function(page){
             schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
         });
 
-        console.log(schedule);
+        //console.log(schedule);
 
         if (!bgGeo) {
             App.alert('Tracking not supported');
@@ -1131,17 +1131,19 @@ App.onPageInit('user.timing', function(page){
                 IMEI: trackerConfig.IMEI,
             }
         }, function (state) {
-            alert(JSON.stringify(state));
+            //alert(JSON.stringify(state));
             if (scheduleState){
-                /*bgGeo.requestPermission().then((status) => {
-                    console.log('[requestPermission] SUCCESS');
+                bgGeo.requestPermission().then((status) => {
+                    bgGeo.startSchedule(function() {
+                        App.alert('Tracking schedule started');
+                        mainView.router.back();
+                    });
                 }).catch((status) => {
+                    App.alert('Tracking permission denied');
                     console.log('[requestPermission] REJECTED', status);
-                });*/
-                bgGeo.startSchedule(function() {
-                    App.alert('Tracking schedule started');
-                    mainView.router.back();
+                    trackerSaveConfig({ScheduleState: false});
                 });
+
             }else{
                 bgGeo.stopSchedule(function() {
                     App.alert('Tracking schedule stopped');
