@@ -1131,7 +1131,7 @@ App.onPageInit('user.timing', function(page){
                 IMEI: trackerConfig.IMEI,
             }
         }, function (state) {
-            App.alert(JSON.stringify(state));
+            alert(JSON.stringify(state));
             if (scheduleState){
                 /*bgGeo.requestPermission().then((status) => {
                     console.log('[requestPermission] SUCCESS');
