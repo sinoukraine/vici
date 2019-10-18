@@ -171,7 +171,7 @@ function sutupGeolocationPlugin(){
         },*/
     }, function(state) {    // <-- Current state provided to #configure callback
         //localStorage.tracker_state = state;
-        //alert(JSON.stringify(state));
+        alert(JSON.stringify(state));
         //alert(state.schedulerEnabled);
 
         //trackerSaveConfig({ScheduleState: state.schedulerEnabled});
