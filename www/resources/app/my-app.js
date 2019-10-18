@@ -171,7 +171,7 @@ function sutupGeolocationPlugin(){
         },*/
     }, function(state) {    // <-- Current state provided to #configure callback
         //localStorage.tracker_state = state;
-        alert(JSON.stringify(state));
+        //alert(JSON.stringify(state));
         //alert(state.schedulerEnabled);
 
         //trackerSaveConfig({ScheduleState: state.schedulerEnabled});
@@ -435,6 +435,15 @@ $$(document).on('click', '.bTrackingStatus', function(){
             }else{
                 App.alert('Tracking disabled');
             }
+        }
+    );
+});
+
+$$(document).on('click', '.bTrackingState', function(){
+    bgGeo.ready(
+        {},
+        function(state) {    // <-- Current state provided to #configure callback
+            alert(JSON.stringify(state));
         }
     );
 });
@@ -1098,7 +1107,7 @@ App.onPageInit('user.timing', function(page){
         bgGeo.setConfig({
             distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
             locationUpdateInterval: interval,  // Get a location every 5 seconds
-            schedule: valid ? schedule : [],
+            schedule: schedule,
             params: {
                 IMEI: trackerConfig.IMEI,
             }
