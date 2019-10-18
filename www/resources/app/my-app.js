@@ -147,11 +147,10 @@ function getSimInfo(){
 
 
 function sutupGeolocationPlugin(){
-    // 1.  Listen to events
     bgGeo = window.BackgroundGeolocation;
 
-      // 2. Execute #ready method:
-    bgGeo.ready({
+    var savedConfig = trackerGetSavedConfig();
+    var config = {
         reset: true,
         debug: false,
         logLevel: bgGeo.LOG_LEVEL_ERROR,
@@ -166,10 +165,25 @@ function sutupGeolocationPlugin(){
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
-        /*params: {
-            IMEI: localStorage.tracker_imei ? localStorage.tracker_imei : '',
-        },*/
-    }, function(state) {    // <-- Current state provided to #configure callback
+        notification: {
+            priority: bgGeo.NOTIFICATION_PRIORITY_MIN
+        }
+    };
+
+    if  (savedConfig.IMEI){
+        config.params = {
+            IMEI: savedConfig.IMEI
+        }
+    }
+    if  (savedConfig.Interval){
+        config.locationUpdateInterval = savedConfig.Interval;
+    }
+    if  (savedConfig.Schedule && savedConfig.Schedule.length){
+        config.schedule = savedConfig.Schedule;
+    }
+
+      // 2. Execute #ready method:
+    bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
         //localStorage.tracker_state = state;
         //alert(JSON.stringify(state));
         //alert(state.schedulerEnabled);
@@ -1073,15 +1087,7 @@ App.onPageInit('user.timing', function(page){
         var endTimeText = endTimeMinutes.text();
         var scheduleState = trackingStateEl.prop('checked');
 
-        var trackerConfig = {
-            DayOfWeek: !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(),
-            StartTime: startTimeMinutes.data('set'),
-            EndTime: endTimeMinutes.data('set'),
-            Interval: interval,
-            ScheduleState: scheduleState,
-            IMEI: page.context.IMEI
-        };
-        trackerSaveConfig(trackerConfig);
+
 
         if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
         	valid = false;        	
@@ -1092,11 +1098,20 @@ App.onPageInit('user.timing', function(page){
             return;
         }
 
-
-
         $.each(daysOfWeekArray, function(key,val){
             schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
         });
+
+        var trackerConfig = {
+            DayOfWeek: !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(),
+            StartTime: startTimeMinutes.data('set'),
+            EndTime: endTimeMinutes.data('set'),
+            Interval: interval,
+            ScheduleState: scheduleState,
+            Schedule: schedule,
+            IMEI: page.context.IMEI
+        };
+        trackerSaveConfig(trackerConfig);
 
         //console.log(schedule);
 
