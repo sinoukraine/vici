@@ -270,8 +270,8 @@ API_URL.URL_GET_LOGIN = API_DOMIAN2 + "User/Auth?username={0}&password={1}&appKe
 API_URL.URL_GET_LOGOUT = API_DOMIAN2 + "User/Logoff2?MajorToken={0}&MinorToken={1}&username={2}&mobileToken={3}";
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN2 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN2 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
-API_URL.URL_EDIT_DEVICE = API_DOMIAN2 + "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}";
-
+//API_URL.URL_EDIT_DEVICE = API_DOMIAN2 + "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}";
+API_URL.URL_EDIT_DEVICE = API_DOMIAN2 +  "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}&MajorToken={12}&registration=&MaxSpeed=&stockNumber=";
 API_URL.URL_GET_ALL_POSITIONS = API_DOMIAN2 + "Device/GetPosInfos?MinorToken={0}";
 //API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN2 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
 API_URL.URL_PHOTO_UPLOAD = "http://upload.quiktrak.co/image/Upload";
