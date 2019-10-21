@@ -1080,7 +1080,7 @@ App.onPageInit('user.timing', function(page){
     });*/
 
     applyUserTiming.on('click', function(){
-        alert('click');
+        //alert('click');
         var interval = parseInt(selectInterval.val()) * 1000;
         var daysOfWeekArray = dayOfWeek.val();
         var valid = true;
