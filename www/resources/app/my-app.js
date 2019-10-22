@@ -152,6 +152,7 @@ function sutupGeolocationPlugin(){
     var savedConfig = trackerGetSavedConfig();
     var config = {
         reset: true,
+        foregroundService: true,
         debug: false,
         logLevel: bgGeo.LOG_LEVEL_ERROR,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
