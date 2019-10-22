@@ -165,7 +165,9 @@ function sutupGeolocationPlugin(){
         autoSync: true,
         stopOnTerminate: false,
         startOnBoot: true,
-        forceReloadOnSchedule: true,
+        //forceReloadOnSchedule: true,
+        forceReloadOnBoot: true,
+        scheduleUseAlarmManager: true,
         notification: {
             priority: bgGeo.NOTIFICATION_PRIORITY_MIN
         }
