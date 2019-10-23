@@ -475,15 +475,73 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
     );
 });
 $$(document).on('click', '.getManual', function(){
-    var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
+   // var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
     //viewDocument2(url);
-    copyFile()
+    //copyFile()
+    var fp = 'resources/manual/DC100-user-guide.pdf';
+    var url = cordova.file.applicationDirectory + fp;
+    alert(fp);
+    copyFile(url,
+        "DC100-user-guide.pdf",
+        LocalFileSystem.PERSISTENT);
 });
 
+function copyFile(baseFileURI, destPathName, fileSystem){
+    window.resolveLocalFileSystemURL(baseFileURI,
+        function(file){
+            window.requestFileSystem(fileSystem, 0,
+                function (fileSystem) {
+                    var documentsPath = fileSystem.root;
+                    alert(documentsPath);
+                    file.copyTo(documentsPath, destPathName,
+                        function(res){
+                            alert('copying was successful to: ' + res.nativeURL)
+                        },
+                        function(){
+                            alert('unsuccessful copying')
+                        });
+                });
+        },
+        function(){
+            alert('failure! file was not found')
+        });
+}
 
-// get base url for index.html
+function download(fileEntry, uri, readBinaryData) {
 
-function copyFile() {
+    var fileTransfer = new FileTransfer();
+    var fileURL = fileEntry.toURL();
+
+    fileTransfer.download(
+        uri,
+        fileURL,
+        function (entry) {
+            console.log("Successful download...");
+            console.log("download complete: " + entry.toURL());
+            if (readBinaryData) {
+                // Read the file...
+                readBinaryFile(entry);
+            }
+            else {
+                // Or just display it.
+                displayImageByFileURL(entry);
+            }
+        },
+        function (error) {
+            console.log("download error source " + error.source);
+            console.log("download error target " + error.target);
+            console.log("upload error code" + error.code);
+        },
+        null, // or, pass false
+        {
+            //headers: {
+            //    "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+            //}
+        }
+    );
+}
+
+function copyFile2() {
     alert(cordova.file.applicationDirectory);
     alert(cordova.file.dataDirectory);
     var baseUrl = location.href.replace("/index.html", "");
