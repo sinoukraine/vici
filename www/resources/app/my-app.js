@@ -484,12 +484,14 @@ $$(document).on('click', '.getManual', function(){
 // get base url for index.html
 
 function copyFile() {
+    alert(cordova.file.applicationDirectory);
+    alert(cordova.file.documentsDirectory);
     var baseUrl = location.href.replace("/index.html", "");
     var fp = "resources/manual/DC100-user-guide.pdf";
     var fileDestPath = "tempFolder/";
 
-    var sourceFilePath = baseUrl + "/" + fp;
-    var targetFilePath = fileSystem.root.toURL() + fileDestPath;
+    var sourceFilePath = cordova.file.applicationDirectory + fp;
+    var targetFilePath = cordova.file.documentsDirectory + fileDestPath;
 
     var ft = new FileTransfer();
     ft.download(
