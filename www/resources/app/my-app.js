@@ -478,6 +478,23 @@ $$(document).on('click', '.getManual', function(){
     var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
     viewDocument(url);
 });
+
+function viewDocument2(url) {
+    if (cordova && cordova.plugins.fileOpener2) {
+        cordova.plugins.fileOpener2.open(
+            url, // You can also use a Cordova-style file uri: cdvfile://localhost/persistent/Downloads/starwars.pdf
+            'application/pdf',
+            {
+                error: function (e) {
+                    alert('Error status: ' + e.status + ' - Error message: ' + e.message);
+                },
+                success: function () {
+                    console.log('file opened successfully');
+                }
+            }
+        );
+    }
+}
 function viewDocument(url) {
     if (cordova && cordova.plugins.SitewaertsDocumentViewer){
         cordova.plugins.SitewaertsDocumentViewer.viewDocument(

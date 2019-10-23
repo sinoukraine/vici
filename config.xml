@@ -74,6 +74,9 @@
 
     <plugin name="cordova-plugin-document-viewer" source="npm" />
 	<plugin name="cordova-plugin-file" source="npm" />
+	
+	<plugin name="cordova-plugin-file-opener2" source="npm" />
+	
     
     
    
