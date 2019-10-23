@@ -153,6 +153,9 @@ function sutupGeolocationPlugin(){
     var config = {
         reset: true,
         foregroundService: true,
+        notification: {
+            priority: bgGeo.NOTIFICATION_PRIORITY_MAX
+        },
         debug: false,
         logLevel: bgGeo.LOG_LEVEL_ERROR,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
@@ -164,14 +167,13 @@ function sutupGeolocationPlugin(){
         url: API_URL.UPLOAD_LINK,
         maxDaysToPersist: 3,
         autoSync: true,
+        autoSyncThreshold: 5,
+        maxBatchSize: 20,
         stopOnTerminate: false,
         startOnBoot: true,
         //forceReloadOnSchedule: true,
-        forceReloadOnBoot: true,
+        //forceReloadOnBoot: true,
         scheduleUseAlarmManager: true,
-        notification: {
-            priority: bgGeo.NOTIFICATION_PRIORITY_MIN
-        }
     };
 
     if  (savedConfig.IMEI){
