@@ -474,7 +474,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
         }
     );
 });
-$$(document).on('click', '.getManual', function(){
+$/*$(document).on('click', '.getManual', function(){
    // var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
     //viewDocument2(url);
     //copyFile()
@@ -510,13 +510,15 @@ $$(document).on('click', '.getManual', function(){
                     alert('copying FAILED');
                 });
         }, function (e) { alert(JSON.stringify(e)); });
-});
+});*/
 
 $$(document).on('click', '.getManual', function(){
 
     var wwwDirEntry;
     window.resolveLocalFileSystemURL(cordova.file.dataDirectory+'phonegapdevapp/www/', function success(dirEntry) {
         wwwDirEntry = dirEntry;
+    },function (e) {
+        alert('error dir '+JSON.stringify(e));
     });
 
     var dirEntry = function (entry) {
@@ -528,6 +530,7 @@ $$(document).on('click', '.getManual', function(){
                         if (i.nativeURL.indexOf('www/resources') > -1) {
                             //found the target /res directory
                             var path = i.nativeURL + '/DC100-user-guide.pdf';
+                            alert(path);
                             window.resolveLocalFileSystemURL(path, function onSuccess(fileEntry)
                             {
                                 //alert(JSON.stringify(fileEntry));
