@@ -481,7 +481,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
     );
 });
 $$(document).on('click', '.getManual', function(){
-    alert(getPhoneGapPath);
+    alert(getPhoneGapPath());
     var href = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
    // alert(href);
     if (typeof navigator !== "undefined" && navigator.app) {
