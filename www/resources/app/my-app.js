@@ -51,7 +51,7 @@ if( navigator.userAgent.match(/Windows/i) ){
     inBrowser = 1;
 }
 
-var cordovaPresent = false;
+//var cordovaPresent = false;
 
 document.addEventListener("deviceready", onDeviceReady, false ); 
 
@@ -91,14 +91,14 @@ function onDeviceReady(){
     checkTelephonyPermissions();
 
 
-
+/*
     assertCordova();
     cordovaPresent = true;
     _sdv = cordova.plugins.SitewaertsDocumentViewer;
     $(document).ready(function ()
     {
         init();
-    });
+    });*/
 }
 
 function checkTelephonyPermissions(){
@@ -495,12 +495,6 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 $$(document).on('click', '.getManual', function(){
     //alert(getPhoneGapPath());
     var href = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
-    alert(href);
-    /*if (typeof navigator !== "undefined" && navigator.app) {
-        navigator.app.loadUrl(href, { openExternal: true });
-    } else {*/
-        /*window.open(href, '_blank');*/
-    /*}*/
 
     if (cordova && cordova.plugins.SitewaertsDocumentViewer){
         cordova.plugins.SitewaertsDocumentViewer.viewDocument(
@@ -509,19 +503,19 @@ $$(document).on('click', '.getManual', function(){
             {
                 title: 'User Manual',
                 documentView : {
-                    closeLabel : 'Clese'
+                    closeLabel : 'Close'
                 },
                 navigationView : {
-                    closeLabel : 'Clsoe'
+                    closeLabel : 'Close'
                 },
                 email : {
                     enabled : true,
                 },
                 print : {
-                    enabled : false
+                    enabled : true
                 },
                 openWith : {
-                    enabled : true
+                    enabled : false
                 },
                 bookmarks : {
                     enabled : false
@@ -535,17 +529,17 @@ $$(document).on('click', '.getManual', function(){
             },
             function(){
                 //onShow
-                alert('document shown');
+                //alert('document shown');
                 //e.g. track document usage
             },
             function () {
                 //onClose
-                alert('document closed');
+                //alert('document closed');
             },
             function(appId, installer)
             {
                 //onMissingApp
-                if(confirm("Do you want to install the free PDF Viewer App "
+                if(confirm("Do you want to install the free PDF Viewer "
                     + appId + " for Android?"))
                 {
                     installer();
@@ -557,7 +551,7 @@ $$(document).on('click', '.getManual', function(){
             }
         );
     }else{
-        alert('plugin not found')
+        alert('plugin to view file not found')
     }
 
 });
@@ -2446,6 +2440,7 @@ function toDataURLBase64(url, callback) {
 
 
 
+/*
 
 
 
@@ -3250,6 +3245,7 @@ function assertCordova()
             alert("cordova.file not found. May be you are using the wrong plugin version.");
     }
 }
+*/
 
 
 
