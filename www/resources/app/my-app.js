@@ -529,7 +529,7 @@ $$(document).on('click', '.getManual', function(){
                     if (i.isDirectory === true) {
                         if (i.nativeURL.indexOf('resources') > -1) {
                             //found the target /res directory
-                            var path = i.nativeURL + '/DC100-user-guide.pdf';
+                            var path = i.nativeURL + 'DC100-user-guide.pdf';
                             alert(path);
                             window.resolveLocalFileSystemURL(path, function onSuccess(fileEntry)
                             {
