@@ -488,10 +488,10 @@ function copyFile() {
     alert(cordova.file.documentsDirectory);
     var baseUrl = location.href.replace("/index.html", "");
     var fp = "resources/manual/DC100-user-guide.pdf";
-    var fileDestPath = "tempFolder/";
+    var fileDestPath = "/";
 
     var sourceFilePath = cordova.file.applicationDirectory + fp;
-    var targetFilePath = cordova.file.documentsDirectory + fileDestPath;
+    var targetFilePath = cordova.file.documentsDirectory;
 
     var ft = new FileTransfer();
     ft.download(
