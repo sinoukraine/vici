@@ -474,7 +474,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
         }
     );
 });
-$/*$(document).on('click', '.getManual', function(){
+/*$$(document).on('click', '.getManual', function(){
    // var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
     //viewDocument2(url);
     //copyFile()
@@ -568,84 +568,6 @@ $$(document).on('click', '.getManual', function(){
 
 
 
-
-function copyFile(baseFileURI, destPathName, fileSystem){
-    window.resolveLocalFileSystemURL(baseFileURI,
-        function(file){
-            window.requestFileSystem(fileSystem, 0,
-                function (fileSystem) {
-                    var documentsPath = fileSystem.root;
-                    alert(documentsPath);
-                    file.copyTo(documentsPath, destPathName,
-                        function(res){
-                            alert('copying was successful to: ' + res.nativeURL)
-                        },
-                        function(){
-                            alert('unsuccessful copying')
-                        });
-                });
-        },
-        function(){
-            alert('failure! file was not found')
-        });
-}
-
-function download(fileEntry, uri, readBinaryData) {
-
-    var fileTransfer = new FileTransfer();
-    var fileURL = fileEntry.toURL();
-
-    fileTransfer.download(
-        uri,
-        fileURL,
-        function (entry) {
-            console.log("Successful download...");
-            console.log("download complete: " + entry.toURL());
-            if (readBinaryData) {
-                // Read the file...
-                readBinaryFile(entry);
-            }
-            else {
-                // Or just display it.
-                displayImageByFileURL(entry);
-            }
-        },
-        function (error) {
-            console.log("download error source " + error.source);
-            console.log("download error target " + error.target);
-            console.log("upload error code" + error.code);
-        },
-        null, // or, pass false
-        {
-            //headers: {
-            //    "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
-            //}
-        }
-    );
-}
-
-function copyFile2() {
-    alert(cordova.file.applicationDirectory);
-    alert(cordova.file.dataDirectory);
-    var baseUrl = location.href.replace("/index.html", "");
-    var fp = "resources/manual/DC100-user-guide.pdf";
-    var fileDestPath = "/";
-
-    var sourceFilePath = cordova.file.applicationDirectory + fp;
-    var targetFilePath = cordova.file.dataDirectory;
-
-    var ft = new FileTransfer();
-    ft.download(
-        sourceFilePath,
-        targetFilePath,
-        function (entry) {
-            alert("file copy success")
-        },
-        function (error) {
-            alert('1' + error);
-        }
-    );
-}
 
 
 function viewDocument2(url) {
