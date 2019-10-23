@@ -527,7 +527,7 @@ $$(document).on('click', '.getManual', function(){
             function (entries) {
                 $.each(entries, function (n, i) {
                     if (i.isDirectory === true) {
-                        if (i.nativeURL.indexOf('www/resources') > -1) {
+                        if (i.nativeURL.indexOf('resources') > -1) {
                             //found the target /res directory
                             var path = i.nativeURL + '/DC100-user-guide.pdf';
                             alert(path);
@@ -563,7 +563,7 @@ $$(document).on('click', '.getManual', function(){
         alert("getDirectory error: " + error.code);
     };
 
-    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, dirEntry, dirError);
+    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory, dirEntry, dirError);
 });
 
 
