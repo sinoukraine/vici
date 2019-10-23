@@ -476,7 +476,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 });
 $$(document).on('click', '.getManual', function(){
     var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
-    viewDocument(url);
+    viewDocument2(url);
 });
 
 function viewDocument2(url) {
