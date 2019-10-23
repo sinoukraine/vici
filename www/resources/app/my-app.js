@@ -481,14 +481,21 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
     );
 });
 $$(document).on('click', '.getManual', function(){
-    var href = 'resources/manual/DC100-user-guide.pdf';
+    alert(getPhoneGapPath);
+    var href = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
+   // alert(href);
     if (typeof navigator !== "undefined" && navigator.app) {
         navigator.app.loadUrl(href, { openExternal: true });
     } else {
         window.open(href, '_blank');
     }
 });
-
+function getPhoneGapPath() {
+    var path = window.location.pathname;
+    var sizefilename = path.length - (path.lastIndexOf("/")+1);
+    path = path.substr( path, path.length - sizefilename );
+    return path;
+};
 $$(document).on('click', '.getIMEI', function(){
     var savedConfig = trackerGetSavedConfig();
     if (savedConfig.IMEI) {
