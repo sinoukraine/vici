@@ -480,11 +480,42 @@ $$(document).on('click', '.getManual', function(){
     //copyFile()
     var fp = 'resources/manual/DC100-user-guide.pdf';
     var url = cordova.file.applicationDirectory + fp;
-    alert(fp);
-    copyFile(url,
-        "DC100-user-guide.pdf",
-        LocalFileSystem.PERSISTENT);
+    alert(url);
+    //COPY FILE
+    var wwwDirEntry;
+
+//resolve url for directory entry for putting in copied file
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory+'phonegapdevapp/www/', function success(dirEntry) {
+        wwwDirEntry = dirEntry;
+    });
+
+//resolve file URL to file entry to enable copying
+//
+//Desired URL: file:///data/user/0/com.adobe.phonegap.app/files/phonegapdevapp/www/my_awesome_file.doc
+//BASE URL: cordova.file.dataDirectory / file:///data/user/0/com.adobe.phonegap.app/files/
+//
+//alert(JSON.stringify(cordova.file.dataDirectory));
+//
+    window.resolveLocalFileSystemURL(url,
+        function onSuccess(fileEntry)
+        {
+            //alert(JSON.stringify(fileEntry));
+            fileEntry.copyTo(wwwDirEntry, 'a_copy_of_my_awesome_file.doc',
+                function()
+                {
+                    alert('copying was successful');
+                },
+                function()
+                {
+                    alert('copying FAILED');
+                });
+        }, function (e) { alert(JSON.stringify(e)); });
 });
+
+
+
+
+
 
 function copyFile(baseFileURI, destPathName, fileSystem){
     window.resolveLocalFileSystemURL(baseFileURI,
