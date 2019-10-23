@@ -485,13 +485,13 @@ $$(document).on('click', '.getManual', function(){
 
 function copyFile() {
     alert(cordova.file.applicationDirectory);
-    alert(cordova.file.documentsDirectory);
+    alert(cordova.file.dataDirectory);
     var baseUrl = location.href.replace("/index.html", "");
     var fp = "resources/manual/DC100-user-guide.pdf";
     var fileDestPath = "/";
 
     var sourceFilePath = cordova.file.applicationDirectory + fp;
-    var targetFilePath = cordova.file.documentsDirectory;
+    var targetFilePath = cordova.file.dataDirectory;
 
     var ft = new FileTransfer();
     ft.download(
