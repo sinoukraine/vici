@@ -476,8 +476,34 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 });
 $$(document).on('click', '.getManual', function(){
     var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
-    viewDocument2(url);
+    //viewDocument2(url);
+    copyFile()
 });
+
+
+// get base url for index.html
+
+function copyFile() {
+    var baseUrl = location.href.replace("/index.html", "");
+    var fp = "resources/manual/DC100-user-guide.pdf";
+    var fileDestPath = "tempFolder/";
+
+    var sourceFilePath = baseUrl + "/" + fp;
+    var targetFilePath = fileSystem.root.toURL() + fileDestPath;
+
+    var ft = new FileTransfer();
+    ft.download(
+        sourceFilePath,
+        targetFilePath,
+        function (entry) {
+            alert("file copy success")
+        },
+        function (error) {
+            alert('1' + error);
+        }
+    );
+}
+
 
 function viewDocument2(url) {
     if (cordova && cordova.plugins.fileOpener2) {
