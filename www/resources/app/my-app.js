@@ -51,8 +51,6 @@ if( navigator.userAgent.match(/Windows/i) ){
     inBrowser = 1;
 }
 
-//var cordovaPresent = false;
-
 document.addEventListener("deviceready", onDeviceReady, false ); 
 
 //function onPlusReady(){   
@@ -76,14 +74,6 @@ function onDeviceReady(){
     }
 
     document.addEventListener("backbutton", backFix, false); 
-    //document.addEventListener("background", onAppBackground, false);
-    //document.addEventListener("foreground", onAppForeground, false);    
-    //document.addEventListener("resume", onAppReume, false);
-    //document.addEventListener("pause", onAppPause, false);
-    //document.addEventListener("newintent", onAppNewintent, false);  
-
-    //plus.push.addEventListener("receive", onPushRecieve, false );
-    //plus.push.addEventListener("click", onPushClick, false );
 
     
     sutupGeolocationPlugin();
@@ -91,14 +81,6 @@ function onDeviceReady(){
     checkTelephonyPermissions();
 
 
-/*
-    assertCordova();
-    cordovaPresent = true;
-    _sdv = cordova.plugins.SitewaertsDocumentViewer;
-    $(document).ready(function ()
-    {
-        init();
-    });*/
 }
 
 function checkTelephonyPermissions(){
@@ -493,15 +475,16 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
     );
 });
 $$(document).on('click', '.getManual', function(){
-    //alert(getPhoneGapPath());
-    var href = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
-
+    var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
+    viewDocument(url);
+});
+function viewDocument(url) {
     if (cordova && cordova.plugins.SitewaertsDocumentViewer){
         cordova.plugins.SitewaertsDocumentViewer.viewDocument(
-            href,
+            url,
             'application/pdf',
             {
-                title: 'User Manual',
+                title: 'DC-100 User Guide',
                 documentView : {
                     closeLabel : 'Close'
                 },
@@ -542,7 +525,19 @@ $$(document).on('click', '.getManual', function(){
                 if(confirm("Do you want to install the free PDF Viewer "
                     + appId + " for Android?"))
                 {
-                    installer();
+                    installer(
+                        function ()
+                        {
+                            window.console.log('successfully installed app');
+                            if (confirm("App installed. Do you want to view the document now?"))
+                                viewDocument(url);
+                        },
+                        function (error)
+                        {
+                            window.console.log('cannot install app');
+                            window.console.log(error);
+                        }
+                    );
                 }
             },
             function (error) {
@@ -553,14 +548,14 @@ $$(document).on('click', '.getManual', function(){
     }else{
         alert('plugin to view file not found')
     }
-
-});
+}
 function getPhoneGapPath() {
     var path = window.location.pathname;
     var sizefilename = path.length - (path.lastIndexOf("/")+1);
     path = path.substr( path, path.length - sizefilename );
     return path;
-};
+}
+
 $$(document).on('click', '.getIMEI', function(){
     var savedConfig = trackerGetSavedConfig();
     if (savedConfig.IMEI) {
