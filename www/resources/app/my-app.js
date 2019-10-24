@@ -514,7 +514,8 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 
 $$(document).on('click', '.getManual', function(){
     var fullPathToFile = cordova.file.applicationDirectory + 'www/resources/manual/DC100-user-guide.pdf';
-    var wwwDirEntry;
+    viewDocument2(fullPathToFile);
+    /*var wwwDirEntry;
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
         wwwDirEntry = dirEntry;
     },function (e) {
@@ -534,51 +535,8 @@ $$(document).on('click', '.getManual', function(){
             {
                 alert('copying FAILED');
             });
-    }, function (e) { alert(JSON.stringify(e)); });
+    }, function (e) { alert(JSON.stringify(e)); });*/
 
-   /* var dirEntry = function (entry) {
-        var dirReader = entry.createReader();
-        dirReader.readEntries(
-            function (entries) {
-                $.each(entries, function (n, i) {
-                    if (i.isDirectory === true) {
-                        if (i.nativeURL.indexOf('resources') > -1) {
-                            //found the target /res directory
-                            var path = i.nativeURL + 'DC100-user-guide.pdf';
-                            alert(path);
-                            window.resolveLocalFileSystemURL(path, function onSuccess(fileEntry)
-                            {
-                                alert(JSON.stringify(fileEntry));
-                                fileEntry.copyTo(wwwDirEntry, 'DC100-user-guide.pdf',
-                                    function()
-                                    {
-                                        alert('copying was successful');
-                                    },
-                                    function()
-                                    {
-                                        alert('copying FAILED');
-                                    });
-                            }, function (e) { alert(JSON.stringify(e)); });
-                            return false; //no need to iterate more
-                        } else {
-                            // Recursive -- call back into this subdirectory
-                            dirEntry(i);
-                        }
-                    }
-                });
-
-            },
-            function (error) {
-                alert("readEntries error: " + error.code);
-            }
-        );
-    };
-
-    var dirError = function (error) {
-        alert("getDirectory error: " + error.code);
-    };
-
-    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory, dirEntry, dirError);*/
 });
 
 
