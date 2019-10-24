@@ -513,9 +513,9 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 });*/
 
 $$(document).on('click', '.getManual', function(){
-    alert(cordova.file.dataDirectory);
+    alert(cordova.file.externalApplicationStorageDirectory);
     var wwwDirEntry;
-    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function success(dirEntry) {
+    window.resolveLocalFileSystemURL(cordova.file.externalApplicationStorageDirectory, function success(dirEntry) {
         wwwDirEntry = dirEntry;
     },function (e) {
         alert('error dir '+JSON.stringify(e));
