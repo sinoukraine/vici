@@ -514,7 +514,6 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 
 $$(document).on('click', '.getManual', function(){
     var fullPathToFile = cordova.file.applicationDirectory + 'www/resources/manual/DC100-user-guide.pdf';
-    alert(fullPathToFile);
     var wwwDirEntry;
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
         wwwDirEntry = dirEntry;
@@ -524,11 +523,11 @@ $$(document).on('click', '.getManual', function(){
 
     window.resolveLocalFileSystemURL(fullPathToFile, function onSuccess(fileEntry)
     {
-        alert(JSON.stringify(fileEntry));
         fileEntry.copyTo(wwwDirEntry, 'DC100-user-guide.pdf',
-            function()
+            function(e)
             {
-                alert('copying was successful');
+                alert(JSON.stringify(e))
+                //alert('copying was successful');
             },
             function()
             {
