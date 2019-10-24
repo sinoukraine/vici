@@ -513,7 +513,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 });*/
 
 $$(document).on('click', '.getManual', function(){
-    var fullPathToFile = cordova.file.applicationDirectory + 'resources/manual/DC100-user-guide.pdf';
+    var fullPathToFile = cordova.file.applicationDirectory + 'www/resources/manual/DC100-user-guide.pdf';
     alert(fullPathToFile);
     var wwwDirEntry;
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
