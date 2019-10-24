@@ -526,7 +526,8 @@ $$(document).on('click', '.getManual', function(){
         fileEntry.copyTo(wwwDirEntry, 'DC100-user-guide.pdf',
             function(e)
             {
-                alert(JSON.stringify(e))
+                viewDocument2(e.nativeURL);
+                //alert(JSON.stringify(e))
                 //alert('copying was successful');
             },
             function()
