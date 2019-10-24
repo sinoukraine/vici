@@ -513,6 +513,8 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 });*/
 
 $$(document).on('click', '.getManual', function(){
+    var fullPathToFile = cordova.file.applicationDirectory + 'resources/manual/DC100-user-guide.pdf';
+    alert(fullPathToFile);
     var wwwDirEntry;
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
         wwwDirEntry = dirEntry;
@@ -520,7 +522,21 @@ $$(document).on('click', '.getManual', function(){
         alert('error dir '+JSON.stringify(e));
     });
 
-    var dirEntry = function (entry) {
+    window.resolveLocalFileSystemURL(fullPathToFile, function onSuccess(fileEntry)
+    {
+        alert(JSON.stringify(fileEntry));
+        fileEntry.copyTo(wwwDirEntry, 'DC100-user-guide.pdf',
+            function()
+            {
+                alert('copying was successful');
+            },
+            function()
+            {
+                alert('copying FAILED');
+            });
+    }, function (e) { alert(JSON.stringify(e)); });
+
+   /* var dirEntry = function (entry) {
         var dirReader = entry.createReader();
         dirReader.readEntries(
             function (entries) {
@@ -562,7 +578,7 @@ $$(document).on('click', '.getManual', function(){
         alert("getDirectory error: " + error.code);
     };
 
-    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory, dirEntry, dirError);
+    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory, dirEntry, dirError);*/
 });
 
 
@@ -585,7 +601,7 @@ function viewDocument2(url) {
         );
     }
 }
-function viewDocument(url) {
+/*function viewDocument(url) {
     if (cordova && cordova.plugins.SitewaertsDocumentViewer){
         cordova.plugins.SitewaertsDocumentViewer.viewDocument(
             url,
@@ -655,7 +671,7 @@ function viewDocument(url) {
     }else{
         alert('plugin to view file not found')
     }
-}
+}*/
 function getPhoneGapPath() {
     var path = window.location.pathname;
     var sizefilename = path.length - (path.lastIndexOf("/")+1);
