@@ -513,37 +513,26 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 });*/
 
 $$(document).on('click', '.getManual', function(){
-    var fullPathToFile = cordova.file.applicationDirectory + 'www/resources/manual/DC100-user-guide.pdf';
-    window.resolveLocalFileSystemURL(fullPathToFile, function success(dirEntry) {
-        alert(JSON.stringify(dirEntry));
-        viewDocument2(dirEntry.nativeURL);
+    var fullPathToFilePrivate = cordova.file.applicationDirectory + 'www/resources/manual/DC100-user-guide.pdf';
+    var externalDirEntry;
+    window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
+        externalDirEntry = dirEntry;
     },function (e) {
         alert('error dir '+JSON.stringify(e));
     });
 
-    /*var wwwDirEntry;
-    window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
-        wwwDirEntry = dirEntry;
-    },function (e) {
-        alert('error dir '+JSON.stringify(e));
-    });*/
-
-
-    /*window.resolveLocalFileSystemURL(fullPathToFile, function onSuccess(fileEntry)
+    window.resolveLocalFileSystemURL(fullPathToFilePrivate, function onSuccess(fileEntry)
     {
-        fileEntry.copyTo(wwwDirEntry, 'DC100-user-guide.pdf',
+        fileEntry.copyTo(externalDirEntry, 'DC100-user-guide.pdf',
             function(e)
             {
                 viewDocument2(e.nativeURL);
-                //alert(JSON.stringify(e))
-                //alert('copying was successful');
             },
             function()
             {
                 alert('copying FAILED');
             });
-    }, function (e) { alert(JSON.stringify(e)); });*/
-
+    }, function (e) { alert(JSON.stringify(e)); });
 });
 
 
