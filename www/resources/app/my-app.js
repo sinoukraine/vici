@@ -514,15 +514,22 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 
 $$(document).on('click', '.getManual', function(){
     var fullPathToFile = cordova.file.applicationDirectory + 'www/resources/manual/DC100-user-guide.pdf';
-    viewDocument2(fullPathToFile);
+    window.resolveLocalFileSystemURL(fullPathToFile, function success(dirEntry) {
+        alert(dirEntry);
+        viewDocument2(dirEntry.nativeURL);
+    },function (e) {
+        alert('error dir '+JSON.stringify(e));
+    });
+
     /*var wwwDirEntry;
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
         wwwDirEntry = dirEntry;
     },function (e) {
         alert('error dir '+JSON.stringify(e));
-    });
+    });*/
 
-    window.resolveLocalFileSystemURL(fullPathToFile, function onSuccess(fileEntry)
+
+    /*window.resolveLocalFileSystemURL(fullPathToFile, function onSuccess(fileEntry)
     {
         fileEntry.copyTo(wwwDirEntry, 'DC100-user-guide.pdf',
             function(e)
