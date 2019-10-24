@@ -515,7 +515,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 $$(document).on('click', '.getManual', function(){
     var fullPathToFile = cordova.file.applicationDirectory + 'www/resources/manual/DC100-user-guide.pdf';
     window.resolveLocalFileSystemURL(fullPathToFile, function success(dirEntry) {
-        alert(dirEntry);
+        alert(JSON.stringify(dirEntry));
         viewDocument2(dirEntry.nativeURL);
     },function (e) {
         alert('error dir '+JSON.stringify(e));
