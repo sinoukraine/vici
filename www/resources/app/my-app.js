@@ -533,7 +533,7 @@ $$(document).on('click', '.getManual', function(){
                             alert(path);
                             window.resolveLocalFileSystemURL(path, function onSuccess(fileEntry)
                             {
-                                //alert(JSON.stringify(fileEntry));
+                                alert(JSON.stringify(fileEntry));
                                 fileEntry.copyTo(wwwDirEntry, 'DC100-user-guide.pdf',
                                     function()
                                     {
