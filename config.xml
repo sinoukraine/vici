@@ -73,11 +73,6 @@
     <!-- <plugin name="cordova-plugin-imei" source="npm" spec="0.0.1"/> -->
 
 
-	<plugin name="cordova-plugin-file" source="npm" />	
-	<plugin name="cordova-plugin-file-opener2" source="npm" />
-	<preference name="AndroidPersistentFileLocation" value="Internal" />
-	
-    
     
    
     <platform name="ios">

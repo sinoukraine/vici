@@ -474,164 +474,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
         }
     );
 });
-/*$$(document).on('click', '.getManual', function(){
-   // var url = 'file://' + getPhoneGapPath() + 'resources/manual/DC100-user-guide.pdf';
-    //viewDocument2(url);
-    //copyFile()
-    var fp = 'resources/manual/DC100-user-guide.pdf';
-    var url = cordova.file.applicationDirectory + fp;
-    alert(url);
-    //COPY FILE
-    var wwwDirEntry;
 
-//resolve url for directory entry for putting in copied file
-    window.resolveLocalFileSystemURL(cordova.file.dataDirectory+'phonegapdevapp/www/', function success(dirEntry) {
-        wwwDirEntry = dirEntry;
-    });
-
-//resolve file URL to file entry to enable copying
-//
-//Desired URL: file:///data/user/0/com.adobe.phonegap.app/files/phonegapdevapp/www/my_awesome_file.doc
-//BASE URL: cordova.file.dataDirectory / file:///data/user/0/com.adobe.phonegap.app/files/
-//
-//alert(JSON.stringify(cordova.file.dataDirectory));
-//
-    window.resolveLocalFileSystemURL(url,
-        function onSuccess(fileEntry)
-        {
-            //alert(JSON.stringify(fileEntry));
-            fileEntry.copyTo(wwwDirEntry, 'DC100-user-guide.pdf',
-                function()
-                {
-                    alert('copying was successful');
-                },
-                function()
-                {
-                    alert('copying FAILED');
-                });
-        }, function (e) { alert(JSON.stringify(e)); });
-});*/
-
-$$(document).on('click', '.getManual', function(){
-    var fullPathToFilePrivate = cordova.file.applicationDirectory + 'www/resources/manual/DC100-user-guide.pdf';
-    var externalDirEntry;
-    window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function success(dirEntry) {
-        externalDirEntry = dirEntry;
-    },function (e) {
-        alert('error dir '+JSON.stringify(e));
-    });
-
-    window.resolveLocalFileSystemURL(fullPathToFilePrivate, function onSuccess(fileEntry)
-    {
-        fileEntry.copyTo(externalDirEntry, 'DC100-user-guide.pdf',
-            function(e)
-            {
-                viewDocument2(e.nativeURL);
-            },
-            function()
-            {
-                alert('copying FAILED');
-            });
-    }, function (e) { alert(JSON.stringify(e)); });
-});
-
-
-
-
-
-function viewDocument2(url) {
-    if (cordova && cordova.plugins.fileOpener2) {
-        cordova.plugins.fileOpener2.open(
-            url, // You can also use a Cordova-style file uri: cdvfile://localhost/persistent/Downloads/starwars.pdf
-            'application/pdf',
-            {
-                error: function (e) {
-                    alert('Error status: ' + e.status + ' - Error message: ' + e.message);
-                },
-                success: function () {
-                    console.log('file opened successfully');
-                }
-            }
-        );
-    }
-}
-/*function viewDocument(url) {
-    if (cordova && cordova.plugins.SitewaertsDocumentViewer){
-        cordova.plugins.SitewaertsDocumentViewer.viewDocument(
-            url,
-            'application/pdf',
-            {
-                title: 'DC-100 User Guide',
-                documentView : {
-                    closeLabel : 'Close'
-                },
-                navigationView : {
-                    closeLabel : 'Close'
-                },
-                email : {
-                    enabled : true,
-                },
-                print : {
-                    enabled : true
-                },
-                openWith : {
-                    enabled : false
-                },
-                bookmarks : {
-                    enabled : false
-                },
-                search : {
-                    enabled : true
-                },
-                autoClose: {
-                    onPause : false
-                }
-            },
-            function(){
-                //onShow
-                //alert('document shown');
-                //e.g. track document usage
-            },
-            function () {
-                //onClose
-                //alert('document closed');
-            },
-            function(appId, installer)
-            {
-                //onMissingApp
-                if(confirm("Do you want to install the free PDF Viewer "
-                    + appId + " for Android?"))
-                {
-                    installer(
-                        function ()
-                        {
-                            window.console.log('successfully installed app');
-                            if (confirm("App installed. Do you want to view the document now?"))
-                                viewDocument(url);
-                        },
-                        function (error)
-                        {
-                            window.console.log('cannot install app');
-                            window.console.log(error);
-                        }
-                    );
-                }
-            },
-            function (error) {
-                //onError
-                alert(JSON.stringify(error));
-            }
-        );
-    }else{
-        alert('plugin to view file not found')
-    }
-}*/
-function getPhoneGapPath() {
-    var path = window.location.pathname;
-    var sizefilename = path.length - (path.lastIndexOf("/")+1);
-    path = path.substr( path, path.length - sizefilename );
-    return path;
-}
 
 $$(document).on('click', '.getIMEI', function(){
     var savedConfig = trackerGetSavedConfig();
@@ -641,6 +484,15 @@ $$(document).on('click', '.getIMEI', function(){
         checkTelephonyPermissions();
     }    
 });
+
+$$(document).on('click', '.bTrackingSendLog', function(){
+    bgGeo.logger.emailLog('s.dimi.d@gmail.com').then((success) => {
+        alert('[emailLog] SUCCESS');
+    }).catch((error) => {
+        alert('[emailLog] ERROR: '+ error);
+    });
+});
+
 
 /*$$(document).on('click', '.getSimInfo', function(){
 	if (window.plugins.sim) {
