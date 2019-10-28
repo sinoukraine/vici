@@ -184,8 +184,8 @@ function sutupGeolocationPlugin(){
 
       // 2. Execute #ready method:
     bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
-        alert(JSON.stringify(savedConfig));
-        if (savedConfig.ScheduleState && savedConfig.ScheduleState === 'true'){
+        //alert(JSON.stringify(savedConfig));
+        if (savedConfig.ScheduleState && savedConfig.ScheduleState == true){
             App.alert('yes');
             bgGeo.requestPermission().then((status) => {
                 bgGeo.startSchedule(function() {
