@@ -184,6 +184,20 @@ function sutupGeolocationPlugin(){
 
       // 2. Execute #ready method:
     bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
+        if (savedConfig.ScheduleState && savedConfig.ScheduleState === 'true'){
+            bgGeo.requestPermission().then((status) => {
+                bgGeo.startSchedule(function() {
+
+                });
+            }).catch((status) => {
+                App.alert('Tracking permission denied');
+                trackerSaveConfig({ScheduleState: false});
+            });
+        }else{
+            bgGeo.stopSchedule(function() {
+                bgGeo.stop();
+            });
+        }
         //localStorage.tracker_state = state;
         //alert(JSON.stringify(state));
         //alert(state.schedulerEnabled);
