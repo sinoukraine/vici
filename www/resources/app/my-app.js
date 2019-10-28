@@ -151,7 +151,7 @@ function sutupGeolocationPlugin(){
             priority: bgGeo.NOTIFICATION_PRIORITY_MAX
         },
         debug: false,
-        logLevel: bgGeo.LOG_LEVEL_ERROR,
+        logLevel: bgGeo.LOG_LEVEL_VERBOSE, //bgGeo.LOG_LEVEL_ERROR,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
         //distanceFilter: 10,
         //allowIdenticalLocations: true,
@@ -487,9 +487,9 @@ $$(document).on('click', '.getIMEI', function(){
 
 $$(document).on('click', '.bTrackingSendLog', function(){
     bgGeo.logger.emailLog('s.dimi.d@gmail.com').then((success) => {
-        alert('[emailLog] SUCCESS');
+        alert('SUCCESS');
     }).catch((error) => {
-        alert('[emailLog] ERROR: '+ error);
+        alert('ERROR: '+ error);
     });
 });
 
