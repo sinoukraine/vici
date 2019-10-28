@@ -166,7 +166,7 @@ function sutupGeolocationPlugin(){
         stopOnTerminate: false,
         startOnBoot: true,
         //forceReloadOnSchedule: true,
-        //forceReloadOnBoot: true,
+        forceReloadOnBoot: true,
         scheduleUseAlarmManager: true,
     };
 
@@ -186,17 +186,13 @@ function sutupGeolocationPlugin(){
     bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
         //alert(JSON.stringify(savedConfig));
         if (savedConfig.ScheduleState && savedConfig.ScheduleState == true){
-            App.alert('yes');
             bgGeo.requestPermission().then((status) => {
-                bgGeo.startSchedule(function() {
-                    App.alert('here');
-                });
+                bgGeo.startSchedule();
             }).catch((status) => {
                 App.alert('Tracking permission denied');
                 trackerSaveConfig({ScheduleState: false});
             });
         }else{
-            App.alert('no');
             bgGeo.stopSchedule(function() {
                 bgGeo.stop();
             });
