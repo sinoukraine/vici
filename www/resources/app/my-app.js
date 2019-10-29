@@ -154,7 +154,7 @@ function sutupGeolocationPlugin(){
         logLevel: bgGeo.LOG_LEVEL_VERBOSE, //bgGeo.LOG_LEVEL_ERROR,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
         //distanceFilter: 10,
-        //allowIdenticalLocations: true,
+        allowIdenticalLocations: true,
         distanceFilter: 0,
         //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
         //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
