@@ -165,6 +165,7 @@ function sutupGeolocationPlugin(){
         //maxBatchSize: 20,
         stopOnTerminate: false,
         startOnBoot: true,
+        speedJumpFilter: 200,
         //forceReloadOnSchedule: true,
         forceReloadOnBoot: true,
         scheduleUseAlarmManager: true,
