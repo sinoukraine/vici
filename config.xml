@@ -2,8 +2,8 @@
 <widget 
 	id="com.sinopacific.phonetrack" 
 	version="1.0.1"
-	android-versionCode="12"
-    ios-CFBundleVersion="12"
+	android-versionCode="13"
+    ios-CFBundleVersion="13"
 	xmlns="http://www.w3.org/ns/widgets" 
 	xmlns:cdv="http://cordova.apache.org/ns/1.0"  	
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -87,12 +87,28 @@
             <string>You can select photo of your asset in your photo library and upload it into the app</string>
         </edit-config>
         <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
-            <string>need location access to find things nearby</string>
+            <string>Need location access to find things nearby</string>
         </edit-config>
         <edit-config target="NSPhotoLibraryAddUsageDescription" file="*-Info.plist" mode="merge">
             <string>Need photo library access to save pictures there</string>
         </edit-config>
+
+        <!-- background-geolocation -->
+        <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Background location tracking is required for our app to get phone location when user turn it on</string>
+        </config-file>
+        <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
+            <string>Background location tracking is required for our app to get phone location when user turn it on</string>
+        </config-file>
+        <!-- <config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Background location tracking is required for our app so we can...</string>
+        </config-file> -->
+        <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
+            <string>Device motion updates help determine when the device is stationary so the app can save power by turning off location-updates</string>
+        </config-file>
+        <!-- /background-geolocation -->
     </platform>
+
     
     <!-- <plugin name="cordova-background-geolocation-lt" spec="2.14.2" source="npm">
         <variable name="LICENSE" value="YOUR_LICENSE_KEY" />
