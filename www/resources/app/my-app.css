@@ -1,12 +1,37 @@
 /* COMMON */
-body{
+/*body{
 	font-family: "Roboto-Regular";
+}*/
+.theme-dealer .panel {
+	background: #fff;
 }
-
-
-body.with-panel-left-reveal .panel-overlay{
+.tabbar a {
+	color: rgba(255,255,255,.5);
+}
+.tabbar a.active{
+	color: #fff;
+}
+.page{
+	background: #fff;
+}
+.pages{
+	background: #fff;
+}
+.navbar:after{
+	background: transparent;
+}
+.toolbar a{
+	color: #fff;
+}
+label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkbox, label.label-checkbox input[type=radio]:checked+.item-media i.icon-form-checkbox{
+	background-color: #42B2AA;
+}
+body.with-panel-left-cover .panel-overlay{
 	opacity: 1;
 	background: rgba(0,0,0,.6);
+}
+.list-block .item-media{
+	min-width: 25px;
 }
 
 select{
@@ -79,7 +104,7 @@ select{
 	margin-top: 0;
 }
 .bg-color-page{
-	/* background-color: #333; */
+	 background-color: #fff;
 }
 .modal-text{
 	word-break: break-all;
@@ -552,6 +577,9 @@ select{
 .login-bottom{
 	/* height: 348px; */
 }
+.login-bottom .toolbar:before{
+	background: transparent;
+}
 	.theme-dealer .toolbar.login-tabbar {
 		background: transparent !important;
 		margin-top: -48px;
@@ -583,6 +611,10 @@ select{
 			.login_list_block_wrapper ul:after,
 			.login_list_block_wrapper .item-inner:after{
 				display: none;
+			}
+
+			.login_list ul li {
+				margin-bottom: 15px;
 			}
 				
 				.login_list_block_wrapper .item-input{
@@ -724,7 +756,8 @@ select{
 	}
 		.position_bottom .address{
 			color: #212121;
-			font-weight: bold;
+			height: auto;
+			/*font-weight: bold;*/
 		}
 		.float_button_wrapper{
 			position: absolute;
@@ -858,6 +891,34 @@ select{
 	margin-top: -34px !important;
 }
 
+.list-block.timingList .smart-select .item-title.label{
+	max-width: 100%;
+	width: auto;
+	-webkit-flex-shrink: 1;
+	-ms-flex: 0 1 auto;
+	flex-shrink: 1;
+}
+.list-block.timingList .smart-select .item-after{
+	max-width: 50%;
+}
+.list-block.timingList .smart-select .item-inner{
+	padding-right: 35px;
+	background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%2060%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpath%20d%3D'm60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z'%20fill%3D'%23c7c7cc'%2F%3E%3C%2Fsvg%3E");
+	background-size: 10px 20px;
+	background-repeat: no-repeat;
+	background-position: 95% center;
+	background-position: -webkit-calc(100% - 15px) center;
+	background-position: calc(100% - 15px) center;
+
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+}
 /* .timingList.list-block .item-inner:after{
 	content: '';
     position: absolute;

@@ -78,12 +78,26 @@ function onDeviceReady(){
     
     sutupGeolocationPlugin();
 
-    checkTelephonyPermissions();
-
+    //checkTelephonyPermissions();
+   // getUniquID();
 
 }
 
-function checkTelephonyPermissions(){
+function getUniquID() {
+    // check the plugin is installed
+    if (window.plugins && window.plugins.uniqueDeviceID) {
+        // request UUID
+        plugins.uniqueDeviceID(function(uuid) {
+                // got it!
+                alert(uuid);
+            },
+            function(err) {
+                // something went wrong
+                alert(JSON.stringify(err));
+            });
+    }
+}
+/*function checkTelephonyPermissions(){
 	if (window.plugins.sim) {
 		window.plugins.sim.hasReadPermission(function(state){
 			if (!state) {
@@ -100,9 +114,9 @@ function checkTelephonyPermissions(){
 	}else{
 		App.alert('Sim Plugin not supported');
 	}
-}
+}*/
 
-function getSimInfo(){
+/*function getSimInfo(){
 	window.plugins.sim.getSimInfo(function(info){
 	    var IMEI = false;
 		if (info.deviceId) {
@@ -137,7 +151,7 @@ function getSimInfo(){
 	}, function(err){
 		App.alert('Unable to get sim info');
 	});	
-}
+}*/
 
 
 function sutupGeolocationPlugin(){
@@ -218,25 +232,25 @@ function backFix(event){
 
 function setRegLink(imei){
     if (imei) {
-        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei='+imei);
+        $$('#regLink').attr('href','https://activation.phonetrack.co/register.php?imei='+imei);
     }else{
-        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei=');
+        $$('#regLink').attr('href','https://activation.phonetrack.co/register.php?imei=');
     }  
 }
 // Initialize your app
 
 
 var App = new Framework7({
-    swipePanel: 'left',   
+    animateNavBackIcon: true,
     swipeBackPage: false,
-    material: true,
-    //pushState: true,       
-    allowDuplicateUrls: true,    
-    sortable: false,    
+    //pushState: true,
+    swipePanel: 'left',
+    allowDuplicateUrls: true,
+    sortable: false,
     modalTitle: 'PhoneTrack',
+    notificationTitle: 'PhoneTrack',
     precompileTemplates: true,
     template7Pages: true,
-    tapHold: false, //enable tap hold events
     onAjaxStart: function(xhr){
         App.showIndicator();
     },
@@ -250,9 +264,8 @@ var $$ = Dom7;
 
 // Add view
 var mainView = App.addView('.view-main', {
-    //main: true,
-    domCache: true,  
-    swipeBackPage: false
+    domCache: true,
+    dynamicNavbar: true,
 });
 
 var virtualAssetList = null;
@@ -305,8 +318,12 @@ var html = Template7.templates.template_Login_Screen();
 $$(document.body).append(html); 
 html = Template7.templates.template_Popover_Menu();
 $$(document.body).append(html);
-html = Template7.templates.template_AssetList();
-$$('.navbar-fixed').append(html);
+
+
+$$('.index-title').html(LANGUAGE.MENU_MSG00);
+$$('.index-search-input').attr('placeholder',LANGUAGE.COM_MSG06);
+$$('.index-search-cancel').html(LANGUAGE.COM_MSG04);
+$$('.index-search-nothing-found').html(LANGUAGE.COM_MSG05);
 
 
 if (inBrowser) {
@@ -334,7 +351,7 @@ virtualAssetList = App.virtualList('.assetList', {
     items: [
     ],
     height: function (item) {        
-        var height = 88;         
+        var height = 79;
         return height; //display the image with 50px height
     },
     // Display the each item using Template7 template parameter
@@ -382,6 +399,8 @@ var cameraButtons = [
         }
     },
 ];
+
+$$(document).on('click', '#btnLogin', login);
 
 $$(document).on('submit', '.login-form', function (e) {    
     e.preventDefault();     
@@ -444,7 +463,8 @@ $$(document).on('click', '.getIMEI', function(){
     if (savedConfig.IMEI) {
         App.alert('Your Imei is: '+savedConfig.IMEI);
     }else{
-        checkTelephonyPermissions();
+        //checkTelephonyPermissions();
+        getUniquID();
     }    
 });
 
@@ -615,36 +635,36 @@ $$('body').on('click', '.menuAsset', function () {
     
 
     var tracking =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
+                        /*'<div class="action_button_block action_button_media">'+
                             '<i class="f7-icons icon-tracking color-dealer "></i>'+
-                        '</div>'+
+                        '</div>'+*/
                         '<div class="action_button_block action_button_text">'+
                             LANGUAGE.HOME_MSG02 +
                         '</div>'+
                     '</div>';
 
     var timing =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
+                       /* '<div class="action_button_block action_button_media">'+
                             '<i class="f7-icons icon-timing color-dealer "></i>'+
-                        '</div>'+
+                        '</div>'+*/
                         '<div class="action_button_block action_button_text">'+
                             LANGUAGE.HOME_MSG03 +
                         '</div>'+
                     '</div>';
 
     var settings =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
+                        /*'<div class="action_button_block action_button_media">'+
                             '<i class="f7-icons icon-settings color-dealer "></i>'+
-                        '</div>'+
+                        '</div>'+*/
                         '<div class="action_button_block action_button_text">'+
                             LANGUAGE.HOME_MSG04 +
                         '</div>'+
                     '</div>';
 
     var assetDelete =  '<div class="action_button_wrapper">'+
-                        '<div class="action_button_block action_button_media">'+
+                        /*'<div class="action_button_block action_button_media">'+
                             '<i class="f7-icons icon-delete color-red "></i>'+
-                        '</div>'+
+                        '</div>'+*/
                         '<div class="action_button_block action_button_text color-red">'+
                             LANGUAGE.HOME_MSG05 +
                         '</div>'+
@@ -668,7 +688,7 @@ $$('body').on('click', '.menuAsset', function () {
         },
         {
             text: timing,
-            disabled: disabled,
+            //disabled: disabled,
             onClick: function () {               
                 loadTimingPage();
             },  
@@ -716,7 +736,8 @@ App.onPageInit('user.profile', function (page) {
             ); 
 
         App.showPreloader();
-        JSON.request(url, function(result){ 
+        JSON.request(url, function(result){
+
                 console.log(result);                  
                 if (result.MajorCode == '000') {                    
                     userInfo.User = {
@@ -1012,9 +1033,9 @@ App.onPageInit('user.timing', function(page){
         });
     }
 
-    if(window.device) {
+    /*if(window.device) {
         checkTelephonyPermissions(); 
-    }
+    }*/
 
     noUiSlider.create(snapSlider, {
         start: [parseInt(startTimeMinutes.data('set')), parseInt(endTimeMinutes.data('set'))],
@@ -1723,7 +1744,7 @@ function setAssetListPosInfo(listObj){
                         var imei = posData[1];
                         var protocolClass = posData[2];
                         var deviceInfo = listObj[imei];            
-                        console.log(deviceInfo);  
+                        /*console.log(deviceInfo);*/
                         
                         POSINFOASSETLIST[imei] = Protocol.ClassManager.get(protocolClass, deviceInfo);
                         POSINFOASSETLIST[imei].initPosInfo(posData); 

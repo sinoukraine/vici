@@ -1,150 +1,153 @@
-<div class="page bg-color-page page_timing" data-page="user.timing">
-	<div class="navbar  bg-dealer">
-        <div class="navbar-inner">
-            <div class="left">
-                <a href="#" class="back link "> <i class="f7-icons icon-arrow-back"></i></a>
-            </div>
-            <div class="left navbar_title">{{@global.LANGUAGE.USER_TIMING_MSG00}}</div>     
-            <div class="right">
-                <a href="#" class="link applyUserTiming" ><i class="f7-icons icon-apply"></i></a>
-            </div> 
+<div class="navbar  bg-dealer">
+    <div class="navbar-inner">
+        <div class="left">
+            <a href="#" class="back link color-white"> <i class="f7-icons">chevron_left</i></a>
+        </div>
+        <div class="center color-white">{{@global.LANGUAGE.USER_TIMING_MSG00}}</div>
+        <div class="right">
+            <a href="#" class="link color-white applyUserTiming" ><i class="f7-icons icon-apply"></i></a>
         </div>
     </div>
-	<div class="page-content " >
-        <div class="content-block content_block_notes">
-            <span>{{@global.LANGUAGE.USER_TIMING_MSG00}}</span><br>
-            {{@global.LANGUAGE.PROMPT_MSG011}}
-        </div>
+</div>
 
-        <div class="list-block media-list list-block-readonly no-hairlines-between">           
-            <ul>  
-                {{#if Name}}               
-                <li class="item-content color-dealer">                  
-                    <div class="item-media">
-                        {{@global.LANGUAGE.USER_TIMING_MSG01}}
-                    </div>
-                    <div class="item-inner">
-                        <div class="item-title">
-                            {{Name}}
-                        </div>                        
-                    </div>                   
-                </li>
-                {{/if}}
-                {{#if Phone}}      
-                <li class="item-content">                  
-                    <div class="item-media">
-                        {{@global.LANGUAGE.USER_TIMING_MSG02}}
-                    </div>
-                    <div class="item-inner">
-                        <div class="item-title">
-                            {{Phone}}
-                        </div>                        
-                    </div>                   
-                </li>
-                {{/if}}
-                <li class="item-content">                  
-                    <div class="item-media">
-                        {{@global.LANGUAGE.USER_TIMING_MSG03}}
-                    </div>
-                    <div class="item-inner">
-                        <div class="item-title">
-                            {{IMEI}}
-                        </div>                        
-                    </div>                   
-                </li>
-            </ul>
-        </div>
-        <!-- <div class="content-block-title">
-            {{@global.LANGUAGE.USER_TIMING_MSG04}}            
-        </div> -->
-        <div class="list-block media-list no-hairlines timingList">           
-            <ul>  
-                <li>
-                    <div class="item-content border_bottom">                               
-                        <div class="item-inner">
-                            <div class="item-title-row">
-                                <div class="item-title mt-8">Turn On / Off Tracking</div>  
-                                <div class="item-after">   
-                                    <div class="item-input">                   
-                                        <label class="label-switch">
-                                            <input type="checkbox" name="tracking-enabled" {{#if TrackingState}}checked="checked"{{/if}}>
-                                            <div class="checkbox"></div>
-                                        </label>       
-                                    </div> 
-                                </div>       
-                            </div>         
+<div class="pages">
+    <div class="page bg-color-page page_timing" data-page="user.timing">
+
+        <div class="page-content " >
+            <div class="content-block content_block_notes">
+                <span>{{@global.LANGUAGE.USER_TIMING_MSG00}}</span><br>
+                {{@global.LANGUAGE.PROMPT_MSG011}}
+            </div>
+
+            <div class="list-block list-block-readonly no-hairlines-between">
+                <ul>
+                    {{#if Name}}
+                    <li class="item-content color-dealer">
+                        <div class="item-media">
+                            {{@global.LANGUAGE.USER_TIMING_MSG01}}
                         </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="item-content with_arrow_select border_bottom">
-                        <div class="item-media"><i class="f7-icons icon-timing color-dealer"></i></div>
                         <div class="item-inner">
-                            <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG05}}</div>
-                            <div class="item-input no-after">                                
-                                <select name="trackingInterval" id="trackingInterval" data-set="{{Interval}}">
-                                    <!-- <option value="0" >{{@global.LANGUAGE.USER_TIMING_MSG21}}</option> -->
-                                    <option value="20" selected>20 {{@global.LANGUAGE.USER_TIMING_MSG15}}</option>
-                                    <option value="60">1 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
-                                    <option value="300">5 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
-                                    <option value="600">10 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
-                                    <option value="900">15 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
-                                    <option value="1200">20 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
-                                    <option value="1800">30 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
-                                    <option value="3600">60 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
-                                </select>
+                            <div class="item-title">
+                                {{Name}}
                             </div>
                         </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="item-content with_arrow_select border_bottom">
-                        <div class="item-media"><i class="f7-icons icon-day-of-week color-dealer"></i></div>
+                    </li>
+                    {{/if}}
+                    {{#if Phone}}
+                    <li class="item-content">
+                        <div class="item-media">
+                            {{@global.LANGUAGE.USER_TIMING_MSG02}}
+                        </div>
                         <div class="item-inner">
-                            <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG07}}</div>
-                            <div class="item-input no-after">                                
-                                <select multiple name="dayOfWeek" id="dayOfWeek" data-set={{DayOfWeek}}>
-                                    <option value="1">{{@global.LANGUAGE.USER_TIMING_MSG14}}</option>
-                                    <option value="2" selected>{{@global.LANGUAGE.USER_TIMING_MSG08}}</option>
-                                    <option value="3" selected>{{@global.LANGUAGE.USER_TIMING_MSG09}}</option>
-                                    <option value="4" selected>{{@global.LANGUAGE.USER_TIMING_MSG10}}</option>
-                                    <option value="5" selected>{{@global.LANGUAGE.USER_TIMING_MSG11}}</option>
-                                    <option value="6" selected>{{@global.LANGUAGE.USER_TIMING_MSG12}}</option>
-                                    <option value="7">{{@global.LANGUAGE.USER_TIMING_MSG13}}</option>
-                                </select>
+                            <div class="item-title">
+                                {{Phone}}
                             </div>
                         </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="item-content slider">
+                    </li>
+                    {{/if}}
+                    <li class="item-content">
+                        <div class="item-media">
+                            {{@global.LANGUAGE.USER_TIMING_MSG03}}
+                        </div>
                         <div class="item-inner">
-                            <div class="item-title-row">
-                                <div class="item-title">
-                                    <span class="slider-val-title">{{@global.LANGUAGE.USER_TIMING_MSG17}}</span><br>
-                                    <span class="startTime" id="startTime" data-set="{{StartTime}}">{{StartTime}}</span>
-                                </div>
-                                <div class="item-after">
-                                    <div class="div">
-                                        <span class="slider-val-title">{{@global.LANGUAGE.USER_TIMING_MSG19}}</span><br>
-                                        <span class="endTime" id="endTime" data-set="{{EndTime}}">{{EndTime}}</span>
+                            <div class="item-title">
+                                {{IMEI}}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- <div class="content-block-title">
+                {{@global.LANGUAGE.USER_TIMING_MSG04}}
+            </div> -->
+            <div class="list-block no-hairlines media-list timingList">
+                <ul>
+                    <li>
+                        <div class="item-content ">
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title mt-8">Turn On / Off Tracking</div>
+                                    <div class="item-after">
+                                            <label class="label-switch">
+                                                <input type="checkbox" name="tracking-enabled" {{#if TrackingState}}checked="checked"{{/if}}>
+                                                <div class="checkbox"></div>
+                                            </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="item-subtitle">                                
-                                <div class="timeOfDay" id="timeOfDay"></div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <a href="#" class="item-link smart-select" data-open-in="picker">
+                            <select name="trackingInterval" id="trackingInterval" data-set="{{Interval}}">
+                                <!-- <option value="0" >{{@global.LANGUAGE.USER_TIMING_MSG21}}</option> -->
+                                <option value="20" selected>20 {{@global.LANGUAGE.USER_TIMING_MSG15}}</option>
+                                <option value="60">1 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                <option value="300">5 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                <option value="600">10 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                <option value="900">15 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                <option value="1200">20 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                <option value="1800">30 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                                <option value="3600">60 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
+                            </select>
+                            <div class="item-content  ">  <!--with_arrow_select-->
+                                <div class="item-media"><i class="f7-icons icon-timing color-dealer"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG05}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link smart-select" data-open-in="picker">
+                            <select multiple name="dayOfWeek" id="dayOfWeek" data-set={{DayOfWeek}}>
+                                <option value="1" data-display-as="{{@global.LANGUAGE.COM_MSG21}}">{{@global.LANGUAGE.USER_TIMING_MSG14}}</option>
+                                <option value="2" selected data-display-as="{{@global.LANGUAGE.COM_MSG22}}">{{@global.LANGUAGE.USER_TIMING_MSG08}}</option>
+                                <option value="3" selected data-display-as="{{@global.LANGUAGE.COM_MSG23}}">{{@global.LANGUAGE.USER_TIMING_MSG09}}</option>
+                                <option value="4" selected data-display-as="{{@global.LANGUAGE.COM_MSG24}}">{{@global.LANGUAGE.USER_TIMING_MSG10}}</option>
+                                <option value="5" selected data-display-as="{{@global.LANGUAGE.COM_MSG25}}">{{@global.LANGUAGE.USER_TIMING_MSG11}}</option>
+                                <option value="6" selected data-display-as="{{@global.LANGUAGE.COM_MSG26}}">{{@global.LANGUAGE.USER_TIMING_MSG12}}</option>
+                                <option value="7" data-display-as="{{@global.LANGUAGE.COM_MSG27}}">{{@global.LANGUAGE.USER_TIMING_MSG13}}</option>
+                            </select>
+                            <div class="item-content ">
+                                <div class="item-media"><i class="f7-icons icon-day-of-week color-dealer"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG07}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="item-content slider">
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title">
+                                        <span class="slider-val-title">{{@global.LANGUAGE.USER_TIMING_MSG17}}</span><br>
+                                        <span class="startTime" id="startTime" data-set="{{StartTime}}">{{StartTime}}</span>
+                                    </div>
+                                    <div class="item-after">
+                                        <div class="div">
+                                            <span class="slider-val-title">{{@global.LANGUAGE.USER_TIMING_MSG19}}</span><br>
+                                            <span class="endTime" id="endTime" data-set="{{EndTime}}">{{EndTime}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-subtitle">
+                                    <div class="timeOfDay" id="timeOfDay"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
 
 
-            </ul>
+                </ul>
+            </div>
+
+
+
+
         </div>
-
-
-
-    
     </div>
 </div>
 
