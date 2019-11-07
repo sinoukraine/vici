@@ -167,12 +167,11 @@ function sutupGeolocationPlugin(){
         debug: false,
         logLevel: bgGeo.LOG_LEVEL_VERBOSE, //bgGeo.LOG_LEVEL_ERROR,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
-        //distanceFilter: 10,
+        distanceFilter: 10,
         allowIdenticalLocations: true,
-        distanceFilter: 0,
-        //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
-        //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
-        url: API_URL.UPLOAD_LINK,
+
+        url: API_URL.UPLOAD_LINK_TEST,
+        //url: API_URL.UPLOAD_LINK,
         maxDaysToPersist: 3,
         autoSync: true,
         //autoSyncThreshold: 5,
@@ -190,9 +189,9 @@ function sutupGeolocationPlugin(){
             IMEI: savedConfig.IMEI
         }
     }
-    if  (savedConfig.Interval){
+    /*if  (savedConfig.Interval){
         config.locationUpdateInterval = savedConfig.Interval;
-    }
+    }*/
     if  (savedConfig.Schedule && savedConfig.Schedule.length){
         config.schedule = savedConfig.Schedule;
     }
@@ -1021,6 +1020,7 @@ App.onPageInit('user.timing', function(page){
 
     var dayOfWeekset = dayOfWeek.data('set').toString();
     var dayOfWeekArr = [];
+    var trackingServerEl = $$(page.container).find('[name="trackingServer"]');
 
     if (dayOfWeekset && dayOfWeekset.indexOf(',') != -1) {
         dayOfWeekArr = dayOfWeekset.split(',');
@@ -1072,15 +1072,15 @@ App.onPageInit('user.timing', function(page){
     });*/
 
     applyUserTiming.on('click', function(){
-        //alert('click');
-        var interval = parseInt(selectInterval.val()) * 1000;
+
+        //var interval = parseInt(selectInterval.val()) * 1000;
         var daysOfWeekArray = dayOfWeek.val();
         var valid = true;
         var schedule = [];
         var startTimeText = startTimeMinutes.text();
         var endTimeText = endTimeMinutes.text();
         var scheduleState = trackingStateEl.prop('checked');
-
+        var server = API_URL.UPLOAD_LINK_TEST;
 
 
         if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
@@ -1096,14 +1096,17 @@ App.onPageInit('user.timing', function(page){
             schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
         });
 
+        if (trackingServerEl.val() == '2'){
+            server = API_URL.UPLOAD_LINK;
+        }
         var trackerConfig = {
             DayOfWeek: !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(),
             StartTime: startTimeMinutes.data('set'),
             EndTime: endTimeMinutes.data('set'),
-            Interval: interval,
+            //url: server,
             ScheduleState: scheduleState,
             Schedule: schedule,
-            IMEI: page.context.IMEI
+            IMEI: page.context.IMEI ? page.context.IMEI : '',
         };
         trackerSaveConfig(trackerConfig);
 
@@ -1114,8 +1117,9 @@ App.onPageInit('user.timing', function(page){
             return;
         }
         bgGeo.setConfig({
-            distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
-            locationUpdateInterval: interval,  // Get a location every 5 seconds
+            //distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+            //locationUpdateInterval: interval,  // Get a location every 5 seconds
+            url: server,
             schedule: schedule,
             params: {
                 IMEI: trackerConfig.IMEI,

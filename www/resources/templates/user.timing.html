@@ -77,11 +77,26 @@
                             </div>
                         </div>
                     </li>
-
                     <li>
                         <a href="#" class="item-link smart-select" data-open-in="picker">
-                            <select name="trackingInterval" id="trackingInterval" data-set="{{Interval}}">
+                            <select name="trackingServer" id="trackingServer" >
                                 <!-- <option value="0" >{{@global.LANGUAGE.USER_TIMING_MSG21}}</option> -->
+                                <option value="1" selected>debug</option>
+                                <option value="2">quiktrak</option>
+
+                            </select>
+                            <div class="item-content  ">  <!--with_arrow_select-->
+                                <div class="item-media"><i class="f7-icons icon-timing color-dealer"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title label ">Servver</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!--<li>
+                        <a href="#" class="item-link smart-select" data-open-in="picker">
+                            <select name="trackingInterval" id="trackingInterval" data-set="{{Interval}}">
                                 <option value="20" selected>20 {{@global.LANGUAGE.USER_TIMING_MSG15}}</option>
                                 <option value="60">1 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                 <option value="300">5 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
@@ -91,14 +106,14 @@
                                 <option value="1800">30 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                                 <option value="3600">60 {{@global.LANGUAGE.USER_TIMING_MSG16}}</option>
                             </select>
-                            <div class="item-content  ">  <!--with_arrow_select-->
+                            <div class="item-content  ">
                                 <div class="item-media"><i class="f7-icons icon-timing color-dealer"></i></div>
                                 <div class="item-inner">
                                     <div class="item-title label ">{{@global.LANGUAGE.USER_TIMING_MSG05}}</div>
                                 </div>
                             </div>
                         </a>
-                    </li>
+                    </li>-->
                     <li>
                         <a href="#" class="item-link smart-select" data-open-in="picker">
                             <select multiple name="dayOfWeek" id="dayOfWeek" data-set={{DayOfWeek}}>
