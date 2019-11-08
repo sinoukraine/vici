@@ -88,7 +88,7 @@ function getUniquID() {
     if (window.plugins && window.plugins.uniqueDeviceID) {
         try {
             // request UUID
-            plugins.uniqueDeviceID(function(uuid) {
+            plugins.uniqueDeviceID.get(function(uuid) {
                     // got it!
                     App.alert(uuid);
                 },
