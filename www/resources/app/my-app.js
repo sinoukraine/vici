@@ -86,15 +86,22 @@ function onDeviceReady(){
 function getUniquID() {
     // check the plugin is installed
     if (window.plugins && window.plugins.uniqueDeviceID) {
-        // request UUID
-        plugins.uniqueDeviceID(function(uuid) {
-                // got it!
-                alert(uuid);
-            },
-            function(err) {
-                // something went wrong
-                alert(JSON.stringify(err));
-            });
+        try {
+            // request UUID
+            plugins.uniqueDeviceID(function(uuid) {
+                    // got it!
+                    App.alert(uuid);
+                },
+                function(err) {
+                    // something went wrong
+                    alert(JSON.stringify(err));
+                });
+        }catch (e) {
+            alert(JSON.stringify(e))
+        }
+
+    }else {
+        App.alert('plugin not found')
     }
 }
 /*function checkTelephonyPermissions(){
@@ -458,13 +465,14 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
 
 
 $$(document).on('click', '.getIMEI', function(){
-    var savedConfig = trackerGetSavedConfig();
+    /*var savedConfig = trackerGetSavedConfig();
     if (savedConfig.IMEI) {
         App.alert('Your Imei is: '+savedConfig.IMEI);
     }else{
         //checkTelephonyPermissions();
         getUniquID();
-    }    
+    } */
+    getUniquID();
 });
 
 $$(document).on('click', '.bTrackingSendLog', function(){
