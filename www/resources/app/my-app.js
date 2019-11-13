@@ -162,7 +162,7 @@ function sutupGeolocationPlugin(){
         url: API_URL.UPLOAD_LINK_TEST,
         maxDaysToPersist: 3,
         autoSync: true,
-        autoSyncThreshold: 5,
+        autoSyncThreshold: 2,
         batchSync: true,
         maxBatchSize: 50,
         stopOnTerminate: false,
@@ -202,7 +202,13 @@ function sutupGeolocationPlugin(){
         }
     });
 
-
+    bgGeo.onHttp((response) => {
+        /*let success = response.success;
+        if (!success) {
+            console.log('[onHttp] FAILURE: ', response);
+        }*/
+        alert(JSON.stringify(response));
+    });
 
 }
 
@@ -295,11 +301,6 @@ API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Device/UploadGPS2';
 
 API_URL.UPLOAD_LINK_TEST = 'https://sinopacificukraine.com/test/phonetrack/locations.php';
 
-
-API_URL.URL_TRACKING_IP = "194.247.12.43";
-API_URL.URL_TRACKING_PORT = "50001"; 
-/*API_URL.URL_TRACKING_IP = "test.m2mdata.co";
-API_URL.URL_TRACKING_PORT = "20771";*/
 
 //http://api.m2mglobaltech.com/PhoneProtect/V1/Client/Activation
 //http://api.m2mglobaltech.com/PhoneProtect/V1/Client/Registration
@@ -440,6 +441,7 @@ $$(document).on('click', '.bTrackingStatusScheduler', function(){
         }
     );
 });
+
 
 
 $$(document).on('click', '.getIMEI', function(){
@@ -1069,7 +1071,7 @@ App.onPageInit('user.timing', function(page){
         if (trackingServerVal === 2){
             trackingServer = API_URL.UPLOAD_LINK
         }
-
+        console.log(trackingServer);
 
 
         if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
