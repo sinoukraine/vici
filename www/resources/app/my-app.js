@@ -159,10 +159,10 @@ function sutupGeolocationPlugin(){
         distanceFilter: 0,
         //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
         //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
-        url: API_URL.UPLOAD_LINK_TEST,
+        url: API_URL.UPLOAD_LINK,
         maxDaysToPersist: 3,
         autoSync: true,
-        autoSyncThreshold: 2,
+        //autoSyncThreshold: 2,
         batchSync: true,
         maxBatchSize: 50,
         stopOnTerminate: false,
@@ -202,13 +202,10 @@ function sutupGeolocationPlugin(){
         }
     });
 
-    bgGeo.onHttp((response) => {
-        /*let success = response.success;
-        if (!success) {
-            console.log('[onHttp] FAILURE: ', response);
-        }*/
+    /*bgGeo.onHttp((response) => {
+
         alert(JSON.stringify(response));
-    });
+    });*/
 
 }
 
@@ -1065,13 +1062,13 @@ App.onPageInit('user.timing', function(page){
         var startTimeText = startTimeMinutes.text();
         var endTimeText = endTimeMinutes.text();
         var scheduleState = trackingStateEl.prop('checked');
-        var trackingServerVal = parseInt(trackingServerEl.val());
-        var trackingServer = API_URL.UPLOAD_LINK_TEST;
+        //var trackingServerVal = parseInt(trackingServerEl.val());
+        var trackingServer = API_URL.UPLOAD_LINK;
 
-        if (trackingServerVal === 2){
+        /*if (trackingServerVal === 2){
             trackingServer = API_URL.UPLOAD_LINK
-        }
-        console.log(trackingServer);
+        }*/
+
 
 
         if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
