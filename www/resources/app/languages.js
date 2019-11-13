@@ -21,13 +21,6 @@ window.LanguagePackages= {
 		"COM_MSG18": "Can't get coordinates",
 		"COM_MSG19": "Yes",
 		"COM_MSG20": "No",
-		"COM_MSG21": "Sun",
-		"COM_MSG22": "Mon",
-		"COM_MSG23": "Tue",
-		"COM_MSG24": "Wed",
-		"COM_MSG25": "Thu",
-		"COM_MSG26": "Fri",
-		"COM_MSG27": "Sat",
 
 		"PROMPT_MSG001": "The login(email) or password you entered is incorrect.",
 		"PROMPT_MSG002": "Fill in IMEI field, please.",
