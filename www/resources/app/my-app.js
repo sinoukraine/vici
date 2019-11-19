@@ -214,7 +214,7 @@ function sutupGeolocationPlugin(){
 function setupPush() {
     push = PushNotification.init({
         "android": {
-            "senderID": "1097482483564"
+            //"senderID": "1097482483564"
         },
         "browser": {
             pushServiceURL: 'https://push.api.phonegap.com/v1/push'
@@ -231,6 +231,7 @@ function setupPush() {
     push.on('registration', function(data) {
         console.log('registration event: ' + data.registrationId);
         alert( JSON.stringify(data) );
+        alert( JSON.stringify(data.registrationId) );
 
         //localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
 
