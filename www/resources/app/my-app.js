@@ -389,6 +389,7 @@ API_URL.URL_DEACTIVATE = API_DOMIAN1 + 'Client/Deactivate';
 API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Device/UploadGPS2';
 
 API_URL.UPLOAD_LINK_TEST = 'https://sinopacificukraine.com/test/phonetrack/locations.php';
+API_URL.URL_REFRESH_TOKEN = API_DOMIAN2 + "User/RefreshToken";
 
 
 //http://api.m2mglobaltech.com/PhoneProtect/V1/Client/Activation
@@ -1397,6 +1398,34 @@ function updateUserData(data) {
     $$('.user_f_l').html(letter1+letter2);
     $$('.user_name').html(data.FirstName+' '+data.SubName);
     $$('.user_email').html(data.EMail);
+}
+
+function refreshToken(newDeviceToken) {
+    console.log('refreshToken() called');
+    var userInfo = getUserinfo();
+
+    if (localStorage.PUSH_MOBILE_TOKEN && userInfo.MajorToken && userInfo.MinorToken && newDeviceToken) {
+        var data = {
+            MajorToken: userInfo.MajorToken,
+            MinorToken: userInfo.MinorToken,
+            MobileToken: localStorage.PUSH_MOBILE_TOKEN,
+            DeviceToken: newDeviceToken,
+        };
+
+        //console.log(urlLogin);
+        JSON1.requestPost(API_URL.URL_REFRESH_TOKEN, data, function(result) {
+                if (result.MajorCode == '000') {
+
+                } else {
+
+                }
+            },
+            function() { console.log('error during refresh token'); }
+        );
+    } else {
+        console.log('not loggined');
+    }
+
 }
 
 function hideKeyboard() {
