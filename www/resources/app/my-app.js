@@ -234,13 +234,13 @@ function setupPush() {
 
         //localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
 
-        var oldRegId = localStorage.PUSH_DEVICE_TOKEN;
+        /*var oldRegId = localStorage.PUSH_DEVICE_TOKEN;
         if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
             // Save new registration ID
             localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
             // Post registrationId to your app server as the value has changed
             refreshToken(data.registrationId);
-        }
+        }*/
     });
 
     push.on('error', function(e) {
