@@ -78,7 +78,7 @@ function onDeviceReady(){
     document.addEventListener("backbutton", backFix, false); 
 
     
-    sutupGeolocationPlugin();
+    //sutupGeolocationPlugin();
 
     /*checkTelephonyPermissions();*/
 

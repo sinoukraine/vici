@@ -130,9 +130,9 @@
         <variable name="MOTION_USAGE_DESCRIPTION" value="Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving" />
     </plugin> -->
 
-    <plugin name="cordova-background-geolocation-lt" spec="3.2.2" source="npm">
+    <!-- <plugin name="cordova-background-geolocation-lt" spec="3.2.2" source="npm">
     	 
-    </plugin>
+    </plugin> -->
     
 
 
