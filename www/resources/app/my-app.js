@@ -18,7 +18,7 @@ function guid() {
 //userCode = minorToken 
 //code = majorToken 
 
-/*function getPlusInfo(){
+function getPlusInfo(){
     if(window.plus) {
         window.uuid = plus.device.uuid;
         var info = plus.push.getClientInfo();
@@ -39,13 +39,14 @@ function guid() {
         localStorage.PUSH_APPID_ID = 'webapp';
         localStorage.DEVICE_TYPE = "web";        
     }
-}*/
+}
 
 
 var inBrowser = 0;
 var notificationChecked = 0;
 var imeiTimer = 0;
 var bgGeo;
+var push = null;
 
 if( navigator.userAgent.match(/Windows/i) ){    
     inBrowser = 1;
@@ -62,7 +63,8 @@ function onDeviceReady(){
     }
     if (StatusBar) {
         StatusBar.styleDefault();
-    } 
+    }
+    setupPush();
 
     if (!inBrowser) {
         if(getUserinfo().MinorToken) {
@@ -207,6 +209,96 @@ function sutupGeolocationPlugin(){
         alert(JSON.stringify(response));
     });*/
 
+}
+
+function setupPush() {
+    push = PushNotification.init({
+        "android": {
+            //"senderID": "264121929701"
+        },
+        "browser": {
+            pushServiceURL: 'https://push.api.phonegap.com/v1/push'
+        },
+        "ios": {
+            "sound": true,
+            "vibration": true,
+            "badge": true
+        },
+        "windows": {}
+    });
+    console.log('after init');
+
+    push.on('registration', function(data) {
+        console.log('registration event: ' + data.registrationId);
+        //alert( JSON.stringify(data) );
+
+        //localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+
+        var oldRegId = localStorage.PUSH_DEVICE_TOKEN;
+        if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
+            // Save new registration ID
+            localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+            // Post registrationId to your app server as the value has changed
+            refreshToken(data.registrationId);
+        }
+    });
+
+    push.on('error', function(e) {
+        //console.log("push error = " + e.message);
+        alert("push error = " + e.message);
+    });
+
+    push.on('notification', function(data) {
+        alert( JSON.stringify(data) );
+
+        //if user using app and push notification comes
+        /*if (data && data.additionalData && data.additionalData.foreground) {
+            // if application open, show popup
+            showMsgNotification([data.additionalData]);
+        } else if (data && data.additionalData && data.additionalData.payload) {
+            //if user NOT using app and push notification comes
+
+            App.showIndicator();
+            loginTimer = setInterval(function() {
+                //alert(localStorage.loginDone);
+                if (localStorage.loginDone) {
+                    clearInterval(loginTimer);
+                    setTimeout(function() {
+                        //alert('before processClickOnPushNotification');
+                        processClickOnPushNotification([data.additionalData.payload]);
+                        App.hideIndicator();
+                    }, 1000);
+                }
+            }, 1000);
+        }
+        if (device && device.platform && device.platform.toLowerCase() == 'ios') {
+            push.finish(
+                () => {
+                    console.log('processing of push data is finished');
+                },
+                () => {
+                    console.log(
+                        'something went wrong with push.finish for ID =',
+                        data.additionalData.notId
+                    );
+                },
+                data.additionalData.notId
+            );
+        }*/
+
+
+    });
+
+    if　 (!localStorage.ACCOUNT) {
+        push.clearAllNotifications(
+            () => {
+                console.log('success');
+            },
+            () => {
+                console.log('error');
+            }
+        );
+    }
 }
 
 function backFix(event){
@@ -1195,7 +1287,7 @@ function clearUserInfo(){
     
    
     //var appId = !localStorage.PUSH_APPID_ID? '' : localStorage.PUSH_APPID_ID;
-    //var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '' : localStorage.PUSH_DEVICE_TOKEN;
+    var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '' : localStorage.PUSH_DEVICE_TOKEN;
     var userName = !localStorage.ACCOUNT? '' : localStorage.ACCOUNT;
     var userInfo = getUserinfo();
     var MinorToken = userInfo.MinorToken;      
@@ -1216,11 +1308,26 @@ function clearUserInfo(){
     if (!isObjEmpty(savedConfig)){
         trackerSaveConfig(savedConfig);
     }
-    
-    if(mobileToken){         
+    if (deviceToken) {
+        localStorage.PUSH_DEVICE_TOKEN = deviceToken;
+    }
+
+    if(mobileToken){
+        localStorage.PUSH_MOBILE_TOKEN = mobileToken;
         JSON.request(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });  
     }   
-    $$("input[name='account']").val(userName);    
+    $$("input[name='account']").val(userName);
+
+    if (push) {
+        push.clearAllNotifications(
+            () => {
+                console.log('success');
+            },
+            () => {
+                console.log('error');
+            }
+        );
+    }
 
 }
 
