@@ -45,6 +45,15 @@
         },
         "cordova-background-geolocation-lt": {
             "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-support-google-services": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-sim": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-unique-device-id": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
         }
     },
     "dependent_plugins": {},
@@ -148,6 +157,22 @@
             "clobbers": [
                 "window.BackgroundGeolocation"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-sim/www/sim.js",
+            "id": "cordova-plugin-sim.Sim",
+            "pluginId": "cordova-plugin-sim",
+            "merges": [
+                "window.plugins.sim"
+            ]
+        },
+        {
+            "file": "plugins/cordova-unique-device-id/www/uniqueid.js",
+            "id": "cordova-unique-device-id.UniqueDeviceID",
+            "pluginId": "cordova-unique-device-id",
+            "merges": [
+                "window.plugins.uniqueDeviceID"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -159,6 +184,9 @@
         "cordova-plugin-splashscreen": "5.0.2",
         "cordova-plugin-camera": "4.0.3",
         "cordova-plugin-geolocation": "4.0.1",
-        "cordova-background-geolocation-lt": "2.8.5"
+        "cordova-background-geolocation-lt": "2.8.5",
+        "cordova-support-google-services": "1.3.2",
+        "cordova-plugin-sim": "1.3.3",
+        "cordova-unique-device-id": "1.3.2"
     }
 }

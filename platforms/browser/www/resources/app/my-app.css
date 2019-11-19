@@ -66,6 +66,9 @@ select{
 .pr-16{
 	padding-right: 16px;
 }
+.mt-8{
+	margin-top: 8px;
+}
 .mt-16{
 	margin-top: 16px;
 }
@@ -78,7 +81,9 @@ select{
 .bg-color-page{
 	/* background-color: #333; */
 }
-
+.modal-text{
+	word-break: break-all;
+}
 .bg-dealer{
 	background: #42B2AA !important;
 	background-image: -moz-linear-gradient( 180deg, rgb(66,178,170) 0%, rgb(86,193,188) 100%) !important;
@@ -853,7 +858,7 @@ select{
 	margin-top: -34px !important;
 }
 
-.timingList.list-block .item-inner:after{
+/* .timingList.list-block .item-inner:after{
 	content: '';
     position: absolute;
     left: 0;
@@ -867,7 +872,7 @@ select{
     z-index: 15;
     -webkit-transform-origin: 50% 100%;
     transform-origin: 50% 100%;
-}
+} */
 .daytimeList {
 	margin: 0;
 }

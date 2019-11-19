@@ -31,6 +31,7 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <platform name="android">
+    	<edit-config file="res/values/strings.xml" mode="add" target="/resources"> <string name="gcm_defaultSenderId">1097482483564</string> </edit-config>
     	<!-- background-geolocation -->
 		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
 		    <meta-data
@@ -79,14 +80,9 @@
     <plugin name="cordova-plugin-camera" source="npm" spec="4.0.3"  />
     <plugin spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" source="git" />
 
-    <!-- <plugin name="cordova-plugin-sim" source="npm" spec="1.3.3" /> -->
+    <plugin name="cordova-plugin-sim" source="npm" spec="1.3.3" />
     <!-- iOS plugin for uniq id -->
-	<!-- <plugin name="cordova-unique-device-id" source="npm" spec="1.3.2" /> -->
-
-    
-    <!-- <plugin name="cordova-plugin-imei" source="npm" spec="0.0.1"/> -->
-
-
+	<plugin name="cordova-unique-device-id" source="npm" spec="1.3.2" />
     
    
     <platform name="ios">
@@ -109,10 +105,7 @@
         </config-file>
         <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
             <string>Background location tracking is required for our app to get phone location when user turn it on</string>
-        </config-file>
-        <!-- <config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
-            <string>Background location tracking is required for our app so we can...</string>
-        </config-file> -->
+        </config-file>      
         <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
             <string>Device motion updates help determine when the device is stationary so the app can save power by turning off location-updates</string>
         </config-file>
@@ -130,9 +123,9 @@
         <variable name="MOTION_USAGE_DESCRIPTION" value="Using the accelerometer increases battery-efficiency by intelligently toggling location-tracking only when the device is detected to be moving" />
     </plugin> -->
 
-    <!-- <plugin name="cordova-background-geolocation-lt" spec="3.2.2" source="npm">
+    <plugin name="cordova-background-geolocation-lt" spec="3.2.2" source="npm">
     	 
-    </plugin> -->
+    </plugin>
     
 
 

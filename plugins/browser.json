@@ -34,6 +34,15 @@
         },
         "cordova-background-geolocation-lt": {
             "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-support-google-services": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-sim": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-unique-device-id": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack"
         }
     },
     "dependent_plugins": {}

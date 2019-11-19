@@ -18,7 +18,7 @@ function guid() {
 //userCode = minorToken 
 //code = majorToken 
 
-/*function getPlusInfo(){
+function getPlusInfo(){
     if(window.plus) {
         window.uuid = plus.device.uuid;
         var info = plus.push.getClientInfo();
@@ -39,13 +39,14 @@ function guid() {
         localStorage.PUSH_APPID_ID = 'webapp';
         localStorage.DEVICE_TYPE = "web";        
     }
-}*/
+}
 
 
 var inBrowser = 0;
 var notificationChecked = 0;
 var imeiTimer = 0;
 var bgGeo;
+var push = null;
 
 if( navigator.userAgent.match(/Windows/i) ){    
     inBrowser = 1;
@@ -62,7 +63,8 @@ function onDeviceReady(){
     }
     if (StatusBar) {
         StatusBar.styleDefault();
-    } 
+    }
+    setupPush();
 
     if (!inBrowser) {
         if(getUserinfo().MinorToken) {
@@ -74,75 +76,230 @@ function onDeviceReady(){
     }
 
     document.addEventListener("backbutton", backFix, false); 
-    //document.addEventListener("background", onAppBackground, false);
-    //document.addEventListener("foreground", onAppForeground, false);    
-    //document.addEventListener("resume", onAppReume, false);
-    //document.addEventListener("pause", onAppPause, false);
-    //document.addEventListener("newintent", onAppNewintent, false);  
-
-    //plus.push.addEventListener("receive", onPushRecieve, false );
-    //plus.push.addEventListener("click", onPushClick, false );
 
     
-    sutupGeolocationPlugin();
+    //sutupGeolocationPlugin();
+
+    /*checkTelephonyPermissions();*/
+
+
+}
+
+function checkTelephonyPermissions(){
+	if (window.plugins.sim) {
+		window.plugins.sim.hasReadPermission(function(state){
+			if (!state) {
+				window.plugins.sim.requestReadPermission(function(){
+					//App.alert('Permission granted');
+					getSimInfo();	
+			    }, function(){
+			    	App.alert('Permission denied');
+			    });	
+			}else{
+				getSimInfo();				
+			}			
+    	});	
+	}else{
+		App.alert('Sim Plugin not supported');
+	}
+}
+
+function getSimInfo(){
+	window.plugins.sim.getSimInfo(function(info){
+	    var IMEI = false;
+		if (info.deviceId) {
+			//localStorage.tracker_imei = info.deviceId;
+            IMEI = info.deviceId;
+		}else{
+			if (info.cards && info.cards.length) {
+				if (info.cards[0] && info.cards[0].deviceId) {
+					//localStorage.tracker_imei = info.cards[0].deviceId;
+                    IMEI = info.cards[0].deviceId;
+                }else if(info.cards[1] && info.cards[1].deviceId){
+					//localStorage.tracker_imei = info.cards[1].deviceId;
+                    IMEI = info.cards[1].deviceId;
+                }else{
+					App.alert('Unable to get device IMEI');
+				}
+			}else{
+				App.alert('Unable to get sim card list');
+			}						
+		}	
+
+		if (IMEI) {
+            trackerSaveConfig({IMEI: IMEI});
+			setRegLink(IMEI);
+            if (bgGeo){
+                bgGeo.setConfig({
+                    params: { IMEI: IMEI },
+                })
+            }
+		}	
+
+	}, function(err){
+		App.alert('Unable to get sim info');
+	});	
 }
 
 
 function sutupGeolocationPlugin(){
-    // 1.  Listen to events
     bgGeo = window.BackgroundGeolocation;
-     
-    bgGeo.on('location', function(location) {
-        console.log('[location] -', location);
-    });
-     
-    bgGeo.on('motionchange', function(event) {
-        console.log('[motionchange] -', event.isMoving, event.location);
-    });
-     
-    /*bgGeo.onHttp(function(response) {
-        console.log('[http] - ', response.success, response.status, response.responseText);
-    });
-     
-    bgGeo.onProviderChange(function(event) {
-        console.log('[providerchange] -', event.status, event.enabled, event.gps, event.network);
-    });*/
-     
-      // 2. Execute #ready method:
-    bgGeo.ready({
-        reset: true,
-        debug: true,
-        logLevel: bgGeo.LOG_LEVEL_VERBOSE,
+
+    var savedConfig = trackerGetSavedConfig();
+    var config = {
+        //reset: true,
+        reset: false,
+        foregroundService: true,
+        notification: {
+            priority: bgGeo.NOTIFICATION_PRIORITY_MAX
+        },
+        debug: false,
+        logLevel: bgGeo.LOG_LEVEL_VERBOSE, //bgGeo.LOG_LEVEL_ERROR,
         desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 10,
-        url: 'http://sinopacificukraine.com/test/prestart/locations.php',        
+        //distanceFilter: 10,
+        allowIdenticalLocations: true,
+        distanceFilter: 0,
+        //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
+        //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
+        url: API_URL.UPLOAD_LINK,
+        maxDaysToPersist: 3,
         autoSync: true,
+        //autoSyncThreshold: 2,
+        batchSync: true,
+        maxBatchSize: 50,
         stopOnTerminate: false,
         startOnBoot: true,
-        params: {
-            "user_id": 123
-        },
-    }, function(state) {    // <-- Current state provided to #configure callback
-        // 3.  Start tracking
-        console.log('BackgroundGeolocation is configured and ready to use');
-        //alert('BackgroundGeolocation is configured and ready to use');
-        alert('BackgroundGeolocation is configured and ready to use. Current State is: ' + state.enabled);
-        alert(JSON.stringify(state));
-        if (!state.enabled) {
-            /*bgGeo.start().then(function() {
-                alert('BackgroundGeolocation tracking started');
-                console.log('- BackgroundGeolocation tracking started');
-            });*/
+        speedJumpFilter: 200,
+        //forceReloadOnSchedule: true,
+        forceReloadOnBoot: true,
+        scheduleUseAlarmManager: true,
+    };
+
+    if  (savedConfig.IMEI){
+        config.params = {
+            IMEI: savedConfig.IMEI
+        }
+    }
+    if  (savedConfig.Interval){
+        config.locationUpdateInterval = savedConfig.Interval;
+    }
+    if  (savedConfig.Schedule && savedConfig.Schedule.length){
+        config.schedule = savedConfig.Schedule;
+    }
+
+      // 2. Execute #ready method:
+    bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
+        //alert(JSON.stringify(savedConfig));
+        if (savedConfig.ScheduleState && savedConfig.ScheduleState == true){
+            bgGeo.requestPermission().then((status) => {
+                bgGeo.startSchedule();
+            }).catch((status) => {
+                App.alert('Tracking permission denied');
+                trackerSaveConfig({ScheduleState: false});
+            });
+        }else{
+            bgGeo.stopSchedule(function() {
+                bgGeo.stop();
+            });
         }
     });
-     
-      // NOTE:  Do NOT execute any API methods which will access location-services
-      // until the callback to #ready executes!
-      //
-      // For example, DO NOT do this here:
-      //
-      // bgGeo.getCurrentPosition();   // <-- NO!
-      // bgGeo.start();                // <-- NO!
+
+    /*bgGeo.onHttp((response) => {
+
+        alert(JSON.stringify(response));
+    });*/
+
+}
+
+function setupPush() {
+    push = PushNotification.init({
+        "android": {
+            "senderID": "1097482483564"
+        },
+        "browser": {
+            pushServiceURL: 'https://push.api.phonegap.com/v1/push'
+        },
+        "ios": {
+            "sound": true,
+            "vibration": true,
+            "badge": true
+        },
+        "windows": {}
+    });
+    console.log('after init');
+
+    push.on('registration', function(data) {
+        console.log('registration event: ' + data.registrationId);
+        alert( JSON.stringify(data) );
+
+        //localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+
+        /*var oldRegId = localStorage.PUSH_DEVICE_TOKEN;
+        if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
+            // Save new registration ID
+            localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+            // Post registrationId to your app server as the value has changed
+            refreshToken(data.registrationId);
+        }*/
+    });
+
+    push.on('error', function(e) {
+        //console.log("push error = " + e.message);
+        alert("push error = " + e.message);
+        //alert(JSON.stringify(e));
+    });
+
+    push.on('notification', function(data) {
+        alert( JSON.stringify(data) );
+
+        //if user using app and push notification comes
+        /*if (data && data.additionalData && data.additionalData.foreground) {
+            // if application open, show popup
+            showMsgNotification([data.additionalData]);
+        } else if (data && data.additionalData && data.additionalData.payload) {
+            //if user NOT using app and push notification comes
+
+            App.showIndicator();
+            loginTimer = setInterval(function() {
+                //alert(localStorage.loginDone);
+                if (localStorage.loginDone) {
+                    clearInterval(loginTimer);
+                    setTimeout(function() {
+                        //alert('before processClickOnPushNotification');
+                        processClickOnPushNotification([data.additionalData.payload]);
+                        App.hideIndicator();
+                    }, 1000);
+                }
+            }, 1000);
+        }
+        if (device && device.platform && device.platform.toLowerCase() == 'ios') {
+            push.finish(
+                () => {
+                    console.log('processing of push data is finished');
+                },
+                () => {
+                    console.log(
+                        'something went wrong with push.finish for ID =',
+                        data.additionalData.notId
+                    );
+                },
+                data.additionalData.notId
+            );
+        }*/
+
+
+    });
+
+    if　 (!localStorage.ACCOUNT) {
+        push.clearAllNotifications(
+            () => {
+                console.log('success');
+            },
+            () => {
+                console.log('error');
+            }
+        );
+    }
 }
 
 function backFix(event){
@@ -157,9 +314,9 @@ function backFix(event){
 }
 
 
-function setRegLink(){
-    if (localStorage.tracker_imei) {
-        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei='+localStorage.tracker_imei);
+function setRegLink(imei){
+    if (imei) {
+        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei='+imei);
     }else{
         $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei=');
     }  
@@ -174,7 +331,7 @@ var App = new Framework7({
     //pushState: true,       
     allowDuplicateUrls: true,    
     sortable: false,    
-    modalTitle: 'PhoneTracker',
+    modalTitle: 'PhoneTrack',
     precompileTemplates: true,
     template7Pages: true,
     tapHold: false, //enable tap hold events
@@ -207,8 +364,9 @@ window.PosMarker = {};
 var StreetViewService = null;
 var updateAssetsPosInfoTimer = null;
 
-var API_DOMIAN1 = "http://api.m2mglobaltech.com/PhoneProtect/V1/";
-var API_DOMIAN2 = "http://api.m2mglobaltech.com/QuikTrak/V1/";
+var API_DOMIAN1 = "https://api.m2mglobaltech.com/PhoneProtect/V1/";
+var API_DOMIAN2 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
+var API_DOMIAN3 = "http://api.m2mglobaltech.com/PhoneTrack/V1/";
 var API_ROUTE = "https://www.google.com/maps/dir/?api=1&destination=";
 var API_URL = {};
 
@@ -216,8 +374,8 @@ API_URL.URL_GET_LOGIN = API_DOMIAN2 + "User/Auth?username={0}&password={1}&appKe
 API_URL.URL_GET_LOGOUT = API_DOMIAN2 + "User/Logoff2?MajorToken={0}&MinorToken={1}&username={2}&mobileToken={3}";
 API_URL.URL_EDIT_ACCOUNT = API_DOMIAN2 + "User/Edit?MajorToken={0}&MinorToken={1}&FirstName={2}&SubName={3}&Mobile={4}&Phone={5}&EMail={6}";
 API_URL.URL_RESET_PASSWORD = API_DOMIAN2 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
-API_URL.URL_EDIT_DEVICE = API_DOMIAN2 + "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}";
-
+//API_URL.URL_EDIT_DEVICE = API_DOMIAN2 + "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}";
+API_URL.URL_EDIT_DEVICE = API_DOMIAN2 +  "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}&MajorToken={12}&registration=&MaxSpeed=&stockNumber=";
 API_URL.URL_GET_ALL_POSITIONS = API_DOMIAN2 + "Device/GetPosInfos?MinorToken={0}";
 //API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN2 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
 API_URL.URL_PHOTO_UPLOAD = "http://upload.quiktrak.co/image/Upload";
@@ -227,10 +385,13 @@ API_URL.URL_ADD_NEW_DEVICE2 = 'http://activation.phonetrack.co/activate.php?imei
 API_URL.URL_REGISTER = API_DOMIAN1 + 'Client/Registration';
 API_URL.URL_DEACTIVATE = API_DOMIAN1 + 'Client/Deactivate';
 
-API_URL.URL_TRACKING_IP = "194.247.12.43";
-API_URL.URL_TRACKING_PORT = "50001"; 
-/*API_URL.URL_TRACKING_IP = "test.m2mdata.co";
-API_URL.URL_TRACKING_PORT = "20771";*/
+//API_URL.UPLOAD_LINK = API_DOMIAN3 + 'Client/UploadGPS';
+//API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Device/UploadGPS';
+API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Device/UploadGPS2';
+
+API_URL.UPLOAD_LINK_TEST = 'https://sinopacificukraine.com/test/phonetrack/locations.php';
+API_URL.URL_REFRESH_TOKEN = API_DOMIAN2 + "User/RefreshToken";
+
 
 //http://api.m2mglobaltech.com/PhoneProtect/V1/Client/Activation
 //http://api.m2mglobaltech.com/PhoneProtect/V1/Client/Registration
@@ -275,38 +436,8 @@ virtualAssetList = App.virtualList('.assetList', {
     renderItem: function (index, item) {
 
         var ret = '';
-        //var asset = POSINFOASSETLIST[item.IMEI];     
-        //var assetFeaturesStatus = Protocol.Helper.getAssetStateInfo(asset);
-            
-            
 
-            var assetImg = getAssetImg(item, {'assetList':true});                    
-            
-            //if (assetFeaturesStatus && assetFeaturesStatus.stats) {
-                
-
-               /* ret +=  '<li class="item-link item-content item_asset" data-imei="' + item.IMEI + '" data-id="' + item.Id + '">';                    
-                ret +=      '<div class="item-media">'+assetImg+'</div>';
-                ret +=      '<div class="item-inner">';
-                ret +=          '<div class="item-title-row">';
-                ret +=              '<div class="item-title">' + item.Name + '</div>';
-                ret +=                  '<div class="item-after"><i id="signal-state'+item.IMEI+'" class="f7-icons icon-other-signal '+assetFeaturesStatus.GSM.state+'"></i><i id="satellite-state'+item.IMEI+'" class="f7-icons icon-other-satellite '+assetFeaturesStatus.GPS.state+'"></i></div>';
-                ret +=          '</div>';
-                ret +=          '<div id="status-state'+item.IMEI+'" class="item-subtitle '+assetFeaturesStatus.status.state+'"><i class="icon-status-fix icon-data-status-1"></i><span id="status-value'+item.IMEI+'">'+assetFeaturesStatus.status.value+'</span></div>';
-                ret +=          '<div class="item-text">';
-                ret +=              '<div class="row no-gutter">';                            
-                                    if (assetFeaturesStatus.speed) {
-                ret +=                  '<div class="col-50">';
-                ret +=                     '<i class="f7-icons icon-data-speed asset_list_icon"></i>';
-                ret +=                     '<span id="speed-value'+item.IMEI+'" class="">'+assetFeaturesStatus.speed.value+'</span>'; 
-                ret +=                  '</div>';
-                                    }
-                                    
-                ret +=              '</div>';
-                ret +=          '</div>';
-                ret +=      '</div>';                   
-                ret +=  '</li>';*/
-
+            var assetImg = getAssetImg(item, {'assetList':true});
 
                 ret +=  '<li class="item-content" data-imei="' + item.IMEI + '" data-imsi="' + item.IMSI + '" data-name="' + item.Name + '" data-id="' + item.Id + '">';
                 ret +=      '<div class="item-media">' + assetImg + '</div>';
@@ -319,21 +450,7 @@ virtualAssetList = App.virtualList('.assetList', {
                 //ret +=          '<div class="item-subtitle">1234.5678.9098.765</div>';
                 ret +=      '</div>';
                 ret +=  '</li>';
-                
-            //}else{
-            //    console.log('NO POSINFO for - '+item.IMEI);
-            //    ret +=  '<li class="item-link item-content item_asset" data-imei="' + item.IMEI + '" data-id="' + item.Id + '" title="No data">';                    
-            //    ret +=      '<div class="item-media">'+assetImg+'</div>';
-            //    ret +=      '<div class="item-inner">';
-            //    ret +=          '<div class="item-title-row">';
-            //    ret +=              '<div class="item-title">' + item.Name + '</div>';
-            //    ret +=                  '<div class="item-after"><i class="f7-icons icon-other-signal state-0"></i><i class="f7-icons icon-other-satellite state-0"></i></div>';
-            //    ret +=          '</div>';
-            //    ret +=          '<div class="item-subtitle state-0"><i class="icon-status-fix icon-data-status-1"></i>'+LANGUAGE.COM_MSG11+'</div>';
-            //    ret +=      '</div>';                   
-            //    ret +=  '</li>';
-            //}
-                
+
         
         return ret;
     },
@@ -343,13 +460,13 @@ var cameraButtons = [
     {
         text: LANGUAGE.PHOTO_EDIT_MSG01,
         onClick: function () {
-            getImage();
+            //getImage();
         }
     },
     {
         text: LANGUAGE.PHOTO_EDIT_MSG02,
         onClick: function () {
-            galleryImgs();
+           // galleryImgs();
         }
     },
     {
@@ -369,17 +486,117 @@ $$(document).on('submit', '.login-form', function (e) {
 
 $$(document).on('click', '.bTrackingStart', function(){
     bgGeo.start().then(function() {
-        alert('BackgroundGeolocation tracking started');
-        console.log('- BackgroundGeolocation tracking started');
-    });
-});
-$$(document).on('click', '.bTrackingStop', function(){
-    bgGeo.stop().then(function() {
-        alert('BackgroundGeolocation tracking stopped');
+        App.alert('BackgroundGeolocation tracking started');
         console.log('- BackgroundGeolocation tracking started');
     });
 });
 
+$$(document).on('click', '.bTrackingStop', function(){
+    bgGeo.stop().then(function() {
+        App.alert('BackgroundGeolocation tracking stopped');
+        console.log('- BackgroundGeolocation tracking started');
+    });
+});
+
+$$(document).on('click', '.bTrackingStatus', function(){
+    bgGeo.ready(
+        {}, 
+        function(state) {    // <-- Current state provided to #configure callback       
+            if (state.enabled) {
+                App.alert('Tracking enabled');
+            }else{
+                App.alert('Tracking disabled');
+            }
+        }
+    );
+});
+
+$$(document).on('click', '.bTrackingState', function(){
+    bgGeo.ready(
+        {},
+        function(state) {    // <-- Current state provided to #configure callback
+            alert(JSON.stringify(state));
+        }
+    );
+});
+
+$$(document).on('click', '.bTrackingStatusScheduler', function(){
+    bgGeo.ready(
+        {},
+        function(state) {    // <-- Current state provided to #configure callback
+            if (state.schedulerEnabled) {
+                App.alert('Scheduler enabled');
+            }else{
+                App.alert('Scheduler disabled');
+            }
+        }
+    );
+});
+
+
+
+$$(document).on('click', '.getIMEI', function(){
+    var savedConfig = trackerGetSavedConfig();
+    if (savedConfig.IMEI) {
+        App.alert('Your Imei is: '+savedConfig.IMEI);
+    }else{
+        checkTelephonyPermissions();
+    }    
+});
+
+$$(document).on('click', '.bTrackingSendLog', function(){
+    bgGeo.logger.emailLog('s.dimi.d@gmail.com').then((success) => {
+        alert('SUCCESS');
+    }).catch((error) => {
+        alert('ERROR: '+ error);
+    });
+});
+
+
+/*$$(document).on('click', '.getSimInfo', function(){
+	if (window.plugins.sim) {
+		window.plugins.sim.getSimInfo(function(info){
+			 App.alert('Sim info: ', JSON.stringify(info) );
+	    }, function(err){
+	    	App.alert('Unable to get sim info: '+ JSON.stringify(err) );
+	    });	
+	}else{
+		App.alert('Sim Plugin not supported');
+	}
+		
+});
+
+$$(document).on('click', '.hasReadPermission', function(){
+	if (window.plugins.sim) {
+		window.plugins.sim.hasReadPermission(function(info){
+			App.alert('Has permission:'+ JSON.stringify(info) );
+    	});	
+	}else{
+		App.alert('Sim Plugin not supported');
+	}
+	
+	
+});
+
+$$(document).on('click', '.requestReadPermission', function(){
+	if (window.plugins.sim) {
+		window.plugins.sim.requestReadPermission(function(){
+			App.alert('Permission granted');
+	    }, function(){
+	    	App.alert('Permission denied');
+	    });	
+	}else{
+		App.alert('Sim Plugin not supported');
+	}
+			
+});*/
+	
+
+
+	 
+	
+	 
+	
 
 $$('body').on('change keyup input click', '.only_numbers', function(){
     if (this.value.match(/[^0-9]/g)) {
@@ -399,14 +616,6 @@ $$(document).on('change', '.leaflet-control-layers-selector[type="radio"]', func
     }
 });
 
-/*$$(document).on('click', '.navbar_title_index', function(){
-    toDataURLBase64(
-               'https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0',
-                function(dataUrl) {
-                    console.log('RESULT:', dataUrl);
-                }
-            );
-});*/
 
 $$('body').on('click', '#menu li', function () {
     var page = $$(this).data('page');     
@@ -469,10 +678,10 @@ $$('body').on('click', 'a.external', function(event) {
     event.preventDefault();
     var href = this.getAttribute('href');
     if (href) {
-        if (window.plus) {
-            plus.runtime.openURL(href);            
+        if (typeof navigator !== "undefined" && navigator.app) {
+            navigator.app.loadUrl(href, { openExternal: true });
         } else {
-            window.open(href,'_blank');
+            window.open(href, '_blank');
         }
     }
     return false;
@@ -481,7 +690,8 @@ $$('body').on('click', 'a.external', function(event) {
 
 
 $$('body').on('click', '.menuAsset', function () {
-    var parrent = $$(this).closest('.item-content');    
+    var parrent = $$(this).closest('.item-content');
+    var savedConfig = trackerGetSavedConfig();
     //var caption = parrent.data('imei');    
     
     TargetAsset.IMEI = !parrent.data('imei')? '' : parrent.data('imei');   
@@ -490,8 +700,12 @@ $$('body').on('click', '.menuAsset', function () {
     TargetAsset.ID = !parrent.data('id')? '' : parrent.data('id');
     TargetAsset.ASSET_IMG = '';      
 
-    var disabled = true;   
-    if (localStorage.tracker_imei == TargetAsset.IMEI) {
+    var disabled = true;
+    var imei = savedConfig.IMEI;
+    if (imei && imei.length !== 16){
+        imei = imei.padStart(16,'0');
+    }
+    if (imei == TargetAsset.IMEI) {
         disabled = false;
     }
     
@@ -550,9 +764,9 @@ $$('body').on('click', '.menuAsset', function () {
         },
         {
             text: timing,
-            //disabled: disabled,
+            disabled: disabled,
             onClick: function () {               
-                loadTimingPage();                
+                loadTimingPage();
             },  
         },
         {
@@ -868,7 +1082,7 @@ App.onPageBeforeRemove('asset.track', function(page){
 });
 
 App.onPageInit('user.timing', function(page){
-
+    console.log(page.context);
     var selectInterval = $$(page.container).find('#trackingInterval');
     var applyUserTiming = $$('body').find('.applyUserTiming');
 
@@ -878,15 +1092,12 @@ App.onPageInit('user.timing', function(page){
     var startTimeMinutes = $$(page.container).find('#startTime');
     var endTimeMinutes = $$(page.container).find('#endTime');
     var dayOfWeek = $(page.container).find('#dayOfWeek');
-
-    var server = $$(page.container).find('input[name="Server"]');
-    var port = $$(page.container).find('input[name="Port"]');
-    
-      
+    var trackingStateEl = $$(page.container).find('input[name="tracking-enabled"]');
+    var trackingServerEl = $$(page.container).find('[name="trackingServer"]');
 
     var dayOfWeekset = dayOfWeek.data('set').toString();
     var dayOfWeekArr = [];
-    console.log(dayOfWeekset);
+
     if (dayOfWeekset && dayOfWeekset.indexOf(',') != -1) {
         dayOfWeekArr = dayOfWeekset.split(',');
     }else if(dayOfWeekset){
@@ -896,6 +1107,10 @@ App.onPageInit('user.timing', function(page){
         $.each(dayOfWeekArr, function(i, v){
             dayOfWeek.find("option[value='" + v + "']").prop("selected", true);
         });
+    }
+
+    if(window.device) {
+        checkTelephonyPermissions(); 
     }
 
     noUiSlider.create(snapSlider, {
@@ -928,54 +1143,121 @@ App.onPageInit('user.timing', function(page){
         $$(snapValues[handle]).data('set',values[handle]);
     });
 
+    /*trackingStateEl.on('change', function () {
+        console.log(this.checked);
+    });*/
+
     applyUserTiming.on('click', function(){
-        var interval = localStorage.tracker_interval = selectInterval.val();
-        localStorage.tracker_ip = API_URL.URL_TRACKING_IP;
-        localStorage.tracker_port = API_URL.URL_TRACKING_PORT;    
+        //alert('click');
+        var interval = parseInt(selectInterval.val()) * 1000;
+        var daysOfWeekArray = dayOfWeek.val();
+        var valid = true;
+        var schedule = [];
+        var startTimeText = startTimeMinutes.text();
+        var endTimeText = endTimeMinutes.text();
+        var scheduleState = trackingStateEl.prop('checked');
+        //var trackingServerVal = parseInt(trackingServerEl.val());
+        var trackingServer = API_URL.UPLOAD_LINK;
 
-        localStorage.tracker_startTimeMinutes = startTimeMinutes.data('set'); 
-        localStorage.tracker_endTimeMinutes = endTimeMinutes.data('set'); 
-        localStorage.tracker_dayOfWeek = !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(); 
+        /*if (trackingServerVal === 2){
+            trackingServer = API_URL.UPLOAD_LINK
+        }*/
 
+
+
+        if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
+        	valid = false;        	
+        }
+
+        if (!valid && state) {
+            App.alert('Set tracking days, please');
+            return;
+        }
+
+        $.each(daysOfWeekArray, function(key,val){
+            schedule.push(val + ' ' + startTimeText + '-' + endTimeText);
+        });
+
+        var trackerConfig = {
+            DayOfWeek: !dayOfWeek.val() ? '' :  dayOfWeek.val().toString(),
+            StartTime: startTimeMinutes.data('set'),
+            EndTime: endTimeMinutes.data('set'),
+            Interval: interval,
+            ScheduleState: scheduleState,
+            Schedule: schedule,
+            IMEI: page.context.IMEI
+        };
+        trackerSaveConfig(trackerConfig);
+
+        //console.log(schedule);
+
+        if (!bgGeo) {
+            App.alert('Tracking not supported');
+            return;
+        }
+        bgGeo.setConfig({
+            distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+            locationUpdateInterval: interval,  // Get a location every 5 seconds
+            schedule: schedule,
+            url: trackingServer,
+            params: {
+                IMEI: trackerConfig.IMEI,
+            }
+        }, function (state) {
+            //alert(JSON.stringify(state));
+            if (scheduleState){
+                bgGeo.requestPermission().then((status) => {
+                    bgGeo.startSchedule(function() {
+                        App.alert('Tracking schedule started');
+                        mainView.router.back();
+                    });
+                }).catch((status) => {
+                    App.alert('Tracking permission denied');
+                    console.log('[requestPermission] REJECTED', status);
+                    trackerSaveConfig({ScheduleState: false});
+                });
+
+            }else{
+                bgGeo.stopSchedule(function() {
+                    App.alert('Tracking schedule stopped');
+                    // You must explicitly stop tracking if currently enabled
+                    bgGeo.stop();
+                    mainView.router.back();
+                });
+            }
+        });
+
+
+
+        /*var serverURL = API_URL.UPLOAD_LINK;
+        if  (trackingServerEl.val() == '2'){
+            serverURL = API_URL.UPLOAD_LINK_TEST
+        }*/
+
+
+        /*if (trackingStateEl.prop('checked')){
+            bgGeo.setConfig({
+                url: serverURL,
+                distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+                locationUpdateInterval: interval,  // Get a location every 5 seconds
+                params: {
+                    IMEI: localStorage.tracker_imei,
+                }
+            });
+            bgGeo.start().then(function() {
+                App.alert('Geolocation tracking started');
+                localStorage.tracker_state = true;
+            });
+        }else{
+            bgGeo.stop().then(function() {
+                localStorage.tracker_state = false;
+                App.alert('Geolocation tracking stopped');
+            });
+        }*/
 
 
     
-        if(window.gpsuploader){
-            var errorFunc = function(){
-                App.alert(LANGUAGE.PROMPT_MSG005);
-            };
-            var successFunc = function(params){
-                App.alert(LANGUAGE.PROMPT_MSG006);
-                mainView.router.back();
-            };
-            if(interval == "0"){
-                successFunc = function(params){
-                    App.alert(LANGUAGE.PROMPT_MSG007);
-                    mainView.router.back();
-                };
-                gpsuploader.endUploadGPSFunction(successFunc, errorFunc);
-            }
-            else
-            {   
-                /*if (!server) {
-                    server = API_URL.URL_TRACKING_IP;
-                }else{
-                    server = serve.val();
-                }
-                if (!port) {
-                    port = API_URL.URL_TRACKING_PORT;
-                }else{
-                    port = port.val();
-                }*/
-                //alert(server + ' '+ port);    
-                server = API_URL.URL_TRACKING_IP;
-                port = API_URL.URL_TRACKING_PORT;
-                gpsuploader.uploadGPSFunction(server, port, interval, successFunc, errorFunc);
-            }
-        }else{
-            App.alert(LANGUAGE.USER_TIMING_MSG18);
-            mainView.router.back();
-        }
+
     });
 
     
@@ -983,41 +1265,71 @@ App.onPageInit('user.timing', function(page){
 
 });
 
+function trackerGetSavedConfig() {
+    var ret = {};
+    var str = localStorage.getItem("COM.QUIKTRAK.PHONETRACK.TRACKERCONFIG");
+    if (str){
+        ret = JSON.parse(str);
+    }
+    return ret;
+}
+
+function trackerSaveConfig(config={}) {
+    if (!isObjEmpty(config)){
+        var savedConfig = trackerGetSavedConfig();
+        const keys = Object.keys(config)
+        for (const key of keys) {
+            savedConfig[key] = config[key];
+        }
+        localStorage.setItem("COM.QUIKTRAK.PHONETRACK.TRACKERCONFIG", JSON.stringify(savedConfig));
+    }
+}
 
 function clearUserInfo(){
     
    
     //var appId = !localStorage.PUSH_APPID_ID? '' : localStorage.PUSH_APPID_ID;
-    //var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '' : localStorage.PUSH_DEVICE_TOKEN;
+    var deviceToken = !localStorage.PUSH_DEVICE_TOKEN? '' : localStorage.PUSH_DEVICE_TOKEN;
     var userName = !localStorage.ACCOUNT? '' : localStorage.ACCOUNT;
     var userInfo = getUserinfo();
     var MinorToken = userInfo.MinorToken;      
     var MajorToken = userInfo.MajorToken;
     var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
+    var savedConfig = trackerGetSavedConfig();
     //var pushList = getNotificationList();
 
     window.PosMarker = {};
-    TargetAsset = {}; 
-
+    TargetAsset = {};
 
     if (virtualAssetList) {
         virtualAssetList.deleteAllItems();
     }
     
     localStorage.clear(); 
-    if ($hub) {
-        $hub.stop();  
-    }  
-    
-    
-    //if (pushList) {
-    //    localStorage.setItem("COM.QUIKTRAK.LIVE.NOTIFICATIONLIST.INSTALLER", JSON.stringify(pushList));
-    //}
-    
-    if(mobileToken){         
+
+    if (!isObjEmpty(savedConfig)){
+        trackerSaveConfig(savedConfig);
+    }
+    if (deviceToken) {
+        localStorage.PUSH_DEVICE_TOKEN = deviceToken;
+    }
+
+    if(mobileToken){
+        localStorage.PUSH_MOBILE_TOKEN = mobileToken;
         JSON.request(API_URL.URL_GET_LOGOUT.format(MajorToken, MinorToken, userName, mobileToken), function(result){ console.log(result); });  
     }   
-    $$("input[name='account']").val(userName);    
+    $$("input[name='account']").val(userName);
+
+    if (push) {
+        push.clearAllNotifications(
+            () => {
+                console.log('success');
+            },
+            () => {
+                console.log('error');
+            }
+        );
+    }
 
 }
 
@@ -1040,11 +1352,6 @@ function login(){
     var account = $$("input[name='account']");
     var password = $$("input[name='password']"); 
 
-    if(window.gpsuploader){
-        gpsuploader.getIMEI(function(imei){            
-            localStorage.tracker_imei = imei;            
-        });
-    }
         
         
     //console.log(account.val()+' '+password.val());
@@ -1092,6 +1399,34 @@ function updateUserData(data) {
     $$('.user_f_l').html(letter1+letter2);
     $$('.user_name').html(data.FirstName+' '+data.SubName);
     $$('.user_email').html(data.EMail);
+}
+
+function refreshToken(newDeviceToken) {
+    console.log('refreshToken() called');
+    var userInfo = getUserinfo();
+
+    if (localStorage.PUSH_MOBILE_TOKEN && userInfo.MajorToken && userInfo.MinorToken && newDeviceToken) {
+        var data = {
+            MajorToken: userInfo.MajorToken,
+            MinorToken: userInfo.MinorToken,
+            MobileToken: localStorage.PUSH_MOBILE_TOKEN,
+            DeviceToken: newDeviceToken,
+        };
+
+        //console.log(urlLogin);
+        JSON1.requestPost(API_URL.URL_REFRESH_TOKEN, data, function(result) {
+                if (result.MajorCode == '000') {
+
+                } else {
+
+                }
+            },
+            function() { console.log('error during refresh token'); }
+        );
+    } else {
+        console.log('not loggined');
+    }
+
 }
 
 function hideKeyboard() {
@@ -1147,41 +1482,14 @@ function loadResetPwdPage(){
 }
 
 function loadAssetAddPage(){
-    
-    /*if (!localStorage.tracker_imei) {
-        if(window.gpsuploader){
-            gpsuploader.getIMEI(function(imei){            
-                localStorage.tracker_imei = imei;
-            });
-        }else{
-            App.alert(LANGUAGE.USER_TIMING_MSG18);
-        }     
-    }
-    mainView.router.load({
-        url:'resources/templates/asset.add.html',
-        context:{
-            //UserImgSrc: UserImgSrc, 
-            IMEI: localStorage.tracker_imei,  
-        }
-    });*/
+    var savedConfig = trackerGetSavedConfig();
 
-    if (!localStorage.tracker_imei) {
-        if(window.gpsuploader){
-            gpsuploader.getIMEI(function(imei){            
-                localStorage.tracker_imei = imei;
-            });
-        }else{
-            App.alert(LANGUAGE.USER_TIMING_MSG18);
-            localStorage.tracker_imei = '0123456789012345';
-        }     
-    }
+    var href = API_URL.URL_ADD_NEW_DEVICE2.format(savedConfig.IMEI,localStorage.ACCOUNT);
 
-    var href = API_URL.URL_ADD_NEW_DEVICE2.format(localStorage.tracker_imei,localStorage.ACCOUNT); 
-    
-    if (window.plus) {
-        plus.runtime.openURL(href);            
+    if (typeof navigator !== "undefined" && navigator.app) {
+        navigator.app.loadUrl(href, { openExternal: true });
     } else {
-        window.open(href,'_blank');
+        window.open(href, '_blank');
     }
 
         setTimeout(function(){
@@ -1269,39 +1577,32 @@ function loadTimingPage(){
     var userInfo = getUserinfo();   
 
     var assetList = getAssetList();  
-    var asset = assetList[TargetAsset.IMEI];       
-
-    if (!localStorage.tracker_imei) {
-        if(window.gpsuploader){
-            gpsuploader.getIMEI(function(imei){            
-                localStorage.tracker_imei = imei;
-            });
-        }else{
-            App.alert(LANGUAGE.USER_TIMING_MSG18);
-        }     
-    }
+    var asset = assetList[TargetAsset.IMEI];
     
     var phone = !asset.TagName ? '' : asset.TagName;
     var name = !asset.Name ? '' : asset.Name;
 
-    var currentInterval = localStorage.tracker_interval;
-    var dayOfWeek = !localStorage.tracker_dayOfWeek ? '' : localStorage.tracker_dayOfWeek;
-    var startTimeMinutes = !localStorage.tracker_startTimeMinutes ? 540 : localStorage.tracker_startTimeMinutes; 
-    var endTimeMinutes = !localStorage.tracker_endTimeMinutes ? 1080 : localStorage.tracker_endTimeMinutes; 
-    
+    var savedConfig = trackerGetSavedConfig();
+
+    var currentInterval = !savedConfig.Interval ? 20 : parseInt(savedConfig.Interval) / 1000;
+    var dayOfWeek = !savedConfig.DayOfWeek ? '' : savedConfig.DayOfWeek;
+    var startTimeMinutes = !savedConfig.StartTime ? 540 : savedConfig.StartTime;
+    var endTimeMinutes = !savedConfig.EndTime ? 1080 : savedConfig.EndTime;
+    var scheduleState = !savedConfig.ScheduleState || savedConfig.ScheduleState === 'false' ? false : true
+
+    console.log(savedConfig);
 
     mainView.router.load({
         url:'resources/templates/user.timing.html',
         context:{
             Name: name,
             Phone: phone,
-            IMEI: localStorage.tracker_imei, 
+            IMEI: savedConfig.IMEI,
             Interval: currentInterval,  
             DayOfWeek: dayOfWeek,
             StartTime: startTimeMinutes,
             EndTime: endTimeMinutes,
-            Server: API_URL.URL_TRACKING_IP,
-            Port: API_URL.URL_TRACKING_PORT,
+            TrackingState: scheduleState,
         }
     });
 }
@@ -1951,6 +2252,26 @@ function showNotification(list){
     }       
 }
 
+function isObjEmpty(obj) {
+    // null and undefined are "empty"
+    if (obj == null) return true;
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+    // If it isn't an object at this point
+    // it is empty, but it can't be anything *but* empty
+    // Is it empty?  Depends on your application.
+    if (typeof obj !== "object") return true;
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+    return true;
+}
+
 
 
 
@@ -2146,4 +2467,8 @@ function toDataURLBase64(url, callback) {
   xhr.responseType = 'blob';
   xhr.send();
 }
+
+
+
+
 

@@ -3,6 +3,8 @@
   <head>
     <!-- Required meta tags-->
     <meta charset="utf-8">
+      <meta http-equiv="Content-Security-Policy" content="default-src *; media-src *; img-src * 'self' data:; style-src 'self' http://* https://* 'unsafe-inline'; script-src 'self' http://* https://* 'unsafe-inline' 'unsafe-eval'" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <!-- Color theme for statusbar -->
@@ -64,7 +66,7 @@
                                                         <div class="item-content">          
                                                             <div class="item-inner">
                                                                 <div class="item-input">                          
-                                                                    <input type="text" placeholder="{{@global.LANGUAGE.LOGIN_MSG02}}" id="account" name="account" value="" /> 
+                                                                    <input type="text" placeholder="{{@global.LANGUAGE.LOGIN_MSG02}}" id="account" name="account" value="" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -73,7 +75,7 @@
                                                         <div class="item-content">          
                                                             <div class="item-inner">
                                                                 <div class="item-input">                          
-                                                                    <input type="password" placeholder="{{@global.LANGUAGE.LOGIN_MSG03}}" id="password" name="password" value="" /> 
+                                                                    <input type="password" placeholder="{{@global.LANGUAGE.LOGIN_MSG03}}" id="password" name="password" value="" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -209,19 +211,49 @@
                             <div class="item-inner">
                                 <div class="item-title">{{@global.LANGUAGE.MENU_MSG02}}</div>
                             </div> 
-                        </li>   
-                        <li class="item-content list-panel-all close-panel" data-page=""> 
-                            
-                            <div class="item-inner">
-                                <div class="item-title">
+                        </li>
+                        <!--<li class="item-content list-panel-all close-panel" data-page="">
+
+                          <div class="item-inner">
+                               <div class="item-title">
+
+                                    <div class="row">
+                                        <div class="button col getIMEI">GET IMEI</div>
+                                    </div>
                                     <div class="row">
                                         <div class="button col bTrackingStart">START</div>
                                         <div class="button col bTrackingStop">STOP</div>
                                     </div>
+                                    <div class="row">
+                                        <div class="button col bTrackingStatus">GET Status</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="button col bTrackingStatusScheduler">GET Status Scheduled</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="button col bTrackingState">GET State</div>
+                                    </div>
+                                   <div class="row">
+                                       <div class="button col bTrackingSendLog">Send Log</div>
+                                   </div>-->
+
+                                    <!--<div class="row">
+                                        <div class="button col sendPosition">Send pos</div>
+                                    </div>-->
+
+                                    <!-- <div class="row">
+                                        <div class="button col hasReadPermission">check Permission</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="button col requestReadPermission">Req permission</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="button col getSimInfo">get sim info</div>
+                                    </div> -->
                                     
-                                </div>
+                                <!--</div>
                             </div> 
-                        </li>            
+                        </li>-->
                     </ul>
                 </div>
             </div>
@@ -305,7 +337,7 @@
     <!-- Path to Framework7 Library JS-->
     <script type="text/javascript" src="resources/libraries/framework7/js/framework7.min.js?version=0.2"></script>
      <!-- jquery libraries -->
-    <script type="text/javascript" src="resources/libraries/jquery/jqury-2.2.4.min.js"></script>
+    <script type="text/javascript" src="resources/libraries/jquery/jquery-3.4.1.min.js"></script>
     <!-- <script type="text/javascript" src="resources/libraries/jquery/jquery.signalR-2.2.0.min.js"></script> -->
     <!-- Path to leaflet Library JS-->
     <script type="text/javascript" src="resources/libraries/leaflet/leaflet.js"></script>
@@ -320,7 +352,7 @@
     <!-- jClass -->
     <script type="text/javascript" src="resources/libraries/jClass.mini.js"></script>
     <!-- google api for street view -->
-    <script async="async" defer="defer" src="http://maps.google.com/maps/api/js?v=3.30&key=AIzaSyC6eQHreVzeV0sGqzKLcNKzp6HfVcNTutI"></script>
+    <script async="async" defer="defer" src="http://maps.google.com/maps/api/js?v=weekly&key=AIzaSyC6eQHreVzeV0sGqzKLcNKzp6HfVcNTutI"></script>
     
     <!-- Path to your app js-->
     <script type="text/javascript" src="resources/app/helper.js" ></script>
