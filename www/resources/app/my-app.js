@@ -245,8 +245,8 @@ function setupPush() {
 
     push.on('error', function(e) {
         //console.log("push error = " + e.message);
-        //alert("push error = " + e.message);
-        alert(JSON.stringify(e));
+        alert("push error = " + e.message);
+        //alert(JSON.stringify(e));
     });
 
     push.on('notification', function(data) {
