@@ -214,7 +214,7 @@ function sutupGeolocationPlugin(){
 function setupPush() {
     push = PushNotification.init({
         "android": {
-            //"senderID": "264121929701"
+            "senderID": "1097482483564"
         },
         "browser": {
             pushServiceURL: 'https://push.api.phonegap.com/v1/push'
@@ -245,7 +245,8 @@ function setupPush() {
 
     push.on('error', function(e) {
         //console.log("push error = " + e.message);
-        alert("push error = " + e.message);
+        //alert("push error = " + e.message);
+        alert(JSON.stringify(e.message));
     });
 
     push.on('notification', function(data) {
