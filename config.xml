@@ -31,7 +31,7 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <platform name="android">
-    	<!-- <edit-config file="res/values/strings.xml" mode="add" target="/resources"> <string name="gcm_defaultSenderId">1097482483564</string> </edit-config> -->
+    	<edit-config file="res/values/strings.xml" mode="add" target="/resources"> <string name="gcm_defaultSenderId">1097482483564</string> </edit-config>
     	<!-- background-geolocation -->
 		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
 		    <meta-data
@@ -70,14 +70,14 @@
 	
 	
    	<plugin name="phonegap-plugin-push" source="npm" spec="2.3.0">
-   		<param name="SENDER_ID" value="106187216531" />
-   	    <!-- <variable name="SENDER_ID" value="106187216531" /> -->
+   		<param name="SENDER_ID" value="1097482483564" />
+   	    <!-- <variable name="SENDER_ID" value="1097482483564" /> -->
    	</plugin>
    	<!-- <plugin name="phonegap-plugin-push-dual" source="npm" spec="2.2.8">
-   	    <variable name="SENDER_ID" value="106187216531" />
+   	    <variable name="SENDER_ID" value="1097482483564" />
    	</plugin> -->
    <!-- 	<plugin source="git" spec="https://github.com/mslobodan/phonegap-plugin-push">
-       <variable name="SENDER_ID" value="106187216531" />
+       <variable name="SENDER_ID" value="1097482483564" />
    </plugin> -->
     <platform name="android">
       <resource-file src="google-services.json" target="app/google-services.json" />
