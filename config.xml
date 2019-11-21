@@ -31,7 +31,7 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <platform name="android">
-    	<edit-config file="res/values/strings.xml" mode="add" target="/resources"> <string name="gcm_defaultSenderId">1097482483564</string> </edit-config>
+    	<!-- <edit-config file="res/values/strings.xml" mode="add" target="/resources"> <string name="gcm_defaultSenderId">1097482483564</string> </edit-config> -->
     	<!-- background-geolocation -->
 		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
 		    <meta-data
