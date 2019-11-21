@@ -73,7 +73,7 @@
    	<param name="SENDER_ID" value="1097482483564" />   	    
    </plugin> -->
    	<plugin name="phonegap-plugin-push-dual" source="npm" spec="2.2.8">
-   	    <param name="SENDER_ID" value="1097482483564" />
+   	    <variable name="SENDER_ID" value="1097482483564" />
    	</plugin>
    <!-- 	<plugin source="git" spec="https://github.com/mslobodan/phonegap-plugin-push">
        <param name="SENDER_ID" value="1097482483564" />
