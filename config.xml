@@ -84,7 +84,7 @@
     <platform name="ios">
       <resource-file src="GoogleService-Info.plist" />
     </platform>
-    <plugin name="cordova-background-geolocation-lt" spec="3.2.2" source="npm"> </plugin>
+    <!-- <plugin name="cordova-background-geolocation-lt" spec="3.2.2" source="npm"> </plugin> -->
 
     <!-- <plugin name="cordova-plugin-console" source="npm" spec="1.0.7" /> -->
     <plugin name="cordova-plugin-dialogs" source="npm" spec="1.2.1" />
