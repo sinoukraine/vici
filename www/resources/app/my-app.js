@@ -229,7 +229,7 @@ function setupPush() {
     console.log('after init');
 
     push.on('registration', function(data) {
-        console.log('registration event: ' + data.registrationId);
+        //console.log('registration event: ' + data.registrationId);
         alert( JSON.stringify(data) );
        // alert( JSON.stringify(data.registrationId) );
 
