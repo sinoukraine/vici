@@ -59,9 +59,9 @@
     <preference name="phonegap-version" value="cli-9.0.0" />
 
     <plugin name="cordova-plugin-statusbar" source="npm" spec="2.1.3" />
-     <!-- <plugin name="cordova-support-google-services" source="npm" spec="1.3.2" /> -->
+     <plugin name="cordova-support-google-services" source="npm" spec="1.3.2" />
     <!-- <plugin name="cordova-support-google-services" source="npm" spec="1.2.0" /> -->
-    <!-- <plugin name="cordova-android-play-services-gradle-release" source="npm" spec="4.0.0" /> -->
+    <plugin name="cordova-android-play-services-gradle-release" source="npm" spec="4.0.0" />
     
     
 	
