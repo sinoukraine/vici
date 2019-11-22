@@ -75,7 +75,7 @@
    	<!-- <plugin name="phonegap-plugin-push-dual" source="npm" spec="2.2.8">
    	    <variable name="SENDER_ID" value="1097482483564" />
    	</plugin> -->
-   <plugin source="git" spec="https://github.com/mslobodan/phonegap-plugin-push">
+   <!-- <plugin source="git" spec="https://github.com/mslobodan/phonegap-plugin-push">
        <param name="SENDER_ID" value="1097482483564" />
    </plugin>
     <platform name="android">
@@ -83,8 +83,8 @@
     </platform>
     <platform name="ios">
       <resource-file src="GoogleService-Info.plist" />
-    </platform>
-    <!-- <plugin name="cordova-background-geolocation-lt" spec="3.2.2" source="npm"> </plugin> -->
+    </platform> -->
+    <plugin name="cordova-background-geolocation-lt" spec="3.2.2" source="npm"> </plugin>
 
     <!-- <plugin name="cordova-plugin-console" source="npm" spec="1.0.7" /> -->
     <plugin name="cordova-plugin-dialogs" source="npm" spec="1.2.1" />

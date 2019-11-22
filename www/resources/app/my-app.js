@@ -64,7 +64,7 @@ function onDeviceReady(){
     if (StatusBar) {
         StatusBar.styleDefault();
     }
-    setupPush();
+    //setupPush();
 
     if (!inBrowser) {
         if(getUserinfo().MinorToken) {
@@ -78,9 +78,9 @@ function onDeviceReady(){
     document.addEventListener("backbutton", backFix, false); 
 
     
-    //sutupGeolocationPlugin();
+    sutupGeolocationPlugin();
 
-    /*checkTelephonyPermissions();*/
+    checkTelephonyPermissions();
 
 
 }
