@@ -42,7 +42,14 @@ window.LanguagePackages= {
 		"PROMPT_MSG018": "Login name or password incorrect. Relogin and try again, please.",
 		"PROMPT_MSG019": "Incorrect IMEI or IMEI already added.",
 		"PROMPT_MSG020": "This function in development yet",
-		"PROMPT_MSG021": "",
+		"PROMPT_MSG021": 'This is an Emergency Button to call a specific phone or send SMS alerts to specific phone numbers with your location. In a case something happened or help is needed',
+		"PROMPT_MSG022": "You have not setuped your Panic Button yet. Go to setupe it?",
+		"PROMPT_MSG023": "Set Panic Button behaviour, please",
+		"PROMPT_MSG024": "Fill out Emergency Phone, please",
+		"PROMPT_MSG025": "Fill out at least one phone number for SMS, please",
+		"PROMPT_MSG026": "Panic Button is turned off. Go to turn it on?",
+		"PROMPT_MSG027": "SMS has been sent",
+		"PROMPT_MSG028": "Emergency phone call executed",
 
 
 		"LOGIN_MSG00": "Login",
@@ -137,7 +144,18 @@ window.LanguagePackages= {
 
 		"PHOTO_EDIT_MSG00": 'Edit Photo',
 		"PHOTO_EDIT_MSG01": 'Take Picture',
-		"PHOTO_EDIT_MSG02": 'From Gallery',	
+		"PHOTO_EDIT_MSG02": 'From Gallery',
+
+		"PANIC_SETTINGS_MSG00": 'Panic Button',
+		"PANIC_SETTINGS_MSG01": 'Button Behaviour',
+		"PANIC_SETTINGS_MSG02": 'Call to Emergency Phone',
+		"PANIC_SETTINGS_MSG03": 'Send SMS',
+		"PANIC_SETTINGS_MSG04": 'Call',
+		"PANIC_SETTINGS_MSG05": 'SMS',
+		"PANIC_SETTINGS_MSG06": 'Emergency Phone',
+		"PANIC_SETTINGS_MSG07": 'SMS Message to',
+
+
 
 
 		

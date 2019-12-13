@@ -23,25 +23,9 @@
     </div>
 
 	<div class="page-content " >
-        <!-- <div class="profile_header bg-dealer">
-            <div class="user_img">
-                <img src="{{UserImgSrc}}" alt="">
-                <div class="user_name">{{FirstName}} {{LastName}}</div>
-            </div>
-        
-        </div> -->
+
         <div class="list-block media-list no-hairlines ">           
-            <ul> 
-                <!-- <li>
-                    <div class="item-content">
-                        <div class="item-inner">
-                            <div class="item-title label">{{@global.LANGUAGE.PROFILE_MSG01}}</div>
-                            <div class="item-input"> 
-                                <input type="text" placeholder="{{@global.LANGUAGE.PROFILE_MSG01}}" name="FirstName" value="{{FirstName}}" maxlength="200" class="color-blue">
-                            </div>
-                        </div>
-                    </div>
-                </li> -->
+            <ul>
                 <li class="item-content">                  
                     <div class="item-media"><i class="f7-icons icon-name color-dealer"></i></div>
                     <div class="item-inner">
@@ -87,37 +71,79 @@
                         </div>
                     </div>                    
                 </li>
-                <!-- <li class="item-content">                    
-                    <div class="item-media"><i class="f7-icons icon-other-password"></i></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.USER_PROFILE_MSG06}}</div>
-                        <div class="item-input">
-                            <input type="password" placeholder="{{@global.LANGUAGE.USER_PROFILE_MSG06}}" name="Password" value="" maxlength="200" class="color-blue">
-                        </div>
-                    </div>                   
-                </li>
-                <li class="item-content">                   
-                    <div class="item-media"></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.USER_PROFILE_MSG07}}</div>
-                        <div class="item-input">
-                            <input type="password" placeholder="{{@global.LANGUAGE.USER_PROFILE_MSG07}}" name="NewPassword" value="" maxlength="200" class="color-blue">
-                        </div>
-                    </div>                    
-                </li>
-                <li class="item-content">                    
-                    <div class="item-media"></div>
-                    <div class="item-inner">
-                        <div class="item-title label">{{@global.LANGUAGE.USER_PROFILE_MSG08}}</div>
-                        <div class="item-input">
-                            <input type="password" placeholder="{{@global.LANGUAGE.USER_PROFILE_MSG08}}" name="RepeatPassword" value="" maxlength="200" class="color-blue">
-                        </div>
-                    </div>                    
-                </li> -->
-
             </ul>
-
+        </div>
+        <div class="list-block no-hairlines no-margin-bottom">
+            <ul>
+                <li>
+                    <div class="item-content hintData" data-hint-text="{{@global.LANGUAGE.PROMPT_MSG021}}" data-hint-title="{{@global.LANGUAGE.PANIC_SETTINGS_MSG00}}">
+                        <div class="item-media showHint"><i class="f7-icons icon-info color-dealer"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title showHint">{{@global.LANGUAGE.PANIC_SETTINGS_MSG00}}</div>
+                            <label class="label-switch">
+                                <input type="checkbox" name="PanicButtonState">
+                                <div class="checkbox"></div>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" class="item-link smart-select">
+                        <select name="PanicButtonBehaviour" multiple>
+                                <option value="call" data-display-as="{{@global.LANGUAGE.PANIC_SETTINGS_MSG04}}">{{@global.LANGUAGE.PANIC_SETTINGS_MSG02}}</option>
+                                <option value="sms" data-display-as="{{@global.LANGUAGE.PANIC_SETTINGS_MSG05}}">{{@global.LANGUAGE.PANIC_SETTINGS_MSG03}}</option>
+                        </select>
+                        <div class="item-content">
+                            <div class="item-media"><i class="f7-icons icon-panic color-dealer"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title">{{@global.LANGUAGE.PANIC_SETTINGS_MSG01}}</div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="list-block no-hairlines no-margin-top">
+            <ul>
+                <li class="item-content border_bottom">
+                    <div class="item-media"><i class="f7-icons icon-phone color-dealer"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.PANIC_SETTINGS_MSG06}}</div>
+                        <div class="item-input">
+                            <input type="tel" placeholder="+13001234512" name="EmergencyPhone" value="{{EmergencyPhone}}" maxlength="200" class="only_numbers color-blue">
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content ">
+                    <div class="item-media"><i class="f7-icons icon-email color-dealer"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.PANIC_SETTINGS_MSG07}}</div>
+                        <div class="item-input">
+                            <input type="tel" placeholder="+13001234512" name="SmsPhone" value="{{SmsPhone1}}" maxlength="200" class="only_numbers color-blue">
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content ">
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.PANIC_SETTINGS_MSG07}}</div>
+                        <div class="item-input">
+                            <input type="tel" placeholder="+13001234512" name="SmsPhone" value="{{SmsPhone2}}" maxlength="200" class="only_numbers color-blue">
+                        </div>
+                    </div>
+                </li>
+                <li class="item-content ">
+                    <div class="item-media"></div>
+                    <div class="item-inner">
+                        <div class="item-title label">{{@global.LANGUAGE.PANIC_SETTINGS_MSG07}}</div>
+                        <div class="item-input">
+                            <input type="tel" placeholder="+13001234512" name="SmsPhone" value="{{SmsPhone3}}" maxlength="200" class="only_numbers color-blue">
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
+
 

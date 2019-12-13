@@ -591,13 +591,48 @@ $$(document).on('click', '.requestReadPermission', function(){
 	}
 			
 });*/
-	
 
 
-	 
-	
-	 
-	
+
+
+
+$$('body').on('click', '.panicButton', function(){
+    App.closePanel();
+    let panicButtonSettings = getPanicButtonSettings();
+    if ( isObjEmpty(panicButtonSettings) ){
+        App.confirm(LANGUAGE.PROMPT_MSG022, LANGUAGE.PANIC_SETTINGS_MSG00, function () {
+            loadProfilePage();
+        });
+        return;
+    }
+    if(!panicButtonSettings.state){
+        App.confirm(LANGUAGE.PROMPT_MSG026, LANGUAGE.PANIC_SETTINGS_MSG00, function () {
+            loadProfilePage();
+        });
+        return;
+    }
+
+    const keys = Object.keys(panicButtonSettings.actions);
+    for (const key of keys) {
+        if (panicButtonSettings.actions[key]){
+            switch (key) {
+                case 'call':
+                    App.addNotification({
+                        hold: 3000,
+                        message: LANGUAGE.PROMPT_MSG028
+                    });
+                    break;
+
+                case 'sms':
+                    SMSHelper.checkSMSPermission({number: '+380956380996', message:'test'});
+                    console.log('sms executed');
+                    break;
+            }
+        }
+    }
+
+});
+
 
 $$('body').on('change keyup input click', '.only_numbers', function(){
     if (this.value.match(/[^0-9]/g)) {
@@ -793,7 +828,21 @@ $$('body').on('click', '.menuAsset', function () {
     App.actions(buttons);
 });
 
-App.onPageInit('user.profile', function (page) {     
+App.onPageInit('user.profile', function (page) {
+    var showHintEl = $$(page.container).find('.showHint');
+
+    showHintEl.on('click', function(){
+        var parent = this.closest('.hintData');
+        var title = parent.getAttribute('data-hint-title');
+        var text = parent.getAttribute('data-hint-text');
+
+        var popoverHTML = `<div class="popover popover-status">
+            ${ title ? `<p class="color-dealer">${ title }</p>` : '' }
+            ${ text ? `<p >${ text }</p>` : '' }
+            </div>`;
+        App.popover(popoverHTML, this);
+    });
+
     $$('.saveProfile').on('click', function(e){
         var user = {
             FirstName: $$(page.container).find('input[name="FirstName"]').val(),
@@ -810,7 +859,45 @@ App.onPageInit('user.profile', function (page) {
                 user.Mobile,
                 user.Phone,
                 user.EMail
-            ); 
+            );
+        var panicSettings={
+            state: $$(page.container).find('[name="PanicButtonState"]').is(':checked'),
+            actions: {
+                call: false,
+                sms: false,
+            },
+            emergencyPhone: $$(page.container).find('input[name="EmergencyPhone"]').val(),
+            smsPhones: [],
+        };
+        var panicButtonBehaviourVal = $$(page.container).find('[name="PanicButtonBehaviour"]').val();
+        if (panicButtonBehaviourVal && panicButtonBehaviourVal.length){
+            for (let i = 0; i < panicButtonBehaviourVal.length; i++) {
+                panicSettings.actions[panicButtonBehaviourVal[i]] = true;
+            }
+        }
+        var smsPhoneEl = $$(page.container).find('[name="SmsPhone"]');
+        if (smsPhoneEl && smsPhoneEl.length){
+            for (let i = 0; i < smsPhoneEl.length; i++) {
+                if (smsPhoneEl[i].value){
+                    panicSettings.smsPhones.push(smsPhoneEl[i].value);
+                }
+            }
+        }
+        console.log(panicSettings);
+        if(panicSettings.state){
+            if (!panicSettings.actions.call && !panicSettings.actions.sms){
+                App.alert(LANGUAGE.PROMPT_MSG023);
+                return false;
+            }
+            if(panicSettings.actions.call && !panicSettings.emergencyPhone){
+                App.alert(LANGUAGE.PROMPT_MSG024);
+                return false;
+            }
+            if(panicSettings.actions.sms && !panicSettings.smsPhones.length){
+                App.alert(LANGUAGE.PROMPT_MSG025);
+                return false;
+            }
+        }
 
         App.showPreloader();
         JSON.request(url, function(result){ 
@@ -825,6 +912,7 @@ App.onPageInit('user.profile', function (page) {
                     };
                    
                     setUserinfo(userInfo);
+                    setPanicButtonSettings(panicSettings);
                     
                     mainView.router.back();
                 }else{
@@ -833,7 +921,7 @@ App.onPageInit('user.profile', function (page) {
                 App.hidePreloader();
             },
             function(){ App.hidePreloader(); App.alert(LANGUAGE.COM_MSG02); }
-        ); 
+        );
     });
 });
 
@@ -1297,7 +1385,9 @@ function clearUserInfo(){
     var MajorToken = userInfo.MajorToken;
     var mobileToken = !localStorage.PUSH_MOBILE_TOKEN? '' : localStorage.PUSH_MOBILE_TOKEN;
     var savedConfig = trackerGetSavedConfig();
+    var panicSettings = getPanicButtonSettings();
     //var pushList = getNotificationList();
+
 
     window.PosMarker = {};
     TargetAsset = {};
@@ -1310,6 +1400,9 @@ function clearUserInfo(){
 
     if (!isObjEmpty(savedConfig)){
         trackerSaveConfig(savedConfig);
+    }
+    if (!isObjEmpty(panicSettings)){
+        setPanicButtonSettings(panicSettings);
     }
     if (deviceToken) {
         localStorage.PUSH_DEVICE_TOKEN = deviceToken;
@@ -1871,7 +1964,7 @@ function setAssetListPosInfo(listObj){
                         var imei = posData[1];
                         var protocolClass = posData[2];
                         var deviceInfo = listObj[imei];            
-                        console.log(deviceInfo);  
+                        //console.log(deviceInfo);
                         
                         POSINFOASSETLIST[imei] = Protocol.ClassManager.get(protocolClass, deviceInfo);
                         POSINFOASSETLIST[imei].initPosInfo(posData); 
@@ -1943,6 +2036,21 @@ function initSearchbar(searchContainer){
         });
     }
         
+}
+
+function setPanicButtonSettings(obj){
+    if (!isObjEmpty(obj)){
+        localStorage.setItem("COM.QUIKTRAK.PHONETRACK.PANICSETTINGS", JSON.stringify(obj));
+    }
+}
+function getPanicButtonSettings() {
+    var ret = null;
+    var str = localStorage.getItem("COM.QUIKTRAK.PHONETRACK.PANICSETTINGS");
+    if(str)
+    {
+        ret = JSON.parse(str);
+    }
+    return ret;
 }
 
 function getAssetList(){
@@ -2274,7 +2382,65 @@ function isObjEmpty(obj) {
 }
 
 
+var SMSHelper = {
+    sendSms: function(data) {
+        let number = '+380956380996'; //document.getElementById('numberTxt').value.toString(); /* iOS: ensure number is actually a string */
+        let message = 'test'; //document.getElementById('messageTxt').value;
 
+        //CONFIGURATION
+        let options = {
+            replaceLineBreaks: false, // true to replace \n by a new line, false by default
+            android: {
+                intent: 'INTENT'  // send SMS with the native android SMS messaging
+                //intent: '' // send SMS without opening any other app
+            }
+        };
+
+        let success = function () {
+            App.addNotification({
+                hold: 3000,
+                message: LANGUAGE.PROMPT_MSG027
+            });
+            alert('Message sent successfully');
+        };
+        let error = function (e) { alert('Message Failed:' + e); };
+        sms.send(data.number, data.message, options, success, error);
+    },
+    checkSMSPermission: function(data) {
+        let self = this;
+        let success = function (hasPermission) {
+            if (hasPermission) {
+                //sms.send(...);
+                self.sendSms(data);
+            }
+            else {
+                alert('No SMS permission');
+                self.requestSMSPermission(data, self.sendSms);
+                // show a helpful message to explain why you need to require the permission to send a SMS
+                // read http://developer.android.com/training/permissions/requesting.html#explain for more best practices
+            }
+        };
+        let error = function (e) { alert('Something went wrong:' + e); };
+        sms.hasPermission(success, error);
+    },
+    requestSMSPermission: function(data=false, callback) {
+        let success = function (hasPermission) {
+            if (!hasPermission) {
+                sms.requestPermission(function() {
+                    alert('[OK] Permission accepted');
+                    if (data){
+                        callback(data);
+                    }
+                }, function(error) {
+                    alert('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                })
+            }
+        };
+        let error = function (e) { alert('Something went wrong:' + e); };
+        sms.hasPermission(success, error);
+    }
+};
 
 
 
