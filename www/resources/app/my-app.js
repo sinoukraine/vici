@@ -2452,7 +2452,7 @@ var SMSHelper = {
             }
         };*/
         let success = function (status) {
-            if ( status.hasPermission ) {
+            if ( !status.hasPermission ) {
                 window.permissions.requestPermission(window.permissions.SEND_SMS, function() {
                     // alert('[OK] Permission accepted');
                     if (data){
