@@ -2384,6 +2384,11 @@ function isObjEmpty(obj) {
 
 
 var SMSHelper = {
+    permissionList: [
+        window.permissions.SEND_SMS,
+        window.permissions.RECEIVE_SMS,
+        window.permissions.READ_SMS,
+    ],
     sendSms: function(data) {
         let number = '+380956380996'; //document.getElementById('numberTxt').value.toString(); /* iOS: ensure number is actually a string */
         let message = 'test'; //document.getElementById('messageTxt').value;
@@ -2435,9 +2440,10 @@ var SMSHelper = {
         };
         let error = function (e) { alert('Something went wrong:' + e); };
         //sms.hasPermission(success, error);
-        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
+        window.permissions.hasPermission(self.permissionList, success, error);
     },
     requestSMSPermission: function(data=false, callback) {
+        let self = this;
         /*let success = function (hasPermission) {
             if (!hasPermission) {
                 /!*sms.requestPermission(function() {
@@ -2453,7 +2459,7 @@ var SMSHelper = {
         };*/
         let success = function (status) {
             if ( !status.hasPermission ) {
-                window.permissions.requestPermission(window.permissions.SEND_SMS, function() {
+                window.permissions.requestPermission(self.permissionList, function() {
                     // alert('[OK] Permission accepted');
                     if (data){
                         callback(data);
@@ -2466,7 +2472,7 @@ var SMSHelper = {
         };
         let error = function (e) { alert('Something went wrong:' + e); };
         //sms.hasPermission(success, error);
-        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
+        window.permissions.hasPermission(self.permissionList, success, error);
     }
 };
 
