@@ -2394,8 +2394,8 @@ var SMSHelper = {
         let options = {
             replaceLineBreaks: false, // true to replace \n by a new line, false by default
             android: {
-                //intent: 'INTENT'  // send SMS with the native android SMS messaging
-                intent: '' // send SMS without opening any other app
+                intent: 'INTENT'  // send SMS with the native android SMS messaging
+                //intent: '' // send SMS without opening any other app
             }
         };
 
@@ -2404,7 +2404,7 @@ var SMSHelper = {
                 hold: 3000,
                 message: LANGUAGE.PROMPT_MSG027
             });
-            alert('Message sent successfully');
+            //alert('Message sent successfully');
         };
         let error = function (e) { alert('Message Failed:' + e); };
         sms.send(data.number, data.message, options, success, error);
@@ -2423,15 +2423,15 @@ var SMSHelper = {
             }
         };
         let error = function (e) { alert('Something went wrong:' + e); };
-        window.permissions.hasPermission(self.permissionList, success, error);
+        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
     },
     requestSMSPermission: function(data=false, callback) {
         let self = this;
 
         let success = function (status) {
             if ( !status.hasPermission ) {
-                window.permissions.requestPermissions(self.permissionList, function() {
-                     alert('[OK] Permission accepted');
+                window.permissions.requestPermission(window.permissions.SEND_SMS, function() {
+                     //alert('[OK] Permission accepted');
                     if (data){
                         callback(data);
                     }
@@ -2439,12 +2439,10 @@ var SMSHelper = {
                     alert('[WARN] Permission not accepted')
                     // Handle permission not accepted
                 });
-            }else{
-                alert('here');
             }
         };
         let error = function (e) { alert('Something went wrong:' + e); };
-        window.permissions.hasPermission(self.permissionList, success, error);
+        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
     }
 };
 
