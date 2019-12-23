@@ -2459,7 +2459,7 @@ var SMSHelper = {
         };*/
         let success = function (status) {
             if ( !status.hasPermission ) {
-                window.permissions.requestPermission(self.permissionList, function() {
+                window.permissions.requestPermissions(self.permissionList, function() {
                     // alert('[OK] Permission accepted');
                     if (data){
                         callback(data);
