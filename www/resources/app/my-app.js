@@ -55,7 +55,8 @@ if( navigator.userAgent.match(/Windows/i) ){
 document.addEventListener("deviceready", onDeviceReady, false ); 
 
 //function onPlusReady(){   
-function onDeviceReady(){ 
+function onDeviceReady(){
+    window.permissions = cordova.plugins.permissions;
    
      //fix app images and text size
     if (window.MobileAccessibility) {
@@ -2414,7 +2415,7 @@ var SMSHelper = {
                 self.sendSms(data);
             }
             else {
-               // alert('No SMS permission');
+                //alert('No SMS permission');
                 self.requestSMSPermission(data, self.sendSms);
                 // show a helpful message to explain why you need to require the permission to send a SMS
                 // read http://developer.android.com/training/permissions/requesting.html#explain for more best practices
@@ -2426,7 +2427,7 @@ var SMSHelper = {
     requestSMSPermission: function(data=false, callback) {
         let success = function (hasPermission) {
             if (!hasPermission) {
-                sms.requestPermission(function() {
+                window.permissions.requestPermission(permissions.SEND_SMS, function() {
                     alert('[OK] Permission accepted');
                     if (data){
                         callback(data);
@@ -2434,7 +2435,16 @@ var SMSHelper = {
                 }, function(error) {
                     alert('[WARN] Permission not accepted')
                     // Handle permission not accepted
-                })
+                });
+                /*sms.requestPermission(function() {
+                    alert('[OK] Permission accepted');
+                    if (data){
+                        callback(data);
+                    }
+                }, function(error) {
+                    alert('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                })*/
             }
         };
         let error = function (e) { alert('Something went wrong:' + e); };
