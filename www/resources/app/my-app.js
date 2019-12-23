@@ -2414,7 +2414,7 @@ var SMSHelper = {
                 self.sendSms(data);
             }
             else {
-                alert('No SMS permission');
+               // alert('No SMS permission');
                 self.requestSMSPermission(data, self.sendSms);
                 // show a helpful message to explain why you need to require the permission to send a SMS
                 // read http://developer.android.com/training/permissions/requesting.html#explain for more best practices

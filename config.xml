@@ -43,21 +43,15 @@
 	  	    <application android:usesCleartextTraffic="true" />
 	  	</edit-config>
 
-	  	<!-- sms plugin -->
-	  	<!-- <config-file parent="/manifest/application" mode="merge">
-	  		    	<uses-permission android:name="android.permission.RECEIVE_SMS" />
-	  			</config-file>
-	  			<config-file parent="/manifest/application" mode="merge">
-	  		    	<uses-permission android:name="android.permission.READ_SMS" />
-	  			</config-file> -->
-		<config-file parent="/manifest/application" mode="merge">
-	    	<uses-permission android:name="android.permission.SEND_SMS" />
+	  	<!-- sms plugin -->  
+		<!-- <config-file parent="/manifest/application" mode="merge">
+			    	<uses-permission android:name="android.permission.SEND_SMS" />
 		</config-file>
 		<config-file parent="/manifest/application" mode="merge">
-	    	<uses-permission android:name="android.permission.READ_SMS" />
+			    	<uses-permission android:name="android.permission.READ_SMS" />
 		</config-file>
 		<config-file parent="/manifest/application" mode="merge">
-	    	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+			    	<uses-permission android:name="android.permission.RECEIVE_SMS" /> -->
 		</config-file>
 	  	<!-- /sms plugin -->
 	  	
