@@ -2390,9 +2390,6 @@ var SMSHelper = {
         window.permissions.READ_SMS,
     ],
     sendSms: function(data) {
-        let number = '+380956380996'; //document.getElementById('numberTxt').value.toString(); /* iOS: ensure number is actually a string */
-        let message = 'test'; //document.getElementById('messageTxt').value;
-
         //CONFIGURATION
         let options = {
             replaceLineBreaks: false, // true to replace \n by a new line, false by default
@@ -2414,53 +2411,27 @@ var SMSHelper = {
     },
     checkSMSPermission: function(data) {
         let self = this;
-        /*let success = function (hasPermission) {
-            if (hasPermission) {
-                //sms.send(...);
-                self.sendSms(data);
-            }
-            else {
-                //alert('No SMS permission');
-                self.requestSMSPermission(data, self.sendSms);
-                // show a helpful message to explain why you need to require the permission to send a SMS
-                // read http://developer.android.com/training/permissions/requesting.html#explain for more best practices
-            }
-        };*/
+
         let success = function (status) {
             if (status.hasPermission) {
                 //sms.send(...);
                 self.sendSms(data);
             }
             else {
-                //alert('No SMS permission');
+               alert('No SMS permission');
                 self.requestSMSPermission(data, self.sendSms);
-                // show a helpful message to explain why you need to require the permission to send a SMS
-                // read http://developer.android.com/training/permissions/requesting.html#explain for more best practices
             }
         };
         let error = function (e) { alert('Something went wrong:' + e); };
-        //sms.hasPermission(success, error);
         window.permissions.hasPermission(self.permissionList, success, error);
     },
     requestSMSPermission: function(data=false, callback) {
         let self = this;
-        /*let success = function (hasPermission) {
-            if (!hasPermission) {
-                /!*sms.requestPermission(function() {
-                    alert('[OK] Permission accepted');
-                    if (data){
-                        callback(data);
-                    }
-                }, function(error) {
-                    alert('[WARN] Permission not accepted')
-                    // Handle permission not accepted
-                })*!/
-            }
-        };*/
+
         let success = function (status) {
             if ( !status.hasPermission ) {
                 window.permissions.requestPermissions(self.permissionList, function() {
-                    // alert('[OK] Permission accepted');
+                     alert('[OK] Permission accepted');
                     if (data){
                         callback(data);
                     }
@@ -2468,10 +2439,11 @@ var SMSHelper = {
                     alert('[WARN] Permission not accepted')
                     // Handle permission not accepted
                 });
+            }else{
+                alert('here');
             }
         };
         let error = function (e) { alert('Something went wrong:' + e); };
-        //sms.hasPermission(success, error);
         window.permissions.hasPermission(self.permissionList, success, error);
     }
 };
