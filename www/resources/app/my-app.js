@@ -2392,8 +2392,8 @@ var SMSHelper = {
         let options = {
             replaceLineBreaks: false, // true to replace \n by a new line, false by default
             android: {
-                intent: 'INTENT'  // send SMS with the native android SMS messaging
-                //intent: '' // send SMS without opening any other app
+                //intent: 'INTENT'  // send SMS with the native android SMS messaging
+                intent: '' // send SMS without opening any other app
             }
         };
 
@@ -2409,8 +2409,20 @@ var SMSHelper = {
     },
     checkSMSPermission: function(data) {
         let self = this;
-        let success = function (hasPermission) {
+        /*let success = function (hasPermission) {
             if (hasPermission) {
+                //sms.send(...);
+                self.sendSms(data);
+            }
+            else {
+                //alert('No SMS permission');
+                self.requestSMSPermission(data, self.sendSms);
+                // show a helpful message to explain why you need to require the permission to send a SMS
+                // read http://developer.android.com/training/permissions/requesting.html#explain for more best practices
+            }
+        };*/
+        let success = function (status) {
+            if (status.hasPermission) {
                 //sms.send(...);
                 self.sendSms(data);
             }
@@ -2422,13 +2434,27 @@ var SMSHelper = {
             }
         };
         let error = function (e) { alert('Something went wrong:' + e); };
-        sms.hasPermission(success, error);
+        //sms.hasPermission(success, error);
+        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
     },
     requestSMSPermission: function(data=false, callback) {
-        let success = function (hasPermission) {
+        /*let success = function (hasPermission) {
             if (!hasPermission) {
-                window.permissions.requestPermission(permissions.SEND_SMS, function() {
+                /!*sms.requestPermission(function() {
                     alert('[OK] Permission accepted');
+                    if (data){
+                        callback(data);
+                    }
+                }, function(error) {
+                    alert('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                })*!/
+            }
+        };*/
+        let success = function (status) {
+            if ( status.hasPermission ) {
+                window.permissions.requestPermission(window.permissions.SEND_SMS, function() {
+                    // alert('[OK] Permission accepted');
                     if (data){
                         callback(data);
                     }
@@ -2436,19 +2462,11 @@ var SMSHelper = {
                     alert('[WARN] Permission not accepted')
                     // Handle permission not accepted
                 });
-                /*sms.requestPermission(function() {
-                    alert('[OK] Permission accepted');
-                    if (data){
-                        callback(data);
-                    }
-                }, function(error) {
-                    alert('[WARN] Permission not accepted')
-                    // Handle permission not accepted
-                })*/
             }
         };
         let error = function (e) { alert('Something went wrong:' + e); };
-        sms.hasPermission(success, error);
+        //sms.hasPermission(success, error);
+        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
     }
 };
 
