@@ -50,8 +50,14 @@
 	  			<config-file parent="/manifest/application" mode="merge">
 	  		    	<uses-permission android:name="android.permission.READ_SMS" />
 	  			</config-file> -->
-		<config-file parent="/manifest/application" mode="merge">
+		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" mode="merge">
 	    	<uses-permission android:name="android.permission.SEND_SMS" />
+		</config-file>
+		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" mode="merge">
+	    	<uses-permission android:name="android.permission.READ_SMS" />
+		</config-file>
+		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" mode="merge">
+	    	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 		</config-file>
 	  	<!-- /sms plugin -->
 	  	
