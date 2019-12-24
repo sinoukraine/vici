@@ -1237,7 +1237,10 @@ App.onPageInit('user.timing', function(page){
     var trackingStateEl = $$(page.container).find('input[name="tracking-enabled"]');
     var trackingServerEl = $$(page.container).find('[name="trackingServer"]');
 
-    var dayOfWeekset = dayOfWeek.data('set').toString();
+    var dayOfWeekset = '';
+    if (dayOfWeek.data('set')){
+        dayOfWeekset = dayOfWeek.data('set').toString();
+    }
     var dayOfWeekArr = [];
 
     if (dayOfWeekset && dayOfWeekset.indexOf(',') != -1) {
@@ -1285,9 +1288,6 @@ App.onPageInit('user.timing', function(page){
         $$(snapValues[handle]).data('set',values[handle]);
     });
 
-    /*trackingStateEl.on('change', function () {
-        console.log(this.checked);
-    });*/
 
     applyUserTiming.on('click', function(){
         //alert('click');
@@ -1764,7 +1764,7 @@ function loadTimingPage(){
             Name: name,
             Phone: phone,
             IMEI: savedConfig.IMEI,
-            Interval: currentInterval,  
+            Interval: currentInterval,
             DayOfWeek: dayOfWeek,
             StartTime: startTimeMinutes,
             EndTime: endTimeMinutes,

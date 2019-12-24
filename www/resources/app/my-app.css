@@ -392,7 +392,15 @@ select{
     	-o-transform: rotate(90deg);
     	transform: rotate(90deg);    	
 	}
-
+	.list-block .smart-select .item-content.with_arrow_select .item-after{
+		max-width: 100%;
+		font-size: 16px;
+		color: #212121;
+		padding: 6px 0;
+	}
+	.smart-select-page .list-block:first-of-type{
+		margin-top: 0;
+	}
 	
 .bottom_divider{
 	position: relative;
