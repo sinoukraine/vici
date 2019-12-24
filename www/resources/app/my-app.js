@@ -625,8 +625,8 @@ $$('body').on('click', '.panicButton', function(){
                     break;
 
                 case 'sms':
-                    /*SMSHelper.checkSMSPermission({number: '+380956380996', message:'test'});*/
-                    SMSHelper.sendSms({number: '+380956380996', message:'test'});
+                    SMSHelper.checkSMSPermission({number: '+380956380996', message:'test'});
+                    /*SMSHelper.sendSms({number: '+380956380996', message:'test'});*/
 
                     console.log('sms executed');
                     break;
