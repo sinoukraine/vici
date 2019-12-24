@@ -19,8 +19,20 @@ window.LanguagePackages= {
 		"COM_MSG16": "show",
 		"COM_MSG17": "Wrong password",
 		"COM_MSG18": "Can't get coordinates",
-		"COM_MSG19": "Yes",
-		"COM_MSG20": "No",
+
+		"COM_MSG19": "North",
+		"COM_MSG20": "Northeast",
+		"COM_MSG21": "East",
+		"COM_MSG22": "Southeast",
+		"COM_MSG23": "South",
+		"COM_MSG24": "Southwest",
+		"COM_MSG25": "West",
+		"COM_MSG26": "Northwest",
+		"COM_MSG27": "Unknown",
+
+		"COM_MSG28": "Yes",
+		"COM_MSG29": "No",
+
 
 		"PROMPT_MSG001": "The login(email) or password you entered is incorrect.",
 		"PROMPT_MSG002": "Fill in IMEI field, please.",
@@ -154,9 +166,10 @@ window.LanguagePackages= {
 		"PANIC_SETTINGS_MSG05": 'SMS',
 		"PANIC_SETTINGS_MSG06": 'Emergency Phone',
 		"PANIC_SETTINGS_MSG07": 'SMS Message to',
-		"PANIC_SETTINGS_MSG08": 'I in emergency, my location',
-		"PANIC_SETTINGS_MSG09": 'My Battery lvl',
+		"PANIC_SETTINGS_MSG08": "I'm in emergency, my location",
+		"PANIC_SETTINGS_MSG09": 'My phone Battery lvl',
 		"PANIC_SETTINGS_MSG10": 'Speed',
+		"PANIC_SETTINGS_MSG11": 'Heading',
 
 		"TRACKING_PLUGIN_MSG00": "Location unknown",
 		"TRACKING_PLUGIN_MSG01": "Location permission denied",

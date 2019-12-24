@@ -193,6 +193,38 @@ Protocol = {
             }
             return ret;
         },
+        getDirectionCardinal: function(direction){
+            var ret = "";
+            direction = parseFloat(direction);
+            switch (true){
+                case (direction >= 338 || direction <= 22 ):
+                    ret = LANGUAGE.COM_MSG19+'('+direction+'&deg;)';
+                    break;
+                case (direction >= 23 && direction <= 75 ):
+                    ret = LANGUAGE.COM_MSG20+'('+direction+'&deg;)';
+                    break;
+                case (direction >= 76 && direction <= 112 ):
+                    ret = LANGUAGE.COM_MSG21+'('+direction+'&deg;)';
+                    break;
+                case (direction >= 113 && direction <= 157 ):
+                    ret = LANGUAGE.COM_MSG22+'('+direction+'&deg;)';
+                    break;
+                case (direction >= 158 && direction <= 202 ):
+                    ret = LANGUAGE.COM_MSG23+'('+direction+'&deg;)';
+                    break;
+                case (direction >= 203 && direction <= 247 ):
+                    ret = LANGUAGE.COM_MSG24+'('+direction+'&deg;)';
+                    break;
+                case (direction >= 248 && direction <= 292 ):
+                    ret = LANGUAGE.COM_MSG25+'('+direction+'&deg;)';
+                    break;
+                case (direction >= 293 && direction <= 337 ):
+                    ret = LANGUAGE.COM_MSG26+'('+direction+'&deg;)';
+                    break;
+                default: ret = LANGUAGE.COM_MSG27+'('+direction+'&deg;)';
+            }
+            return ret;
+        },
         getAddressByGeocoder: function(latlng,replyFunc){
             /*var url = "http://map.quiktrak.co/reverse.php?format=json&lat={0}&lon={1}&zoom=18&addressdetails=1".format(latlng.lat, latlng.lng);
             JSON.request(url, function(result){ replyFunc(result.display_name);});*/

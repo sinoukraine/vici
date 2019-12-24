@@ -613,6 +613,7 @@ $$('body').on('click', '.panicButton', function(){
         return;
     }
 
+    App.showIndicator();
     const keys = Object.keys(panicButtonSettings.actions);
     for (const key of keys) {
         if (panicButtonSettings.actions[key]){
@@ -622,11 +623,10 @@ $$('body').on('click', '.panicButton', function(){
                         hold: 3000,
                         message: LANGUAGE.PROMPT_MSG028
                     });
+                    App.hideIndicator();
                     break;
 
                 case 'sms':
-                    //SMSHelper.checkSMSPermission({number: '+380956380996', message:'test'});
-
                     bgGeo.getCurrentPosition({
                         timeout: 30,          // 30 second timeout to fetch location
                         persist: true,        // Defaults to state.enabled
@@ -635,6 +635,7 @@ $$('body').on('click', '.panicButton', function(){
                         samples: 3,           // How many location samples to attempt.
                     }, function(location){
                         //alert(JSON.stringify(location));
+                        App.hideIndicator();
                         if(isObjEmpty(location)){
                             App.alert(LANGUAGE.TRACKING_PLUGIN_MSG05);
                             return;
@@ -644,10 +645,14 @@ $$('body').on('click', '.panicButton', function(){
                         if (location.coords.speed > 0){
                             pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
                         }
-                        let message = `${ LANGUAGE.PANIC_SETTINGS_MSG08 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PANIC_SETTINGS_MSG09 } ${ pBattery }, ${ LANGUAGE.PANIC_SETTINGS_MSG10 } ${ pSpeed }`;
-                        //App.alert(message);
+                        let pHeading = Protocol.Helper.getDirectionCardinal(location.coords.heading);
+
+                        let message = `${ LANGUAGE.PANIC_SETTINGS_MSG08 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PANIC_SETTINGS_MSG09 } ${ pBattery }, ${ LANGUAGE.PANIC_SETTINGS_MSG10 } ${ pSpeed }, ${ LANGUAGE.PANIC_SETTINGS_MSG11 } ${ pHeading }`;
+
                         SMSHelper.checkSMSPermission({number: '+380956380996', message: message});
+
                     },function(errorCode){
+                        App.hideIndicator();
                         let errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG04;
                         switch (errorCode) {
                             case 0:
@@ -665,6 +670,7 @@ $$('body').on('click', '.panicButton', function(){
                         }
                         App.alert(errorMsg);
                     });
+
 
                     break;
             }
@@ -1651,7 +1657,7 @@ function loadAssetAddPage(){
                 text: LANGUAGE.PROMPT_MSG008, //LANGUAGE.PROMPT_MSG017
                 buttons: [
                     {
-                        text: LANGUAGE.COM_MSG19,
+                        text: LANGUAGE.COM_MSG28,
                         onClick: function() {
                             //myApp.alert('You clicked first button!')
                             login();
@@ -1659,7 +1665,7 @@ function loadAssetAddPage(){
                         }
                     },
                     {
-                        text: LANGUAGE.COM_MSG20,
+                        text: LANGUAGE.COM_MSG29,
                         onClick: function() {
                             //mainView.router.back();
                             //afterRechergeCredits();
