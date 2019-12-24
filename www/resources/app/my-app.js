@@ -599,6 +599,7 @@ $$(document).on('click', '.requestReadPermission', function(){
 
 $$('body').on('click', '.panicButton', function(){
     App.closePanel();
+    let container = $$('body');
     let panicButtonSettings = getPanicButtonSettings();
     if ( isObjEmpty(panicButtonSettings) ){
         App.confirm(LANGUAGE.PROMPT_MSG022, LANGUAGE.PANIC_SETTINGS_MSG00, function () {
@@ -613,7 +614,8 @@ $$('body').on('click', '.panicButton', function(){
         return;
     }
 
-    App.showIndicator();
+    if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+    App.showProgressbar(container);
     const keys = Object.keys(panicButtonSettings.actions);
     for (const key of keys) {
         if (panicButtonSettings.actions[key]){
@@ -623,7 +625,7 @@ $$('body').on('click', '.panicButton', function(){
                         hold: 3000,
                         message: LANGUAGE.PROMPT_MSG028
                     });
-                    App.hideIndicator();
+                    App.hideProgressbar();
                     break;
 
                 case 'sms':
@@ -635,7 +637,7 @@ $$('body').on('click', '.panicButton', function(){
                         samples: 3,           // How many location samples to attempt.
                     }, function(location){
                         //alert(JSON.stringify(location));
-                        App.hideIndicator();
+                        App.hideProgressbar();
                         if(isObjEmpty(location)){
                             App.alert(LANGUAGE.TRACKING_PLUGIN_MSG05);
                             return;
@@ -654,7 +656,7 @@ $$('body').on('click', '.panicButton', function(){
 
 
                     },function(errorCode){
-                        App.hideIndicator();
+                        App.hideProgressbar();
                         let errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG04;
                         switch (errorCode) {
                             case 0:
