@@ -81,7 +81,7 @@
                         <div class="item-inner">
                             <div class="item-title showHint">{{@global.LANGUAGE.PANIC_SETTINGS_MSG00}}</div>
                             <label class="label-switch">
-                                <input type="checkbox" name="PanicButtonState">
+                                <input type="checkbox" name="PanicButtonState" {{#if PanicButtonState}}checked="checked"{{/if}}>
                                 <div class="checkbox"></div>
                             </label>
                         </div>
@@ -90,8 +90,8 @@
                 <li>
                     <a href="#" class="item-link smart-select">
                         <select name="PanicButtonBehaviour" multiple>
-                                <option value="call" data-display-as="{{@global.LANGUAGE.PANIC_SETTINGS_MSG04}}">{{@global.LANGUAGE.PANIC_SETTINGS_MSG02}}</option>
-                                <option value="sms" data-display-as="{{@global.LANGUAGE.PANIC_SETTINGS_MSG05}}">{{@global.LANGUAGE.PANIC_SETTINGS_MSG03}}</option>
+                                <option value="call" data-display-as="{{@global.LANGUAGE.PANIC_SETTINGS_MSG04}}" {{#if PanicButtonActions.call}}selected{{/if}}>{{@global.LANGUAGE.PANIC_SETTINGS_MSG02}}</option>
+                                <option value="sms" data-display-as="{{@global.LANGUAGE.PANIC_SETTINGS_MSG05}}" {{#if PanicButtonActions.sms}}selected{{/if}}>{{@global.LANGUAGE.PANIC_SETTINGS_MSG03}}</option>
                         </select>
                         <div class="item-content">
                             <div class="item-media"><i class="f7-icons icon-panic color-dealer"></i></div>

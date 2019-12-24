@@ -625,10 +625,20 @@ $$('body').on('click', '.panicButton', function(){
                     break;
 
                 case 'sms':
-                    /*SMSHelper.checkSMSPermission({number: '+380956380996', message:'test'});*/
-                    SMSHelper.sendSms({number: '+380956380996', message:'test'});
+                    //SMSHelper.checkSMSPermission({number: '+380956380996', message:'test'});
 
-                    console.log('sms executed');
+                    bgGeo.getCurrentPosition({
+                        timeout: 30,          // 30 second timeout to fetch location
+                        persist: true,        // Defaults to state.enabled
+                        maximumAge: 5000,     // Accept the last-known-location if not older than 5000 ms.
+                        desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
+                        samples: 3,           // How many location samples to attempt.
+                    }, function(location){
+                        alert(JSON.stringify(location));
+                    },function(error){
+                        alert(JSON.stringify(error));
+                    });
+
                     break;
             }
         }
@@ -1553,19 +1563,38 @@ function getUserImg(asset){
 
 
 function loadProfilePage(){
-    var userInfo = getUserinfo();  
-    console.log(userInfo);
+    let userInfo = getUserinfo();
+    let panicButtonSettings = getPanicButtonSettings();
+    //console.log(panicButtonSettings);
     //var UserImgSrc = getUserImg();
+    let context = {
+        //UserImgSrc: UserImgSrc,
+        FirstName: userInfo.User.FirstName,
+        SubName: userInfo.User.SubName,
+        Mobile: userInfo.User.Mobile,
+        Phone: userInfo.User.Phone,
+        EMail: userInfo.User.EMail,
+
+        PanicButtonActions: {},
+    };
+    if ( !isObjEmpty(panicButtonSettings) ){
+        context.PanicButtonState = panicButtonSettings.state;
+        context.EmergencyPhone = panicButtonSettings.emergencyPhone;
+        if(!isObjEmpty(panicButtonSettings.smsPhones)){
+            for (let i = 0; i < panicButtonSettings.smsPhones.length ; i++) {
+                let num = i+1;
+                context['SmsPhone'+num] = panicButtonSettings.smsPhones[i];
+            }
+        }
+        if(!isObjEmpty(panicButtonSettings.actions)){
+            context.PanicButtonActions = panicButtonSettings.actions;
+        }
+
+
+    }
     mainView.router.load({
         url:'resources/templates/user.profile.html',
-        context:{
-            //UserImgSrc: UserImgSrc,
-            FirstName: userInfo.User.FirstName,
-            SubName: userInfo.User.SubName,
-            Mobile: userInfo.User.Mobile,
-            Phone: userInfo.User.Phone,            
-            EMail: userInfo.User.EMail,           
-        }
+        context: context
     });
 }
 
@@ -1975,7 +2004,7 @@ function setAssetListPosInfo(listObj){
                     });
                 }              
                 
-                console.log(POSINFOASSETLIST);
+                //console.log(POSINFOASSETLIST);
                              
             } else{
                 console.log(result);
