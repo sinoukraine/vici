@@ -615,17 +615,19 @@ $$('body').on('click', '.panicButton', function(){
     }
 
     if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
-    App.showProgressbar(container);
+    App.showProgressbar(container,'red');
     const keys = Object.keys(panicButtonSettings.actions);
     for (const key of keys) {
         if (panicButtonSettings.actions[key]){
             switch (key) {
                 case 'call':
+                    App.hideProgressbar();
                     App.addNotification({
                         hold: 3000,
                         message: LANGUAGE.PROMPT_MSG028
                     });
-                    App.hideProgressbar();
+
+                    window.open('tel:'+panicButtonSettings.emergencyPhone, '_blank');
                     break;
 
                 case 'sms':
@@ -920,6 +922,7 @@ App.onPageInit('user.profile', function (page) {
             smsPhones: [],
         };
         var panicButtonBehaviourVal = $$(page.container).find('[name="PanicButtonBehaviour"]').val();
+        console.log(panicButtonBehaviourVal);
         if (panicButtonBehaviourVal && panicButtonBehaviourVal.length){
             for (let i = 0; i < panicButtonBehaviourVal.length; i++) {
                 panicSettings.actions[panicButtonBehaviourVal[i]] = true;
