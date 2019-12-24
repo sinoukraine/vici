@@ -634,9 +634,32 @@ $$('body').on('click', '.panicButton', function(){
                         desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
                         samples: 3,           // How many location samples to attempt.
                     }, function(location){
-                        alert(JSON.stringify(location));
-                    },function(error){
-                        alert(JSON.stringify(error));
+                        //alert(JSON.stringify(location));
+                        if(isObjEmpty(location)){
+                            App.alert(LANGUAGE.TRACKING_PLUGIN_MSG05);
+                            return;
+                        }
+                        let pBattery = location.battery.level * 100;
+                        let message = `${ LANGUAGE.PANIC_SETTINGS_MSG08 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PANIC_SETTINGS_MSG09 } ${ pBattery }%, ${ LANGUAGE.PANIC_SETTINGS_MSG10 } ${ location.coords.speed }m/s`;
+                        alert(message);
+                        //SMSHelper.checkSMSPermission({number: '+380956380996', message:'test'});
+                    },function(errorCode){
+                        let errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG04;
+                        switch (errorCode) {
+                            case 0:
+                                errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG00;
+                                break;
+                            case 1:
+                                errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG01;
+                                break;
+                            case 2:
+                                errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG02;
+                                break;
+                            case 408:
+                                errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG03;
+                                break;
+                        }
+                        App.alert(errorMsg);
                     });
 
                     break;

@@ -154,9 +154,16 @@ window.LanguagePackages= {
 		"PANIC_SETTINGS_MSG05": 'SMS',
 		"PANIC_SETTINGS_MSG06": 'Emergency Phone',
 		"PANIC_SETTINGS_MSG07": 'SMS Message to',
+		"PANIC_SETTINGS_MSG08": 'I in emergency, my location',
+		"PANIC_SETTINGS_MSG09": 'My Battery lvl',
+		"PANIC_SETTINGS_MSG10": 'Speed',
 
-
-
+		"TRACKING_PLUGIN_MSG00": "Location unknown",
+		"TRACKING_PLUGIN_MSG01": "Location permission denied",
+		"TRACKING_PLUGIN_MSG02": "Network error",
+		"TRACKING_PLUGIN_MSG03": "Location timeout",
+		"TRACKING_PLUGIN_MSG04": "Unknown Error",
+		"TRACKING_PLUGIN_MSG05": "Location data is empty",
 
 		
 	},
