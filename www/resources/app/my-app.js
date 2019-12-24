@@ -2386,11 +2386,6 @@ function isObjEmpty(obj) {
 
 
 var SMSHelper = {
-    permissionList: [
-        window.permissions.SEND_SMS,
-        window.permissions.RECEIVE_SMS,
-        window.permissions.READ_SMS,
-    ],
     sendSms: function(data) {
         //CONFIGURATION
         let options = {
