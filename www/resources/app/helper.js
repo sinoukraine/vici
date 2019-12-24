@@ -198,30 +198,30 @@ Protocol = {
             direction = parseFloat(direction);
             switch (true){
                 case (direction >= 338 || direction <= 22 ):
-                    ret = LANGUAGE.COM_MSG19+'('+direction+'&deg;)';
+                    ret = LANGUAGE.COM_MSG19+'('+direction+'°)';
                     break;
                 case (direction >= 23 && direction <= 75 ):
-                    ret = LANGUAGE.COM_MSG20+'('+direction+'&deg;)';
+                    ret = LANGUAGE.COM_MSG20+'('+direction+'°)';
                     break;
                 case (direction >= 76 && direction <= 112 ):
-                    ret = LANGUAGE.COM_MSG21+'('+direction+'&deg;)';
+                    ret = LANGUAGE.COM_MSG21+'('+direction+'°)';
                     break;
                 case (direction >= 113 && direction <= 157 ):
-                    ret = LANGUAGE.COM_MSG22+'('+direction+'&deg;)';
+                    ret = LANGUAGE.COM_MSG22+'('+direction+'°)';
                     break;
                 case (direction >= 158 && direction <= 202 ):
-                    ret = LANGUAGE.COM_MSG23+'('+direction+'&deg;)';
+                    ret = LANGUAGE.COM_MSG23+'('+direction+'°)';
                     break;
                 case (direction >= 203 && direction <= 247 ):
-                    ret = LANGUAGE.COM_MSG24+'('+direction+'&deg;)';
+                    ret = LANGUAGE.COM_MSG24+'('+direction+'°)';
                     break;
                 case (direction >= 248 && direction <= 292 ):
-                    ret = LANGUAGE.COM_MSG25+'('+direction+'&deg;)';
+                    ret = LANGUAGE.COM_MSG25+'('+direction+'°)';
                     break;
                 case (direction >= 293 && direction <= 337 ):
-                    ret = LANGUAGE.COM_MSG26+'('+direction+'&deg;)';
+                    ret = LANGUAGE.COM_MSG26+'('+direction+'°)';
                     break;
-                default: ret = LANGUAGE.COM_MSG27+'('+direction+'&deg;)';
+                default: ret = LANGUAGE.COM_MSG27+'('+direction+'°)';
             }
             return ret;
         },

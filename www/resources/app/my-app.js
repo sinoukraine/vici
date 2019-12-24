@@ -649,7 +649,9 @@ $$('body').on('click', '.panicButton', function(){
 
                         let message = `${ LANGUAGE.PANIC_SETTINGS_MSG08 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PANIC_SETTINGS_MSG09 } ${ pBattery }, ${ LANGUAGE.PANIC_SETTINGS_MSG10 } ${ pSpeed }, ${ LANGUAGE.PANIC_SETTINGS_MSG11 } ${ pHeading }`;
 
-                        SMSHelper.checkSMSPermission({number: '+380956380996', message: message});
+                        //SMSHelper.checkSMSPermission({number: '+380956380996', message: message});
+                        SMSHelper.checkSMSPermission({number: panicButtonSettings.smsPhones.toString(), message: message});
+
 
                     },function(errorCode){
                         App.hideIndicator();
@@ -681,8 +683,8 @@ $$('body').on('click', '.panicButton', function(){
 
 
 $$('body').on('change keyup input click', '.only_numbers', function(){
-    if (this.value.match(/[^0-9]/g)) {
-        this.value = this.value.replace(/[^0-9]/g, '');
+    if (this.value.match(/[^0-9,+]/g)) {
+        this.value = this.value.replace(/[^0-9,+]/g, '');
     }
 });
 
