@@ -640,7 +640,10 @@ $$('body').on('click', '.panicButton', function(){
                             return;
                         }
                         let pBattery = parseInt(location.battery.level * 100) + '%';
-                        let pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
+                        let pSpeed = '0m/s';
+                        if (location.coords.speed > 0){
+                            pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
+                        }
                         let message = `${ LANGUAGE.PANIC_SETTINGS_MSG08 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PANIC_SETTINGS_MSG09 } ${ pBattery }, ${ LANGUAGE.PANIC_SETTINGS_MSG10 } ${ pSpeed }`;
                         //App.alert(message);
                         SMSHelper.checkSMSPermission({number: '+380956380996', message: message});
