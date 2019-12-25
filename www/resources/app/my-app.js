@@ -687,6 +687,11 @@ $$('body').on('click', '.panicButton', function(){
 
 
 $$('body').on('change keyup input click', '.only_numbers', function(){
+    if (this.value.match(/[^0-9]/g)) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    }
+});
+$$('body').on('change keyup input click', '.only_numbers_plus', function(){
     if (this.value.match(/[^0-9,+]/g)) {
         this.value = this.value.replace(/[^0-9,+]/g, '');
     }
@@ -913,6 +918,7 @@ App.onPageInit('user.profile', function (page) {
             Phone: $$(page.container).find('input[name="Phone"]').val(),
             EMail: $$(page.container).find('input[name="EMail"]').val(),
         };
+       /* console.log(user);*/
         var userInfo = getUserinfo(); 
         var url = API_URL.URL_EDIT_ACCOUNT.format(userInfo.MajorToken,
                 userInfo.MinorToken,
@@ -979,7 +985,7 @@ App.onPageInit('user.profile', function (page) {
                     
                     mainView.router.back();
                 }else if(result.MajorCode === '100' && result.MinorCode === "1002"){
-                    alert(JSON.stringify(result));
+                   // alert(JSON.stringify(result));
                     switch(result.Data){
                         case 'firstName':
                             App.alert(LANGUAGE.PROMPT_MSG029);
