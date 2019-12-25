@@ -852,7 +852,7 @@ $$('body').on('click', '.menuAsset', function () {
         },
         {
             text: timing,
-            //disabled: disabled,
+            disabled: disabled,
             onClick: function () {               
                 loadTimingPage();
             },  
