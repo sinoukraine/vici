@@ -152,13 +152,9 @@
                 <li>
                     <a href="#" class="item-link smart-select">
                         <select multiple name="dayOfWeek" id="dayOfWeek" data-set={{DayOfWeek}}>
-                            <option value="1">{{@global.LANGUAGE.USER_TIMING_MSG14}}</option>
-                            <option value="2" selected>{{@global.LANGUAGE.USER_TIMING_MSG08}}</option>
-                            <option value="3" selected>{{@global.LANGUAGE.USER_TIMING_MSG09}}</option>
-                            <option value="4" selected>{{@global.LANGUAGE.USER_TIMING_MSG10}}</option>
-                            <option value="5" selected>{{@global.LANGUAGE.USER_TIMING_MSG11}}</option>
-                            <option value="6" selected>{{@global.LANGUAGE.USER_TIMING_MSG12}}</option>
-                            <option value="7">{{@global.LANGUAGE.USER_TIMING_MSG13}}</option>
+                            {{#each DaysOfWeekArr}}
+                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                            {{/each}}
                         </select>
                         <div class="item-content with_arrow_select border_bottom">
                             <div class="item-media"><i class="f7-icons icon-day-of-week color-dealer"></i></div>

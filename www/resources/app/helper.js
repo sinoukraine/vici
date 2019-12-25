@@ -225,6 +225,38 @@ Protocol = {
             }
             return ret;
         },
+        getWeekDaysArr: function(){
+            return [
+                {
+                    Val: 1,
+                    Name: LANGUAGE.USER_TIMING_MSG14,
+                },
+                {
+                    Val: 2,
+                    Name: LANGUAGE.USER_TIMING_MSG08,
+                },
+                {
+                    Val: 3,
+                    Name: LANGUAGE.USER_TIMING_MSG09,
+                },
+                {
+                    Val: 4,
+                    Name: LANGUAGE.USER_TIMING_MSG10,
+                },
+                {
+                    Val: 5,
+                    Name: LANGUAGE.USER_TIMING_MSG11,
+                },
+                {
+                    Val: 6,
+                    Name: LANGUAGE.USER_TIMING_MSG12,
+                },
+                {
+                    Val: 7,
+                    Name: LANGUAGE.USER_TIMING_MSG13,
+                },
+            ]
+        },
         getAddressByGeocoder: function(latlng,replyFunc){
             /*var url = "http://map.quiktrak.co/reverse.php?format=json&lat={0}&lon={1}&zoom=18&addressdetails=1".format(latlng.lat, latlng.lng);
             JSON.request(url, function(result){ replyFunc(result.display_name);});*/

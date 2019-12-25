@@ -852,7 +852,7 @@ $$('body').on('click', '.menuAsset', function () {
         },
         {
             text: timing,
-            disabled: disabled,
+            //disabled: disabled,
             onClick: function () {               
                 loadTimingPage();
             },  
@@ -1228,31 +1228,14 @@ App.onPageInit('user.timing', function(page){
     var selectInterval = $$(page.container).find('#trackingInterval');
     var applyUserTiming = $$('body').find('.applyUserTiming');
 
-    selectInterval.val(selectInterval.data("set"));
+    selectInterval.val(selectInterval.data("set")).change();
 
     var snapSlider = document.getElementById('timeOfDay');
     var startTimeMinutes = $$(page.container).find('#startTime');
     var endTimeMinutes = $$(page.container).find('#endTime');
-    var dayOfWeek = $(page.container).find('#dayOfWeek');
+    var dayOfWeek = $$(page.container).find('#dayOfWeek');
     var trackingStateEl = $$(page.container).find('input[name="tracking-enabled"]');
     var trackingServerEl = $$(page.container).find('[name="trackingServer"]');
-
-    var dayOfWeekset = '';
-    if (dayOfWeek.data('set')){
-        dayOfWeekset = dayOfWeek.data('set').toString();
-    }
-    var dayOfWeekArr = [];
-
-    if (dayOfWeekset && dayOfWeekset.indexOf(',') != -1) {
-        dayOfWeekArr = dayOfWeekset.split(',');
-    }else if(dayOfWeekset){
-        dayOfWeekArr = [dayOfWeekset];
-    }
-    if (dayOfWeekArr.length > 0) {
-        $.each(dayOfWeekArr, function(i, v){
-            dayOfWeek.find("option[value='" + v + "']").prop("selected", true);
-        });
-    }
 
     if(window.device) {
         checkTelephonyPermissions(); 
@@ -1304,7 +1287,6 @@ App.onPageInit('user.timing', function(page){
         /*if (trackingServerVal === 2){
             trackingServer = API_URL.UPLOAD_LINK
         }*/
-
 
 
         if (!daysOfWeekArray || daysOfWeekArray.length === 0) {   
@@ -1751,12 +1733,27 @@ function loadTimingPage(){
     var savedConfig = trackerGetSavedConfig();
 
     var currentInterval = !savedConfig.Interval ? 20 : parseInt(savedConfig.Interval) / 1000;
-    var dayOfWeek = !savedConfig.DayOfWeek ? '' : savedConfig.DayOfWeek;
+    var dayOfWeek = !savedConfig.DayOfWeek ? '2,3,4,5,6' : savedConfig.DayOfWeek;
+    var dayOfWeekArr = Protocol.Helper.getWeekDaysArr();
     var startTimeMinutes = !savedConfig.StartTime ? 540 : savedConfig.StartTime;
     var endTimeMinutes = !savedConfig.EndTime ? 1080 : savedConfig.EndTime;
     var scheduleState = !savedConfig.ScheduleState || savedConfig.ScheduleState === 'false' ? false : true
 
     console.log(savedConfig);
+    if (dayOfWeek && dayOfWeek.indexOf(',') !== -1) {
+        dayOfWeek = dayOfWeek.split(',');
+    }else if(dayOfWeek){
+        dayOfWeek = [dayOfWeek];
+    }
+
+    for (let i = 0; i < dayOfWeek.length; i++) {
+        for (let y = 0; y < dayOfWeekArr.length; y++) {
+            if(dayOfWeekArr[y].Val === parseInt(dayOfWeek[i])){
+                dayOfWeekArr[y].Selected = true;
+                break;
+            }
+        }
+    }
 
     mainView.router.load({
         url:'resources/templates/user.timing.html',
@@ -1765,7 +1762,8 @@ function loadTimingPage(){
             Phone: phone,
             IMEI: savedConfig.IMEI,
             Interval: currentInterval,
-            DayOfWeek: dayOfWeek,
+            //DayOfWeek: dayOfWeek,
+            DaysOfWeekArr: dayOfWeekArr,
             StartTime: startTimeMinutes,
             EndTime: endTimeMinutes,
             TrackingState: scheduleState,
