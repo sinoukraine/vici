@@ -882,6 +882,16 @@ $$('body').on('click', '.menuAsset', function () {
 
 App.onPageInit('user.profile', function (page) {
     var showHintEl = $$(page.container).find('.showHint');
+    var emergancyPhoneEl = $$(page.container).find('input[name="EmergencyPhone"]');
+    var smsPhone1El = $$(page.container).find('input[name="SmsPhone"]')[0];
+    smsPhone1El = $$(smsPhone1El);
+
+    emergancyPhoneEl.on('focusout', function(e){
+        if (!smsPhone1El.val()){
+            smsPhone1El.val(e.target.value);
+        }
+    });
+
 
     showHintEl.on('click', function(){
         var parent = this.closest('.hintData');
@@ -922,7 +932,7 @@ App.onPageInit('user.profile', function (page) {
             smsPhones: [],
         };
         var panicButtonBehaviourVal = $$(page.container).find('[name="PanicButtonBehaviour"]').val();
-        console.log(panicButtonBehaviourVal);
+        //console.log(panicButtonBehaviourVal);
         if (panicButtonBehaviourVal && panicButtonBehaviourVal.length){
             for (let i = 0; i < panicButtonBehaviourVal.length; i++) {
                 panicSettings.actions[panicButtonBehaviourVal[i]] = true;
@@ -955,7 +965,7 @@ App.onPageInit('user.profile', function (page) {
         App.showPreloader();
         JSON.request(url, function(result){ 
                 console.log(result);                  
-                if (result.MajorCode == '000') {                    
+                if (result.MajorCode === '000') {
                     userInfo.User = {
                         FirstName: result.Data.User.FirstName,
                         SubName: result.Data.User.SubName,
@@ -968,6 +978,33 @@ App.onPageInit('user.profile', function (page) {
                     setPanicButtonSettings(panicSettings);
                     
                     mainView.router.back();
+                }else if(result.MajorCode === '100' && result.MinorCode === "1002"){
+                    switch(result.Data){
+                        case 'firstName':
+                            App.alert(LANGUAGE.PROMPT_MSG029);
+                            break;
+                        case 'subName':
+                            App.alert(LANGUAGE.PROMPT_MSG030);
+                            break;
+
+                        case 'email':
+                            App.alert(LANGUAGE.PROMPT_MSG031);
+                            break;
+
+                        case 'mobile':
+                            App.alert(LANGUAGE.PROMPT_MSG032);
+                            break;
+
+                        case 'phone':
+                            App.alert(LANGUAGE.PROMPT_MSG033);
+                            break;
+
+                        default:
+                            App.alert('Something wrong');
+                    }
+
+
+
                 }else{
                     App.alert('Something wrong');
                 }
