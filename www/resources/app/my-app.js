@@ -979,6 +979,7 @@ App.onPageInit('user.profile', function (page) {
                     
                     mainView.router.back();
                 }else if(result.MajorCode === '100' && result.MinorCode === "1002"){
+                    alert(JSON.stringify(result));
                     switch(result.Data){
                         case 'firstName':
                             App.alert(LANGUAGE.PROMPT_MSG029);
@@ -1467,6 +1468,7 @@ function clearUserInfo(){
     if (virtualAssetList) {
         virtualAssetList.deleteAllItems();
     }
+    toIndex();
     
     localStorage.clear(); 
 
