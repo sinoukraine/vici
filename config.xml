@@ -44,9 +44,7 @@
 	  	</edit-config>	 
 
         <!-- sms plugin -->
-        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
-            <uses-permission android:name="android.permission.SEND_SMS" />
-        </edit-config>    
+        <uses-permission android:name="android.permission.SEND_SMS" />
        <!--  <config-file parent="/manifest/application" mode="merge">
            <uses-permission android:name="android.permission.SEND_SMS" />
        </config-file> -->
