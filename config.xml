@@ -42,11 +42,11 @@
               android:name="com.transistorsoft.locationmanager.license_key"
               android:value="YOUR_LICENSE_KEY_HERE" />
         </config-file> -->
-        <config-file target="AndroidManifest.xml" mode="merge" parent="/manifest" >
+        <!-- <config-file target="AndroidManifest.xml" mode="merge" parent="/manifest" >
             <meta-data
               android:name="com.transistorsoft.locationmanager.license_key"
               android:value="YOUR_LICENSE_KEY_HERE" />
-        </config-file>
+        </config-file> -->
 		<!-- /background-geolocation -->
 
 	  	<edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
@@ -62,6 +62,12 @@
        
         <config-file parent="/manifest" mode="merge" target="AndroidManifest.xml"> 
             <uses-permission android:name="android.permission.SEND_SMS" />
+        </config-file>
+
+        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
+            <meta-data
+              android:name="com.transistorsoft.locationmanager.license_key"
+              android:value="YOUR_LICENSE_KEY_HERE" />
         </config-file>
 
         <!-- <config-file file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
