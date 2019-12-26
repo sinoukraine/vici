@@ -37,7 +37,12 @@
               android:name="com.transistorsoft.locationmanager.license_key"
               android:value="YOUR_LICENSE_KEY_HERE" />
         </config-file> -->
-        <config-file target="AndroidManifest.xml" parent="/manifest" >
+        <!-- <config-file target="AndroidManifest.xml" parent="/manifest" >
+            <meta-data
+              android:name="com.transistorsoft.locationmanager.license_key"
+              android:value="YOUR_LICENSE_KEY_HERE" />
+        </config-file> -->
+        <config-file target="AndroidManifest.xml" mode="merge" parent="/manifest" >
             <meta-data
               android:name="com.transistorsoft.locationmanager.license_key"
               android:value="YOUR_LICENSE_KEY_HERE" />
