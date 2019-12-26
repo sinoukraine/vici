@@ -2521,11 +2521,10 @@ var SMSHelper = {
 
         let success = function (status) {
             if (status.hasPermission) {
-                //sms.send(...);
                 self.sendSms(data);
             }
             else {
-               //alert('No SMS permission');
+                //alert('No SMS permission');
                 self.requestSMSPermission(data, self.sendSms);
             }
         };
