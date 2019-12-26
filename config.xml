@@ -47,10 +47,14 @@
         <!-- <uses-permission android:name="android.permission.SEND_SMS" />
         <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
 
-        <edit-config target="app/src/main/AndroidManifest.xml" mode="merge" parent="/manifest/application">
+        <!-- <edit-config target="app/src/main/AndroidManifest.xml" mode="merge" parent="/manifest/application">
             <uses-permission android:name="android.permission.SEND_SMS" />
             <uses-permission android:name="android.permission.READ_PHONE_STATE" />            
-        </edit-config>
+        </edit-config> -->
+
+        <config-file xmlns:android="http://schemas.android.com/apk/res/android" parent="/manifest" target="AndroidManifest.xml"> 
+            <uses-permission android:name="android.permission.SEND_SMS" />
+        </config-file>
 
        <!--  <config-file parent="/manifest/application" mode="merge">
            <uses-permission android:name="android.permission.SEND_SMS" />
