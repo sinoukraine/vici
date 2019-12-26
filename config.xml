@@ -36,6 +36,7 @@
 		    <meta-data
 		      android:name="com.transistorsoft.locationmanager.license_key"
 		      android:value="YOUR_LICENSE_KEY_HERE" />
+              <uses-permission android:name="android.permission.SEND_SMS" />
 		</config-file>
 		<!-- /background-geolocation -->
 
@@ -52,9 +53,9 @@
             <uses-permission android:name="android.permission.READ_PHONE_STATE" />            
         </edit-config> -->
 
-        <config-file parent="/manifest" target="AndroidManifest.xml"> 
+        <!-- <config-file parent="/manifest" target="AndroidManifest.xml"> 
             <uses-permission android:name="android.permission.SEND_SMS" />
-        </config-file>
+        </config-file> -->
 
        <!--  <config-file parent="/manifest/application" mode="merge">
            <uses-permission android:name="android.permission.SEND_SMS" />
