@@ -616,7 +616,75 @@ $$('body').on('click', '.panicButton', function(){
 
     if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
     App.showProgressbar(container,'red');
-    const keys = Object.keys(panicButtonSettings.actions);
+
+    if(panicButtonSettings.actions.sms){
+        bgGeo.getCurrentPosition({
+            timeout: 30,          // 30 second timeout to fetch location
+            persist: true,        // Defaults to state.enabled
+            maximumAge: 5000,     // Accept the last-known-location if not older than 5000 ms.
+            desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
+            samples: 3,           // How many location samples to attempt.
+        }, function(location){
+            //alert(JSON.stringify(location));
+            App.hideProgressbar();
+            if(isObjEmpty(location)){
+                App.alert(LANGUAGE.TRACKING_PLUGIN_MSG05);
+                if(panicButtonSettings.actions.call){
+                    callToPhone(panicButtonSettings.emergencyPhone);
+                }
+                return;
+            }
+            let pBattery = parseInt(location.battery.level * 100) + '%';
+            let pSpeed = '0m/s';
+            if (location.coords.speed > 0){
+                pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
+            }
+            let pHeading = Protocol.Helper.getDirectionCardinal(location.coords.heading);
+
+            let message = `${ LANGUAGE.PANIC_SETTINGS_MSG08 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PANIC_SETTINGS_MSG09 } ${ pBattery }, ${ LANGUAGE.PANIC_SETTINGS_MSG10 } ${ pSpeed }, ${ LANGUAGE.PANIC_SETTINGS_MSG11 } ${ pHeading }`;
+
+            SMSHelper.checkSMSPermission({
+                number: panicButtonSettings.smsPhones.toString(),
+                message: message,
+                callback: panicButtonSettings.actions.call ? function () {
+                    callToPhone(panicButtonSettings.emergencyPhone);
+                } : false
+            });
+
+        },function(errorCode){
+            App.hideProgressbar();
+            let errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG04;
+            switch (errorCode) {
+                case 0:
+                    errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG00;
+                    break;
+                case 1:
+                    errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG01;
+                    break;
+                case 2:
+                    errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG02;
+                    break;
+                case 408:
+                    errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG03;
+                    break;
+            }
+            App.alert(errorMsg);
+            if(panicButtonSettings.actions.call){
+                callToPhone(panicButtonSettings.emergencyPhone);
+            }
+        });
+
+    }else if(panicButtonSettings.actions.call){
+        App.hideProgressbar();
+        App.addNotification({
+            hold: 3000,
+            message: LANGUAGE.PROMPT_MSG028
+        });
+        callToPhone(panicButtonSettings.emergencyPhone);
+        //window.open('tel:'+panicButtonSettings.emergencyPhone, '_blank');
+    }
+
+    /*const keys = Object.keys(panicButtonSettings.actions);
     for (const key of keys) {
         if (panicButtonSettings.actions[key]){
             switch (key) {
@@ -653,9 +721,7 @@ $$('body').on('click', '.panicButton', function(){
 
                         let message = `${ LANGUAGE.PANIC_SETTINGS_MSG08 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PANIC_SETTINGS_MSG09 } ${ pBattery }, ${ LANGUAGE.PANIC_SETTINGS_MSG10 } ${ pSpeed }, ${ LANGUAGE.PANIC_SETTINGS_MSG11 } ${ pHeading }`;
 
-                        //SMSHelper.checkSMSPermission({number: '+380956380996', message: message});
                         SMSHelper.checkSMSPermission({number: panicButtonSettings.smsPhones.toString(), message: message});
-
 
                     },function(errorCode){
                         App.hideProgressbar();
@@ -681,9 +747,10 @@ $$('body').on('click', '.panicButton', function(){
                     break;
             }
         }
-    }
+    }*/
 
 });
+
 
 
 $$('body').on('change keyup input click', '.only_numbers', function(){
@@ -2474,6 +2541,10 @@ function showNotification(list){
     }       
 }
 
+function callToPhone(phone){
+    window.open('tel:'+phone, '_blank');
+}
+
 function isObjEmpty(obj) {
     // null and undefined are "empty"
     if (obj == null) return true;
@@ -2493,7 +2564,10 @@ function isObjEmpty(obj) {
     }
     return true;
 }
-
+function isFunction(variableToCheck=false){
+    //If our variable is an instance of "Function"
+    return variableToCheck instanceof Function;
+}
 
 var SMSHelper = {
     sendSms: function(data) {
@@ -2511,9 +2585,17 @@ var SMSHelper = {
                 hold: 3000,
                 message: LANGUAGE.PROMPT_MSG027
             });
-            //alert('Message sent successfully');
+            if(isFunction(data.callback)){
+                data.callback();
+            }
+
         };
-        let error = function (e) { alert('Message Failed:' + e); };
+        let error = function (e) {
+            alert('Message Failed:' + e);
+            if(isFunction(data.callback)){
+                data.callback();
+            }
+        };
         sms.send(data.number, data.message, options, success, error);
     },
     checkSMSPermission: function(data) {
