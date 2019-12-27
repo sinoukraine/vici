@@ -32,14 +32,19 @@
     </platform>
     <platform name="android">    	
     	<!-- background-geolocation -->
-		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
+		<!-- <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
+                    <meta-data
+                      android:name="com.transistorsoft.locationmanager.license_key"
+                      android:value="YOUR_LICENSE_KEY_HERE" />
+                </config-file> -->
+        <config-file target="AndroidManifest.xml" parent="/manifest" >
             <meta-data
               android:name="com.transistorsoft.locationmanager.license_key"
               android:value="YOUR_LICENSE_KEY_HERE" />
         </config-file>
 		<!-- /background-geolocation -->
     </platform>
-    
+
     <platform name="android"> 
 	  	<edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
 	  	    <application android:usesCleartextTraffic="true" />
