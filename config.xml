@@ -30,28 +30,27 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
-    <config-file xmlns:android="http://schemas.android.com/apk/res/android" parent="/manifest" target="AndroidManifest.xml"> 
-        <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> 
-    </config-file>
+    
     <platform name="android">    	
-    	<!-- background-geolocation -->
-		<config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
+    	
+    </platform>
+
+    <platform name="android"> 
+        <edit-config target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="merge" >
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>   
+
+
+        <!-- background-geolocation -->
+        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
             <meta-data
                android:name="com.transistorsoft.locationmanager.license_key"
                android:value="YOUR_LICENSE_KEY_HERE" />
         </config-file>        
-		<!-- /background-geolocation -->
-    </platform>
+        <!-- /background-geolocation -->
 
-    <platform name="android"> 
-	  	<edit-config target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="merge" >
-	  	    <application android:usesCleartextTraffic="true" />
-	  	</edit-config>	 
-
-        <!-- sms plugin -->
-        <!-- <config-file target="AndroidManifest.xml" parent="/manifest" mode="merge" > 
-            <uses-permission android:name="android.permission.SEND_SMS" />            
-        </config-file> -->
+	  	
+        <!-- sms plugin -->        
         <config-file target="AndroidManifest.xml" parent="/manifest" mode="merge" > 
             <uses-permission android:name="android.permission.SEND_SMS" />            
         </config-file>
