@@ -37,7 +37,7 @@
                       android:name="com.transistorsoft.locationmanager.license_key"
                       android:value="YOUR_LICENSE_KEY_HERE" />
                 </config-file> --> 
-        <config-file target="AndroidManifest.xml" mode="merge" parent="/manifest" >
+        <config-file target="AndroidManifest.xml" parent="/manifest" mode="merge" >
             <meta-data
               android:name="com.transistorsoft.locationmanager.license_key"
               android:value="YOUR_LICENSE_KEY_HERE" />
@@ -46,7 +46,7 @@
     </platform>
 
     <platform name="android"> 
-	  	<edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+	  	<edit-config target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="merge" >
 	  	    <application android:usesCleartextTraffic="true" />
 	  	</edit-config>	 
 
