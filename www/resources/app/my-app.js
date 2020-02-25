@@ -109,15 +109,12 @@ function getSimInfo(){
 	window.plugins.sim.getSimInfo(function(info){
 	    var IMEI = false;
 		if (info.deviceId) {
-			//localStorage.tracker_imei = info.deviceId;
             IMEI = info.deviceId;
 		}else{
 			if (info.cards && info.cards.length) {
 				if (info.cards[0] && info.cards[0].deviceId) {
-					//localStorage.tracker_imei = info.cards[0].deviceId;
                     IMEI = info.cards[0].deviceId;
                 }else if(info.cards[1] && info.cards[1].deviceId){
-					//localStorage.tracker_imei = info.cards[1].deviceId;
                     IMEI = info.cards[1].deviceId;
                 }else{
 					App.alert('Unable to get device IMEI');
@@ -127,15 +124,17 @@ function getSimInfo(){
 			}						
 		}	
 
-		if (IMEI) {
+		if (!IMEI) {
+            App.alert('no imei');
+		}else{
             trackerSaveConfig({IMEI: IMEI});
-			setRegLink(IMEI);
+            setRegLink(IMEI);
             if (bgGeo){
                 bgGeo.setConfig({
                     params: { IMEI: IMEI },
                 })
             }
-		}	
+        }
 
 	}, function(err){
 		App.alert('Unable to get sim info');
@@ -318,9 +317,9 @@ function backFix(event){
 
 function setRegLink(imei){
     if (imei) {
-        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei='+imei);
+        $$('#regLink').attr('href','https://activation.phonetrack.co/register.php?imei='+imei);
     }else{
-        $$('#regLink').attr('href','http://activation.phonetrack.co/register.php?imei=');
+        $$('#regLink').attr('href','https://activation.phonetrack.co/register.php?imei=');
     }  
 }
 // Initialize your app
@@ -368,7 +367,7 @@ var updateAssetsPosInfoTimer = null;
 
 var API_DOMIAN1 = "https://api.m2mglobaltech.com/PhoneProtect/V1/";
 var API_DOMIAN2 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
-var API_DOMIAN3 = "http://api.m2mglobaltech.com/PhoneTrack/V1/";
+var API_DOMIAN3 = "https://api.m2mglobaltech.com/PhoneTrack/V1/";
 var API_ROUTE = "https://www.google.com/maps/dir/?api=1&destination=";
 var API_URL = {};
 
@@ -380,10 +379,10 @@ API_URL.URL_RESET_PASSWORD = API_DOMIAN2 + "User/Password?MinorToken={0}&oldpwd=
 API_URL.URL_EDIT_DEVICE = API_DOMIAN2 +  "Device/Edit?MinorToken={0}&Code={1}&name={2}&speedUnit={3}&initMileage={4}&initAccHours={5}&attr1={6}&attr2={7}&attr3={8}&attr4={9}&tag={10}&icon={11}&MajorToken={12}&registration=&MaxSpeed=&stockNumber=";
 API_URL.URL_GET_ALL_POSITIONS = API_DOMIAN2 + "Device/GetPosInfos?MinorToken={0}";
 //API_URL.URL_GET_NEW_NOTIFICATIONS = API_DOMIAN2 +"Device/Alarms?MinorToken={0}&deviceToken={1}";
-API_URL.URL_PHOTO_UPLOAD = "http://upload.quiktrak.co/image/Upload";
+API_URL.URL_PHOTO_UPLOAD = "https://upload.quiktrak.co/image/Upload";
 
 API_URL.URL_ADD_NEW_DEVICE = API_DOMIAN1 + 'Client/Activation';
-API_URL.URL_ADD_NEW_DEVICE2 = 'http://activation.phonetrack.co/activate.php?imei={0}&account={1}';
+API_URL.URL_ADD_NEW_DEVICE2 = 'https://activation.phonetrack.co/activate.php?imei={0}&account={1}';
 API_URL.URL_REGISTER = API_DOMIAN1 + 'Client/Registration';
 API_URL.URL_DEACTIVATE = API_DOMIAN1 + 'Client/Deactivate';
 
@@ -1686,7 +1685,7 @@ function getUserImg(asset){
     if (asset && asset.Icon) {
         var pattern = /^IMEI_/i;
         if (pattern.test(asset.Icon)) {
-            src = 'http://upload.quiktrak.co/Attachment/images/'+asset.Icon+'?'+ new Date().getTime();
+            src = 'https://upload.quiktrak.co/Attachment/images/'+asset.Icon+'?'+ new Date().getTime();
         }
     }
 
@@ -2157,8 +2156,8 @@ function setAssetListPosInfo(listObj){
             } else{
                 console.log(result);
             }
-            init_AssetList(); 
-            initSearchbar(); 
+            init_AssetList();
+            initSearchbar();
         },
         function(){ }
     ); 
@@ -2377,7 +2376,7 @@ function getAssetImg(params, imgFor){
     if (params && imgFor.assetList) {
         var pattern = /^IMEI_/i;   
         if (params.Icon && pattern.test(params.Icon)) {
-            assetImg = '<img class="item_asset_img" src="http://upload.quiktrak.co/Attachment/images/'+params.Icon+'?'+ new Date().getTime()+'alt="">';
+            assetImg = '<img class="item_asset_img" src="https://upload.quiktrak.co/Attachment/images/'+params.Icon+'?'+ new Date().getTime()+'alt="">';
         }else if (params.Name) {
             var splitted = params.Name.split(' ');             
             if (splitted.length > 1) {
