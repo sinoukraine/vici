@@ -86,7 +86,7 @@ function onDeviceReady(){
 
 }
 
-function checkTelephonyPermissions(){
+/*function checkTelephonyPermissions(){
 	if (window.plugins.sim) {
 		window.plugins.sim.hasReadPermission(function(state){
 			if (!state) {
@@ -103,10 +103,32 @@ function checkTelephonyPermissions(){
 	}else{
 		App.alert('Sim Plugin not supported');
 	}
+}*/
+function checkTelephonyPermissions(){
+    if (window.SimPlugin) {
+        window.SimPlugin.hasReadPermission(function(state){
+            if (!state) {
+                window.SimPlugin.requestReadPermission(function(){
+                    //App.alert('Permission granted');
+                    getSimInfo();
+                }, function(){
+                    App.alert('Permission denied');
+                });
+            }else{
+                getSimInfo();
+            }
+        });
+    }else{
+        App.alert('Sim Plugin not supported');
+    }
 }
+/*window.SimPlugin.getSimInfo(function(info) {},function(err) {});
+window.SimPlugin.hasReadPermission(function (permission) {});
+window.SimPlugin.requestReadPermission(function() {})*/;
 
 function getSimInfo(){
-	window.plugins.sim.getSimInfo(function(info){
+	//window.plugins.sim.getSimInfo(function(info){
+    window.SimPlugin.getSimInfo(function(info){
 	    alert(JSON.stringify(info));
 	    var IMEI = false;
 		if (info.deviceId) {
