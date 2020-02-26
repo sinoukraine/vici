@@ -112,14 +112,14 @@ function checkTelephonyPermissions(){
                     //App.alert('Permission granted');
                     getSimInfo();
                 }, function(){
-                    App.alert('Permission denied');
+                    alert('Permission denied');
                 });
             }else{
                 getSimInfo();
             }
         });
     }else{
-        App.alert('Sim Plugin not supported');
+        alert('Sim Plugin not supported');
     }
 }
 /*window.SimPlugin.getSimInfo(function(info) {},function(err) {});
@@ -129,7 +129,7 @@ window.SimPlugin.requestReadPermission(function() {});*/
 function getSimInfo(){
 	//window.plugins.sim.getSimInfo(function(info){
     window.SimPlugin.getSimInfo(function(info){
-	    //alert(JSON.stringify(info));
+	    alert(JSON.stringify(info));
 	    var IMEI = false;
 		if (info.deviceId) {
             IMEI = info.deviceId;
@@ -140,15 +140,15 @@ function getSimInfo(){
                 }else if(info.cards[1] && info.cards[1].deviceId){
                     IMEI = info.cards[1].deviceId;
                 }else{
-					App.alert('Unable to get device IMEI');
+					alert('Unable to get device IMEI');
 				}
 			}else{
-				App.alert('Unable to get sim card list');
+				alert('Unable to get sim card list');
 			}						
 		}	
 
 		if (!IMEI) {
-            App.alert('no imei');
+            alert('no imei');
 		}else{
             trackerSaveConfig({IMEI: IMEI});
             setRegLink(IMEI);
@@ -160,7 +160,7 @@ function getSimInfo(){
         }
 
 	}, function(err){
-		App.alert('Unable to get sim info');
+		alert('Unable to get sim info');
 	});	
 }
 
