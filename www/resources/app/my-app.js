@@ -107,6 +107,7 @@ function checkTelephonyPermissions(){
 
 function getSimInfo(){
 	window.plugins.sim.getSimInfo(function(info){
+	    alert(JSON.stringify(info));
 	    var IMEI = false;
 		if (info.deviceId) {
             IMEI = info.deviceId;
