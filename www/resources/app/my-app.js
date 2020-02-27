@@ -580,7 +580,7 @@ $$(document).on('click', '.bTrackingSendLog', function(){
 $$(document).on('click', '.getSimInfo', function(){
 	if (window.SimPlugin) {
 		window.SimPlugin.getSimInfo(function(info){
-			 App.alert(JSON.stringify(info) );
+			 alert(JSON.stringify(info) );
 	    }, function(err){
 	    	App.alert('Unable to get sim info: '+ JSON.stringify(err) );
 	    });	
