@@ -213,7 +213,7 @@ function sutupGeolocationPlugin(){
       // 2. Execute #ready method:
     bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
         //alert(JSON.stringify(savedConfig));
-        if (savedConfig.ScheduleState && savedConfig.ScheduleState == true){
+        if (savedConfig.ScheduleState && savedConfig.ScheduleState === true){
             bgGeo.requestPermission().then((status) => {
                 bgGeo.startSchedule();
             }).catch((status) => {
@@ -577,10 +577,10 @@ $$(document).on('click', '.bTrackingSendLog', function(){
 });
 
 
-/*$$(document).on('click', '.getSimInfo', function(){
-	if (window.plugins.sim) {
-		window.plugins.sim.getSimInfo(function(info){
-			 App.alert('Sim info: ', JSON.stringify(info) );
+$$(document).on('click', '.getSimInfo', function(){
+	if (window.SimPlugin) {
+		window.SimPlugin.getSimInfo(function(info){
+			 App.alert(JSON.stringify(info) );
 	    }, function(err){
 	    	App.alert('Unable to get sim info: '+ JSON.stringify(err) );
 	    });	
@@ -590,7 +590,7 @@ $$(document).on('click', '.bTrackingSendLog', function(){
 		
 });
 
-$$(document).on('click', '.hasReadPermission', function(){
+/*$$(document).on('click', '.hasReadPermission', function(){
 	if (window.plugins.sim) {
 		window.plugins.sim.hasReadPermission(function(info){
 			App.alert('Has permission:'+ JSON.stringify(info) );
