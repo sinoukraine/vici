@@ -129,7 +129,7 @@ window.SimPlugin.requestReadPermission(function() {});*/
 function getSimInfo(){
 	//window.plugins.sim.getSimInfo(function(info){
     window.SimPlugin.getSimInfo(function(info){
-	    alert(JSON.stringify(info));
+	    //alert(JSON.stringify(info));
 	    var IMEI = false;
 		if (info.deviceId) {
             IMEI = info.deviceId;
