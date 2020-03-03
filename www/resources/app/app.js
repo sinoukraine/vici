@@ -95,8 +95,8 @@ let app = new Framework7({
                         StatusBar.styleDefault();
                     }
 
-                    /*self.methods.handleAndroidBackButton();
-                    self.methods.handleKeyboard();*/
+                    self.methods.handleAndroidBackButton();
+                    self.methods.handleKeyboard();
 
 
                     self.methods.setGeolocationPlugin();
