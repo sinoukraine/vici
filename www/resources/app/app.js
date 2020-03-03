@@ -83,7 +83,7 @@ let app = new Framework7({
         },
         init: function () {
             let self = this;
-            try {
+
                 if(window.hasOwnProperty("cordova")){
                     window.permissions = cordova.plugins.permissions;
 
@@ -95,8 +95,8 @@ let app = new Framework7({
                         StatusBar.styleDefault();
                     }
 
-                    self.methods.handleAndroidBackButton();
-                    self.methods.handleKeyboard();
+                    /*self.methods.handleAndroidBackButton();
+                    self.methods.handleKeyboard();*/
 
 
                     self.methods.setGeolocationPlugin();
@@ -104,9 +104,7 @@ let app = new Framework7({
 
                     //checkTelephonyPermissions();
                 }
-            } catch (e) {
-                alert(e);
-            }
+
 
 
             if(localStorage.ACCOUNT && localStorage.PASSWORD) {
