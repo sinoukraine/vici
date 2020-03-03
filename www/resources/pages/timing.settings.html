@@ -276,21 +276,21 @@
                         IMEI: data.IMEI,
                     }
                 }, function (state) {
-                    if (scheduleState){
+                    if (data.scheduleState){
                         bgGeo.requestPermission().then((status) => {
                             bgGeo.startSchedule(function() {
-                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG007);
+                                self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
                                 mainView.router.back();
                             });
                         }).catch((status) => {
-                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG008);
+                            self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
                             console.log('[requestPermission] REJECTED', status);
                             self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
                         });
 
                     }else{
                         bgGeo.stopSchedule(function() {
-                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG009);
+                            self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG009});
                             // You must explicitly stop tracking if currently enabled
                             bgGeo.stop();
                             mainView.router.back();
@@ -355,10 +355,10 @@
                                 self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003 + ' ' + LANGUAGE.PROMPT_MSG004);
                                 return;
                             }
-                            /*if(result.data.Data.IMEI === 'UNFOUND'){
+                            if(result.data.Data.IMEI === 'UNFOUND'){
                                 self.$app.dialog.alert(LANGUAGE.PROMPT_MSG005, imei);
                                 return;
-                            }*/
+                            }
 
                             let rangeSliderVal = self.$app.range.get('.range-slider-tracking-time').getValue();
                             let daysOfWeekEl = page.$el.find('[name = "DaysOfWeek"]');
