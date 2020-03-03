@@ -1,0 +1,126 @@
+<!--suppress JSAnnotator -->
+<template>
+    <div class="page " data-name="home"> <!-- page-with-subnavbar -->
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="/panel-left/" class="link icon-only " >
+                        <i class="icon material-icons">menu</i>
+                    </a>
+                </div>
+                <div class="title sliding">
+                    {{@global.LANGUAGE.HOME_MSG00}}
+                </div>
+                <div class="right">
+                   <!-- <a href="#" class="link icon-only ">
+                        <i class="f7-icons icon-other-barcode"></i>
+                    </a>-->
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <a href="#" class="float-panic-button panicButton">
+                <img src="resources/images/panic.svg" alt="">
+            </a>
+            <div class="home-map-wrapper">
+                <div id="homeMap" class="map"></div>
+            </div>
+            <div class="list no-margin no-hairlines no-hairlines-between">
+                <ul>
+                    <li>
+                        <div class="item-content text-color-custom">
+                            <div class="item-media">{{@global.LANGUAGE.HOME_MSG01}}</div>
+                            <div class="item-inner">
+                                <div class="item-title">{{Name}}</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media">{{@global.LANGUAGE.HOME_MSG02}}</div>
+                            <div class="item-inner">
+                                <div class="item-title">{{Phone}}</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media">{{@global.LANGUAGE.HOME_MSG03}}</div>
+                            <div class="item-inner">
+                                <div class="item-title">{{Email}}</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-divider only-line"></li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media text-color-lightgray"><i class="f7-icons icon-tracking"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title">{{Address}}</div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</template>
+
+
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            let ret = {
+                Name: 'test',
+                Phone: '+1234567890',
+                Email: 'test@test.com',
+                Address: 'Loading...',
+            };
+
+            return ret;
+        },
+        methods: {
+
+        },
+
+        on: {
+            pageInit: function (e, page) {
+                let self = this;
+
+                self.MapTrack = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
+
+                LoginEvents.on('signedIn', function (userInfo){
+                    self.$setState({
+                        LoginDone: true,
+
+                        Name: (userInfo.FirstName + ' ' + userInfo.SubName).trim(),
+                        Phone: userInfo.Mobile,
+                        Email: userInfo.EMail,
+                    });
+
+                });
+                LoginEvents.on('signedOut', function (){
+                    //self.VirtualAssetListMain.deleteAllItems();
+                    self.$setState({
+                        LoginDone: false
+                    })
+                });
+
+            },
+            pageBeforeRemove: function () {
+                LoginEvents.off('signedIn');
+                LoginEvents.off('signedOut');
+            }
+
+
+        }
+    };
+</script>

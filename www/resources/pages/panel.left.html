@@ -1,0 +1,94 @@
+<!--suppress JSAnnotator -->
+<template>
+    <div class="panel panel-left panel-cover panel-init">
+        <div class="page" data-name="panel-left">
+            <div class="page-content ">
+                <div class="panel-header display-flex justify-content-center align-items-center">
+                    <div class="logo">
+                        <img src="resources/images/logo.png" alt="">
+                    </div>
+
+                </div>
+                <div class="list no-hairlines no-hairlines-between no-chevron">
+                    <ul>
+                        <li>
+                            <a href="#" class="item-link item-content panel-close">
+                                <div class="item-media text-color-custom"><i class="f7-icons icon-home "></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">{{@global.LANGUAGE.MENU_MSG00}}</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/profile-settings/" class="item-link item-content panel-close">
+                                <div class="item-media text-color-custom"><i class="f7-icons icon-settings "></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">{{@global.LANGUAGE.MENU_MSG01}}</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/timing-settings/" class="item-link item-content panel-close">
+                                <div class="item-media text-color-custom"><i class="f7-icons icon-timing"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">{{@global.LANGUAGE.TIMING_MSG00}}</div>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a @click="logout" href="#" class="item-link item-content panel-close">
+                                <div class="item-media text-color-custom"><i class="f7-icons icon-logout "></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">{{@global.LANGUAGE.MENU_MSG02}}</div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <a href="#" class="menu-panic-button panicButton">
+                    <img src="resources/images/panic.svg" alt="">
+                </a>
+
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            let self = this;
+
+            return {
+                /*Initials: 'UN',
+                FirstName: 'User',
+                LastName: 'Name',
+                Email: 'test@mail.com',
+                test: self.$app.utils.id()*/
+            };
+        },
+        methods: {
+            logout: function () {
+                this.$app.methods.logout();
+            }
+        },
+
+        on: {
+            pageInit: function (e, page) {
+                let self = this;
+                console.log('panel loaded');
+
+
+            },
+            pageAfterIn:function(){
+
+            },
+            pageAfterOut: function () {
+                // page has left the view
+            },
+
+        }
+    };
+</script>
