@@ -83,27 +83,31 @@ let app = new Framework7({
         },
         init: function () {
             let self = this;
+            try {
+                if(window.hasOwnProperty("cordova")){
+                    window.permissions = cordova.plugins.permissions;
 
-            if(window.hasOwnProperty("cordova")){
-                window.permissions = cordova.plugins.permissions;
+                    //fix app images and text size
+                    if (window.MobileAccessibility) {
+                        window.MobileAccessibility.usePreferredTextZoom(false);
+                    }
+                    if (StatusBar) {
+                        StatusBar.styleDefault();
+                    }
 
-                //fix app images and text size
-                if (window.MobileAccessibility) {
-                    window.MobileAccessibility.usePreferredTextZoom(false);
+                    self.methods.handleAndroidBackButton();
+                    self.methods.handleKeyboard();
+
+
+                    self.methods.setGeolocationPlugin();
+                    self.methods.checkTelephonyPermissions();
+
+                    //checkTelephonyPermissions();
                 }
-                if (StatusBar) {
-                    StatusBar.styleDefault();
-                }
-
-                self.methods.handleAndroidBackButton();
-                self.methods.handleKeyboard();
-
-
-                self.methods.setGeolocationPlugin();
-                self.methods.checkTelephonyPermissions();
-
-                //checkTelephonyPermissions();
+            } catch (e) {
+                alert(e);
             }
+
 
             if(localStorage.ACCOUNT && localStorage.PASSWORD) {
                 self.methods.login();
@@ -576,7 +580,7 @@ let app = new Framework7({
                     bgGeo.requestPermission().then((status) => {
                         bgGeo.startSchedule();
                     }).catch((status) => {
-                        App.alert('Tracking permission denied');
+                        self.$app.methods.customDialog({text: LANGUAGE.TRACKING_PLUGIN_MSG06});
                         self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
                     });
                 }else{

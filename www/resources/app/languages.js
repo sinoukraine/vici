@@ -53,6 +53,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG016": 'My phone Battery lvl',
 		"PROMPT_MSG017": 'Speed',
 		"PROMPT_MSG018": 'Heading',
+		"PROMPT_MSG019": '',
 
 		"PROMPT_MSG022": "Please set up your Panic Button Behaviour",
 		"PROMPT_MSG023": "Data not saved",
@@ -119,6 +120,8 @@ window.LanguagePackages= {
 		"TRACKING_PLUGIN_MSG03": "Location timeout",
 		"TRACKING_PLUGIN_MSG04": "Unknown Error",
 		"TRACKING_PLUGIN_MSG05": "Location data is empty",
+		"TRACKING_PLUGIN_MSG06": "Tracking permission denied",
+
 
 
 	},
