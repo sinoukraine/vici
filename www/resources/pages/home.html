@@ -68,7 +68,7 @@
                         <div class="item-content">
                             <div class="item-media text-color-lightgray"><i class="f7-icons icon-tracking"></i></div>
                             <div class="item-inner">
-                                <div class="item-title">{{Address}}</div>
+                                <div class="item-title only-2-rows">{{Address}}</div>
                             </div>
                         </div>
                     </li>
@@ -100,12 +100,6 @@
             refreshMap: function () {
                 let self = this;
 
-                /*bgGeo.requestPermission().then((status) => {
-
-                }).catch((status) => {
-                    self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
-                    console.log('[requestPermission] REJECTED', status);
-                });*/
                 if (!bgGeo){
                     self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG006});
                     return;
@@ -118,7 +112,6 @@
                     desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
                     samples: 3,           // How many location samples to attempt.
                 }, function(location){
-                    //alert(JSON.stringify(location));
                     self.$app.progressbar.hide();
                     if(self.$app.methods.isObjEmpty(location)){
                         self.$app.methods.customDialog({text:LANGUAGE.TRACKING_PLUGIN_MSG05});
@@ -127,29 +120,18 @@
 
                     if(!self.Marker){
                         self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
-                        self.Marker.addTo(self.Map);
+                        self.Marker.addTo(self.MarkersGroup);
+                        self.MarkersGroup.addTo(self.Map);
                     }
                     self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
-                    self.Map.setView([location.coords.latitude, location.coords.longitude]);
+                    if (self.MarkersGroup.getBounds().isValid()) {
+                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                    }
                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                         self.$setState({
                             Address: address
                         })
                     })
-
-                    /* let pBattery = parseInt(location.battery.level * 100) + '%';
-                     let pSpeed = '0m/s';
-                     if (location.coords.speed > 0){
-                         pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
-                     }
-                     let pHeading = Helper.Methods.getDirectionCardinal(location.coords.heading);
-
-
-                     let message = `${ LANGUAGE.PROMPT_MSG015 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PROMPT_MSG016 } ${ pBattery }, ${ LANGUAGE.PROMPT_MSG017 } ${ pSpeed }, ${ LANGUAGE.PROMPT_MSG018 } ${ pHeading }`;
-                     let numbers = [];
-                     for (let i = 0; i < panicConfig.SMSTo.length; i++) {
-                         numbers.push( emergencyList.find( ({ Id }) => Id === panicConfig.SMSTo[i] ).Phone );
-                     }*/
 
                 },function(errorCode){
                     self.$app.progressbar.hide();
@@ -178,6 +160,11 @@
                 let self = this;
 
                 self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
+                self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
+
+                if(self.LoginDone){
+                    self.refreshMap();
+                }
 
                 LoginEvents.on('signedIn', function (userInfo){
                     self.$setState({
@@ -187,19 +174,35 @@
                         Phone: userInfo.Mobile,
                         Email: userInfo.EMail,
                     });
-
+                    self.refreshMap();
                 });
                 LoginEvents.on('signedOut', function (){
-                    //self.VirtualAssetListMain.deleteAllItems();
                     self.$setState({
                         LoginDone: false
-                    })
+                    });
+                    if(!bgGeo){
+                        return;
+                    }
+                    bgGeo.stopSchedule(function() {
+                        let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                        if( !self.$app.methods.isEmptyObject(trackingConfig) && trackingConfig.ScheduleState){
+                            self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});
+                            // You must explicitly stop tracking if currently enabled
+                            bgGeo.stop();
+                            self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
+                        }
+                    });
                 });
-
             },
             pageBeforeRemove: function () {
                 LoginEvents.off('signedIn');
                 LoginEvents.off('signedOut');
+                if(this.MarkersGroup){
+                    this.MarkersGroup.clearLayers();
+                }
+                if(this.Map){
+                    this.Map.remove()
+                }
             }
 
 
