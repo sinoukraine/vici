@@ -1,4 +1,18 @@
 const Helper = {
+    MarkerIcon: [
+        L.icon({
+            iconUrl: 'resources/images/marker.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
+        }),
+        L.icon({
+            iconUrl: 'resources/images/marker2.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
+        })
+    ],
     Methods: {
         getWeekDaysArr: function(){
             return [
@@ -38,6 +52,33 @@ const Helper = {
                     DisplayAs: LANGUAGE.COM_MSG016,
                 },
             ]
+        },
+        getAddressByGeocoder: function(latlng,replyFunc, additionalData){
+            let coords = LANGUAGE.COM_MSG037 + ': ' + latlng.lat + ', ' + LANGUAGE.COM_MSG038 + ': ' + latlng.lng;
+            let data = {
+                format: 'json',
+                zoom: 18,
+                addressdetails: 1,
+                lat: latlng.lat,
+                lon: latlng.lng,
+            };
+            app.request.get(API_DOMIAN7+'reverse.php', data, function (result) {
+                if (result.display_name) {
+                    replyFunc(result.display_name, additionalData);
+                }else{
+                    replyFunc(coords, additionalData);
+                }
+            }, function () {
+                app.request.get(API_DOMIAN8+'reverse', data, function (result) {
+                    if (result.display_name) {
+                        replyFunc(result.display_name, additionalData);
+                    }else{
+                        replyFunc(coords, additionalData);
+                    }
+                }, function () {
+                    replyFunc(coords, additionalData);
+                }, 'json');
+            }, 'json');
         },
         createMap: function(option){
             var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { name: 'osm', attribution: '' });

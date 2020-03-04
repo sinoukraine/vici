@@ -4,6 +4,10 @@ window.COM_TIMEFORMAT3 = 'DD/MM/YYYY HH:mm:ss';
 window.COM_TIMEFORMAT4 = 'YYYY-MM-DD';
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
+
+const API_DOMIAN7 = "https://nominatim.sinopacific.com.ua/";
+const API_DOMIAN8 = "https://nominatim.openstreetmap.org/";
+
 /*const API_DOMIAN1 = "https://api.m2mglobaltech.com/QuikTrak/V1/";
 const API_DOMIAN2 = "https://api.m2mglobaltech.com/Quikloc8/V1/";
 const API_DOMIAN3 = "https://api.m2mglobaltech.com/QuikProtect/V1/Client/";

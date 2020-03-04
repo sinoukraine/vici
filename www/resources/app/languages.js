@@ -22,7 +22,6 @@ window.LanguagePackages= {
 		"COM_MSG016": "Sat",
 		"COM_MSG017": "OK",
 		"COM_MSG018": "Can't get coordinates",
-
 		"COM_MSG019": "North",
 		"COM_MSG020": "Northeast",
 		"COM_MSG021": "East",
@@ -32,6 +31,10 @@ window.LanguagePackages= {
 		"COM_MSG025": "West",
 		"COM_MSG026": "Northwest",
 		"COM_MSG027": "Unknown",
+		"COM_MSG028": "Share",
+
+		"COM_MSG037": "Latitude",
+		"COM_MSG038": "Longitude",
 
 
 		"PROMPT_MSG000": "Nothing found",

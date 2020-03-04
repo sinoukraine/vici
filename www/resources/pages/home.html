@@ -14,9 +14,11 @@
                     {{@global.LANGUAGE.HOME_MSG00}}
                 </div>
                 <div class="right">
-                   <!-- <a href="#" class="link icon-only ">
-                        <i class="f7-icons icon-other-barcode"></i>
-                    </a>-->
+                    <div class="right">
+                        <a href="#" @click="refreshMap" class="link icon-only">
+                            <i class="f7-icons icon-refresh-map"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -27,6 +29,13 @@
             </a>
             <div class="home-map-wrapper">
                 <div id="homeMap" class="map"></div>
+
+                <div class="fab fab-right-bottom fab-custom ">
+                    <a href="#" class="bg-color-custom elevation-hover-10 flex-direction-column shareButton" data-lat="{{Lat}}" data-lng="{{Lng}}">
+                        <i class="f7-icons icon-share"></i>
+                        <div class="fab-text">{{@global.LANGUAGE.COM_MSG028}}</div>
+                    </a>
+                </div>
             </div>
             <div class="list no-margin no-hairlines no-hairlines-between">
                 <ul>
@@ -88,14 +97,87 @@
             return ret;
         },
         methods: {
+            refreshMap: function () {
+                let self = this;
 
+                /*bgGeo.requestPermission().then((status) => {
+
+                }).catch((status) => {
+                    self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
+                    console.log('[requestPermission] REJECTED', status);
+                });*/
+                if (!bgGeo){
+                    self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG006});
+                    return;
+                }
+                self.$app.progressbar.show('gray');
+                bgGeo.getCurrentPosition({
+                    timeout: 30,          // 30 second timeout to fetch location
+                    persist: true,        // Defaults to state.enabled
+                    maximumAge: 5000,     // Accept the last-known-location if not older than 5000 ms.
+                    desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
+                    samples: 3,           // How many location samples to attempt.
+                }, function(location){
+                    //alert(JSON.stringify(location));
+                    self.$app.progressbar.hide();
+                    if(self.$app.methods.isObjEmpty(location)){
+                        self.$app.methods.customDialog({text:LANGUAGE.TRACKING_PLUGIN_MSG05});
+                        return;
+                    }
+
+                    if(!self.Marker){
+                        self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
+                        self.Marker.addTo(self.Map);
+                    }
+                    self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                    self.Map.setView([location.coords.latitude, location.coords.longitude]);
+                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                        self.$setState({
+                            Address: address
+                        })
+                    })
+
+                    /* let pBattery = parseInt(location.battery.level * 100) + '%';
+                     let pSpeed = '0m/s';
+                     if (location.coords.speed > 0){
+                         pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
+                     }
+                     let pHeading = Helper.Methods.getDirectionCardinal(location.coords.heading);
+
+
+                     let message = `${ LANGUAGE.PROMPT_MSG015 } https://www.google.com/maps?q=${ location.coords.latitude },${ location.coords.longitude }. ${ LANGUAGE.PROMPT_MSG016 } ${ pBattery }, ${ LANGUAGE.PROMPT_MSG017 } ${ pSpeed }, ${ LANGUAGE.PROMPT_MSG018 } ${ pHeading }`;
+                     let numbers = [];
+                     for (let i = 0; i < panicConfig.SMSTo.length; i++) {
+                         numbers.push( emergencyList.find( ({ Id }) => Id === panicConfig.SMSTo[i] ).Phone );
+                     }*/
+
+                },function(errorCode){
+                    self.$app.progressbar.hide();
+                    let errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG04;
+                    switch (errorCode) {
+                        case 0:
+                            errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG00;
+                            break;
+                        case 1:
+                            errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG01;
+                            break;
+                        case 2:
+                            errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG02;
+                            break;
+                        case 408:
+                            errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG03;
+                            break;
+                    }
+                    self.$app.methods.customDialog({text:errorMsg});
+                });
+            }
         },
 
         on: {
             pageInit: function (e, page) {
                 let self = this;
 
-                self.MapTrack = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
+                self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
 
                 LoginEvents.on('signedIn', function (userInfo){
                     self.$setState({

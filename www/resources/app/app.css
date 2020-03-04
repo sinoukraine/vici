@@ -292,6 +292,7 @@
     min-height: 200px;
     height: 100%;
     height: calc(100% - 200px);
+    position: relative;
 }
 
 /*TIMING*/
@@ -508,4 +509,62 @@ html.color-theme-custom .leaflet-control-layers-overlays label input[type=checkb
     margin-top: 10px;
     color: #757575;
     font-size: 16px;
+}
+
+
+.fab.fab-custom>a{
+    flex-wrap: wrap;
+}
+.fab.fab-custom>a i{
+    position: initial;
+    transform: none;
+    font-size: 20px;
+}
+.fab.fab-custom .fab-text{
+    font-weight: normal;
+    text-transform: none;
+    font-size: 11px;
+    letter-spacing: normal;
+    padding: 0;
+    /*margin-top: -24px;*/
+}
+.fab-custom i.pano-preview-img{
+    background: url('../images/pano-preview.png') no-repeat center center;
+    background-size: cover;
+    display: block;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+.fab.fab-custom.with-borders>a{
+    border: 1px solid #fff;
+    box-sizing: border-box;
+}
+.leaflet-control-fullscreen{
+    background: #fff;
+    padding: 5px;
+}
+.leaflet-control-fullscreen,
+.leaflet-control-fullscreen .leaflet-control-fullscreen-button{
+    border-radius: 50%;
+}
+/* STREET VIEW */
+#pano {
+    height: 100%;
+    width: 100%;
+    margin:0;
+    padding:0;
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    z-index: 10000000;
+}
+
+.fab-pano-close{
+    z-index: 100000000;
+}
+.fab-pano-close>a{
+    background: rgba(0,0,0,.4);
 }
