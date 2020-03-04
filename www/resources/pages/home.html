@@ -185,7 +185,7 @@
                     }
                     bgGeo.stopSchedule(function() {
                         let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
-                        if( !self.$app.methods.isEmptyObject(trackingConfig) && trackingConfig.ScheduleState){
+                        if( !self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.ScheduleState){
                             self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});
                             // You must explicitly stop tracking if currently enabled
                             bgGeo.stop();
