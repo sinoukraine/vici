@@ -209,6 +209,8 @@
     return {
         data: function () {
             let self = this;
+
+            let userInfo = self.$app.methods.getFromStorage('userInfo');
             let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
             let panicConfig = self.$app.methods.getFromStorage('panicConfig');
             let emergencyList = self.$app.methods.getFromStorage('emergencyList');
@@ -217,8 +219,15 @@
             let countrys = Helper.Methods.getCountrys();
             let intervalList = Helper.Methods.getIntervalList();
 
+            let trackingPhone = !trackingConfig.Phone ? '' : trackingConfig.Phone;
             if (trackingConfig.CountryCode){
                 countrys.find( ({ CountryCode }) => CountryCode === trackingConfig.CountryCode ).Selected = true;
+            }else if(userInfo.CountryCode){
+                countrys.find( ({ CountryCode }) => CountryCode === userInfo.CountryCode ).Selected = true;
+                if(!trackingPhone && userInfo.Mobile){
+                    let phoneCode = countrys.find( ({ CountryCode }) => CountryCode === userInfo.CountryCode ).CountryPhoneCode;
+                    trackingPhone = userInfo.Mobile.replace(phoneCode, '');
+                }
             }
 
             let interval = !trackingConfig.Interval ? 20 : parseInt(trackingConfig.Interval) / 1000;
@@ -252,7 +261,7 @@
                 IntervalList: intervalList,
                 StartTimeMinutes: !trackingConfig.StartTime ? 540 : trackingConfig.StartTime,
                 EndTimeMinutes: !trackingConfig.EndTime ? 1080 : trackingConfig.EndTime,
-                Phone: !trackingConfig.Phone ? '' : trackingConfig.Phone,
+                Phone: trackingPhone,
                 TrackingState: trackingConfig.ScheduleState
            };
 
@@ -276,7 +285,7 @@
                         IMEI: data.IMEI,
                     }
                 }, function (state) {
-                    if (data.scheduleState){
+                    if (data.ScheduleState){
                         bgGeo.requestPermission().then((status) => {
                             bgGeo.startSchedule(function() {
                                 self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
@@ -352,11 +361,11 @@
                                 return;
                             }
                             if(self.$app.methods.isObjEmpty(result.data.Data) || !result.data.Data.IMEI){
-                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003 + ' ' + LANGUAGE.PROMPT_MSG004);
+                                self.$app.methods.customDialog({title: imei, text: LANGUAGE.PROMPT_MSG003 + ' ' + LANGUAGE.PROMPT_MSG004});
                                 return;
                             }
                             if(result.data.Data.IMEI === 'UNFOUND'){
-                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG005, imei);
+                                self.$app.methods.customDialog({title: imei, text: LANGUAGE.PROMPT_MSG005});
                                 return;
                             }
 
