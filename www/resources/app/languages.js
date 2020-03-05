@@ -63,7 +63,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG023": "Data not saved",
 
 		"PROMPT_MSG026": "Panic Button is turned off. Go to turn it on?",
-
+		"PROMPT_MSG027": "SMS has been sent",
 		"PROMPT_MSG028": "Emergency phone call executed",
 
 		"PROMPT_MSG052": "Here you can set new password - min 6, max 32 characters and contains no spaces",

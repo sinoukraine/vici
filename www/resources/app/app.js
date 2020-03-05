@@ -770,23 +770,18 @@ let SMSHelper = {
             }
         };
 
-        let success = function () {
-            App.addNotification({
-                hold: 3000,
-                message: LANGUAGE.PROMPT_MSG027
-            });
+        sms.send(data.number, data.message, options, function () {
+            app.methods.customNotification({text: LANGUAGE.PROMPT_MSG027});
             if (data.callback instanceof Function) {
                 data.callback();
             }
 
-        };
-        let error = function (e) {
+        }, function (e) {
             alert('Message Failed:' + e);
             if (data.callback instanceof Function) {
                 data.callback();
             }
-        };
-        sms.send(data.number, data.message, options, success, error);
+        });
     },
     checkSMSPermission: function(data=false) {
         let self = this;
