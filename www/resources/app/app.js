@@ -586,7 +586,7 @@ let app = new Framework7({
             if  (savedConfig.Schedule && savedConfig.Schedule.length){
                 config.schedule = savedConfig.Schedule;
             }
-            console.log(bgGeo)
+
             // 2. Execute #ready method:
             bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
                 //alert(JSON.stringify(savedConfig));
@@ -775,14 +775,14 @@ let SMSHelper = {
                 hold: 3000,
                 message: LANGUAGE.PROMPT_MSG027
             });
-            if(isFunction(data.callback)){
+            if (data.callback instanceof Function) {
                 data.callback();
             }
 
         };
         let error = function (e) {
             alert('Message Failed:' + e);
-            if(isFunction(data.callback)){
+            if (data.callback instanceof Function) {
                 data.callback();
             }
         };
