@@ -82,6 +82,7 @@ window.LanguagePackages= {
 		"MENU_MSG00": "Home",
 		"MENU_MSG01": "User Settings",
 		"MENU_MSG02": "Sign Out",
+		"MENU_MSG03": "Add New",
 
 		"LOGIN_SCREEN_MSG00": "Login Name / Email",
 		"LOGIN_SCREEN_MSG01": "Password",

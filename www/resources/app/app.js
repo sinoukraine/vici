@@ -5,6 +5,7 @@ window.COM_TIMEFORMAT4 = 'YYYY-MM-DD';
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
 
+const API_DOMAIN3 = "https://app.phonetrack.co/";
 const API_DOMAIN4 = "https://maps.google.com/";
 const API_DOMIAN7 = "https://nominatim.sinopacific.com.ua/";
 const API_DOMIAN8 = "https://nominatim.openstreetmap.org/";
@@ -32,6 +33,8 @@ API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
 API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
+API_URL.ADD_NEW = API_DOMAIN3 + 'activation/activate';
+API_URL.REGISTER = API_DOMAIN3 + 'activation/register';
 
 //API_URL.URL_GET_LOGIN = API_DOMIAN1 + "User/Auth?username={0}&password={1}&appKey={2}&mobileToken={3}&deviceToken={4}&deviceType={5}";
 //API_URL.URL_GET_LOGOUT = API_DOMIAN1 + "User/Logoff2?mobileToken={0}&deviceToken={1}";
@@ -56,7 +59,8 @@ if (Framework7.device.ios) {
 
 let htmlTemplate = $$('script#loginScreenTemplate').html();
 let compiledTemplate = Template7.compile(htmlTemplate);
-$$('#app').append(compiledTemplate());
+//let withContext = compiledTemplate(dealerData);
+$$('#app').append(compiledTemplate({RegisterUrl: API_URL.REGISTER}));
 
 // Init App
 let app = new Framework7({
