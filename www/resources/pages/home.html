@@ -169,15 +169,15 @@
                     var options = {
                         message: LANGUAGE.PROMPT_MSG019, // not supported on some apps (Facebook, Instagram)
                         subject: LANGUAGE.PROMPT_MSG019, // fi. for email
-                        //files: ['', ''], // an array of filenames either locally or remotely
+                        files: [`https://maps.googleapis.com/maps/api/staticmap?center=${location.coords.latitude},${location.coords.longitude}&zoom=13&scale=1&size=600x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:P%7C${location.coords.latitude},${location.coords.longitude}`], // an array of filenames either locally or remotely
                         url: API_URL.SHARE_POSITION + `?z=18&q=${location.coords.latitude},${location.coords.longitude}`,
                         //chooserTitle: 'Pick an app', // Android only, you can override the default share sheet title
                         //appPackageName: 'com.apple.social.facebook', // Android only, you can provide id of the App you want to share with
                         //iPadCoordinates: '0,0,0,0' //IOS only iPadCoordinates for where the popover should be point.  Format with x,y,width,height
                     };
-
+               // <a href="https://www.google.com/maps/place/*|LAT|*,*|LNG|*/" target="_blank"><img width="100%" src="https://maps.googleapis.com/maps/api/staticmap?center=*|LAT|*,*|LNG|*&zoom=13&scale=1&size=600x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:P%7C*|LAT|*,*|LNG|*" alt="Device location: *|LAT|*,*|LNG|*"></a>
                     window.plugins.socialsharing.shareWithOptions(options, function(result) {
-                        alert("Done" + JSON.stringify(result));
+                        //alert("Done" + JSON.stringify(result));
 
                         //console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
                         //console.log("Shared to app: " + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
