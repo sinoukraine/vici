@@ -56,7 +56,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG016": 'My phone Battery lvl',
 		"PROMPT_MSG017": 'Speed',
 		"PROMPT_MSG018": 'Heading',
-		"PROMPT_MSG019": '',
+		"PROMPT_MSG019": 'My location',
 
 		"PROMPT_MSG022": "Please set up your Panic Button Behaviour",
 		"PROMPT_MSG023": "Data not saved",
