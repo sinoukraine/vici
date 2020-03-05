@@ -788,15 +788,16 @@ let SMSHelper = {
         };
         sms.send(data.number, data.message, options, success, error);
     },
-    checkSMSPermission: function(data) {
+    checkSMSPermission: function(data=false) {
         let self = this;
 
         let success = function (status) {
             if (status.hasPermission) {
-                self.sendSms(data);
+                if(data){
+                    self.sendSms(data);
+                }
             }
             else {
-                //alert('No SMS permission');
                 self.requestSMSPermission(data, self.sendSms);
             }
         };

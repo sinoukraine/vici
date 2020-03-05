@@ -346,6 +346,9 @@
                         self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG012});
                         return;
                     }
+                    if(panicState && smsTo.length){
+                        SMSHelper.checkSMSPermission();
+                    }
 
                     let panicConfig = {
                         State: panicState,
@@ -353,6 +356,8 @@
                         SMSTo: smsTo,
                     };
                     self.$app.methods.setInStorage({name:'panicConfig', data: panicConfig});
+
+
 
                     self.$app.progressbar.show();
                     self.$app.request.promise.post(API_URL.VERIFY_DEVICE, {IMEI: imei}, 'json')
