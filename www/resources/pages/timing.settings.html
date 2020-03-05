@@ -288,7 +288,8 @@
                     if (data.ScheduleState){
                         bgGeo.requestPermission().then((status) => {
                             bgGeo.startSchedule(function() {
-                                self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                                //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                                self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
                                 mainView.router.back();
                             });
                         }).catch((status) => {
@@ -299,7 +300,8 @@
 
                     }else{
                         bgGeo.stopSchedule(function() {
-                            self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG009});
+                            //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG009});
+                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
                             // You must explicitly stop tracking if currently enabled
                             bgGeo.stop();
                             mainView.router.back();

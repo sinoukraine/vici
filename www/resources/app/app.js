@@ -759,6 +759,71 @@ let mainView = app.views.create('.view-main', {
     name: 'view-main'
 });
 
+let SMSHelper = {
+    sendSms: function(data) {
+        //CONFIGURATION
+        let options = {
+            replaceLineBreaks: false, // true to replace \n by a new line, false by default
+            android: {
+                //intent: 'INTENT'  // send SMS with the native android SMS messaging
+                intent: '' // send SMS without opening any other app
+            }
+        };
+
+        let success = function () {
+            App.addNotification({
+                hold: 3000,
+                message: LANGUAGE.PROMPT_MSG027
+            });
+            if(isFunction(data.callback)){
+                data.callback();
+            }
+
+        };
+        let error = function (e) {
+            alert('Message Failed:' + e);
+            if(isFunction(data.callback)){
+                data.callback();
+            }
+        };
+        sms.send(data.number, data.message, options, success, error);
+    },
+    checkSMSPermission: function(data) {
+        let self = this;
+
+        let success = function (status) {
+            if (status.hasPermission) {
+                self.sendSms(data);
+            }
+            else {
+                //alert('No SMS permission');
+                self.requestSMSPermission(data, self.sendSms);
+            }
+        };
+        let error = function (e) { alert('Something went wrong:' + e); };
+        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
+    },
+    requestSMSPermission: function(data=false, callback) {
+        let self = this;
+
+        let success = function (status) {
+            if ( !status.hasPermission ) {
+                window.permissions.requestPermission(window.permissions.SEND_SMS, function() {
+                    //alert('[OK] Permission accepted');
+                    if (data){
+                        callback(data);
+                    }
+                }, function(error) {
+                    alert('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                });
+            }
+        };
+        let error = function (e) { alert('Something went wrong:' + e); };
+        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
+    }
+};
+
 $$('body').on('submit', '[name="login-form"]', function (e) {
     e.preventDefault();
     //preLogin();
