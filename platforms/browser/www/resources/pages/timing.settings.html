@@ -1,0 +1,440 @@
+<!--suppress JSAnnotator -->
+<template>
+    <!-- Page, data-name contains page name which can be used in callbacks -->
+    <div class="page " > <!-- page-with-subnavbar -->
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                    </a>
+                </div>
+                <div class="title sliding">{{@global.LANGUAGE.TIMING_MSG00}}</div>
+                <div class="right">
+                    <label for="submit-form-timing" class="link icon-only">
+                        <i class="f7-icons icon-apply"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <form name="FormTiming" class="page-content" >
+            <div class="block-title">{{@global.LANGUAGE.PROMPT_MSG010}}</div>
+            <div class="block">
+                {{@global.LANGUAGE.PROMPT_MSG011}}
+            </div>
+            <div class="list no-hairlines no-margin-bottom">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title text-transform-uppercase " >{{@global.LANGUAGE.PANIC_BUTTON_MSG00}} </div>
+                            <div class="item-after">
+                                <label class="toggle toggle-init ">
+                                    <input type="checkbox" name="PanicButtonState" {{#if PanicButtonState}}checked="checked"{{/if}}>
+                                    <span class="toggle-icon"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="item-link smart-select smart-select-init {{#unless EmergencyList}}disabled{{/unless}}" data-open-in="popover" data-close-on-select="true" >
+                            <select name="PanicPhone" multiple maxlength="1">
+                                {{#each EmergencyList}}
+                                <option value="{{Id}}" {{#if Call}}selected{{/if}}>{{Name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-media text-color-lightgray">
+                                    <i class="f7-icons icon-phone"></i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title ">{{@global.LANGUAGE.PANIC_BUTTON_MSG01}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="item-link smart-select smart-select-init {{#unless EmergencyList}}disabled{{/unless}}" data-open-in="popover" data-close-on-select="true" >
+                            <select name="PanicSMS" multiple  >
+                                {{#each EmergencyList}}
+                                <option value="{{Id}}" {{#if Sms}}selected{{/if}}>{{Name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-media text-color-lightgray">
+                                    <i class="f7-icons icon-email"></i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title ">{{@global.LANGUAGE.PANIC_BUTTON_MSG02}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    {{#unless EmergencyList}}
+                    <li class="text-color-red block-footer">{{@global.LANGUAGE.PROMPT_MSG068}}</li>
+                    {{/unless}}
+                </ul>
+            </div>
+
+
+            <input type="submit" id="submit-form-timing" class="display-none" />
+            <div class="block-title">{{@global.LANGUAGE.TIMING_MSG00}}</div>
+            <div class="block">
+                {{@global.LANGUAGE.PROMPT_MSG001}}
+            </div>
+            <div class="list no-hairlines no-margin-bottom">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title text-transform-uppercase " >{{@global.LANGUAGE.TIMING_MSG01}} </div>
+                            <div class="item-after">
+                                <label class="toggle toggle-init ">
+                                    <input type="checkbox" name="TrackingState" {{#if TrackingState}}checked="checked"{{/if}}>
+                                    <span class="toggle-icon"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content item-input">
+                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-mobile-phone"></i></div>
+                        <div class="row no-gap width-100">
+                            <div class="col-40">
+                                <a class="item-link smart-select custom-smart-select smart-select-init no-chevron" data-open-in="page" data-open-in="popup"
+                                   data-searchbar="true" data-close-on-select="true" >
+                                    <select name="CountryCode" {{#if TrackingState}} required validate{{/if}}>
+                                        {{#Countrys}}
+                                        <option value="{{CountryCode}}" data-display-as="{{CountryPhoneCode}}" {{#if Selected}}selected{{/if}}>({{CountryPhoneCode}}) {{Country}}</option>
+                                        {{/Countrys}}
+                                    </select>
+                                    <div class="item-content item-input">
+                                        <div class="item-inner padding-bottom-quarter">
+                                            <div class="item-title item-label">{{@global.LANGUAGE.TIMING_MSG09}}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-60">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.TIMING_MSG08}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="tel" name="Phone" value="{{Phone}}" {{#if TrackingState}} required validate{{/if}}>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popover" data-close-on-select="true" >
+                            <select name="Interval" {{#if TrackingState}} required validate{{/if}}>
+                                {{#each IntervalList}}
+                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-media text-color-lightgray">
+                                    <i class="f7-icons icon-timing"></i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title ">{{@global.LANGUAGE.TIMING_MSG02}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popover" data-close-on-select="true"  data-sheet-push="true">
+                            <select name="DaysOfWeek" multiple {{#if TrackingState}} required validate{{/if}}>
+                                {{#each DaysOfWeekArr}}
+                                <option value="{{Val}}" data-display-as="{{DisplayAs}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-media text-color-lightgray">
+                                    <i class="f7-icons icon-day-of-week"></i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title ">{{@global.LANGUAGE.TIMING_MSG03}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="list no-hairlines margin-top-half">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title width-100 overflow-visible">
+                                <div class="item-header display-flex justify-content-space-between text-color-gray">
+                                    <span class="text-color-custom">
+                                        {{@global.LANGUAGE.TIMING_MSG04}}
+                                        <p class="text-color-black timing-time-label no-margin-top margin-bottom-half">{{StartTime}}</p>
+                                    </span>
+                                    <span class="text-color-custom text-align-right">
+                                        {{@global.LANGUAGE.TIMING_MSG05}}
+                                        <p class="text-color-black timing-time-label no-margin-top margin-bottom-half">{{EndTime}}</p>
+                                    </span>
+                                </div>
+                                <!-- Dual range slider with all the parameters passed via data- attributes -->
+                                <div
+                                        class="range-slider range-slider-init range-slider-tracking-time"
+                                        data-dual="true"
+                                        data-min="0"
+                                        data-max="1439"
+                                        data-step="5"
+                                        data-value-left="0"
+                                        data-value-right="1"
+                                ></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+
+    </div>
+
+
+
+</template>
+
+
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            let self = this;
+
+            let userInfo = self.$app.methods.getFromStorage('userInfo');
+            let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+            let panicConfig = self.$app.methods.getFromStorage('panicConfig');
+            let emergencyList = self.$app.methods.getFromStorage('emergencyList');
+
+            let daysOfWeekArr = Helper.Methods.getWeekDaysArr();
+            let countrys = Helper.Methods.getCountrys();
+            let intervalList = Helper.Methods.getIntervalList();
+
+            let trackingPhone = !trackingConfig.Phone ? '' : trackingConfig.Phone;
+            if (trackingConfig.CountryCode){
+                countrys.find( ({ CountryCode }) => CountryCode === trackingConfig.CountryCode ).Selected = true;
+            }else if(userInfo.CountryCode){
+                countrys.find( ({ CountryCode }) => CountryCode === userInfo.CountryCode ).Selected = true;
+                if(!trackingPhone && userInfo.Mobile){
+                    let phoneCode = countrys.find( ({ CountryCode }) => CountryCode === userInfo.CountryCode ).CountryPhoneCode;
+                    trackingPhone = userInfo.Mobile.replace(phoneCode, '');
+                }
+            }
+
+            let interval = !trackingConfig.Interval ? 20 : parseInt(trackingConfig.Interval) / 1000;
+            intervalList.find( ({ Val }) => Val === interval ).Selected = true;
+
+            let daysOfWeek = !trackingConfig.DaysOfWeek ? '2,3,4,5,6' : trackingConfig.DaysOfWeek;
+            daysOfWeek = daysOfWeek.split(',');
+            for (let i = 0; i < daysOfWeek.length; i++) {
+                daysOfWeekArr.find( ({ Val }) => Val === parseInt(daysOfWeek[i])).Selected = true;
+            }
+
+            if(!self.$app.methods.isObjEmpty(panicConfig)){
+                if(!self.$app.methods.isObjEmpty(panicConfig.CallTo)){
+                    for (let i = 0; i < panicConfig.CallTo.length; i++) {
+                        emergencyList.find( ({ Id }) => Id === panicConfig.CallTo[i] ).Call = true;
+                    }
+                }
+                if(!self.$app.methods.isObjEmpty(panicConfig.SMSTo)){
+                    for (let i = 0; i < panicConfig.SMSTo.length; i++) {
+                        emergencyList.find( ({ Id }) => Id === panicConfig.SMSTo[i] ).Sms = true;
+                    }
+                }
+            }
+
+            let ret = {
+                EmergencyList: emergencyList && emergencyList.length ? emergencyList : false,
+                PanicButtonState: panicConfig.State,
+
+                Countrys: countrys,
+                DaysOfWeekArr: daysOfWeekArr,
+                IntervalList: intervalList,
+                StartTimeMinutes: !trackingConfig.StartTime ? 540 : trackingConfig.StartTime,
+                EndTimeMinutes: !trackingConfig.EndTime ? 1080 : trackingConfig.EndTime,
+                Phone: trackingPhone,
+                TrackingState: trackingConfig.ScheduleState
+           };
+
+            return ret;
+        },
+
+        methods: {
+            saveTrackingConfig: function (data) {
+                let self = this;
+
+                if (!bgGeo) {
+                    self.$app.dialog.alert(LANGUAGE.PROMPT_MSG006);
+                    return;
+                }
+                bgGeo.setConfig({
+                    distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+                    locationUpdateInterval: data.Interval,  // Get a location every 5 seconds
+                    schedule: data.Schedule,
+                    url: API_URL.UPLOAD_LINK,
+                    params: {
+                        IMEI: data.IMEI,
+                    }
+                }, function (state) {
+                    if (data.ScheduleState){
+                        bgGeo.requestPermission().then((status) => {
+                            bgGeo.startSchedule(function() {
+                                self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                                mainView.router.back();
+                            });
+                        }).catch((status) => {
+                            self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
+                            console.log('[requestPermission] REJECTED', status);
+                            self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
+                        });
+
+                    }else{
+                        bgGeo.stopSchedule(function() {
+                            self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG009});
+                            // You must explicitly stop tracking if currently enabled
+                            bgGeo.stop();
+                            mainView.router.back();
+                        });
+                    }
+                });
+            }
+
+        },
+
+        on: {
+            pageInit: function (e, page) {
+                let self = this;
+
+                let form = page.$el.find('[name = "FormTiming"]');
+
+                form.on('change','[name="PanicButtonState"]', function () {
+                    self.$setState({
+                        PanicButtonState: this.checked
+                    });
+                });
+
+                form.on('change','[name="TrackingState"]', function () {
+                    self.$setState({
+                        TrackingState: this.checked
+                    });
+                });
+
+                form.on('submit', function(e){
+                    e.preventDefault();
+
+                    let panicState = page.$el.find('[name = "PanicButtonState"]').is(':checked');
+                    let callTo = page.$el.find('[name = "PanicPhone"]').val();
+                    let smsTo = page.$el.find('[name = "PanicSMS"]').val();
+
+                    let phoneCodeEl = page.$el.find('[name = "CountryCode"]');
+                    let phoneVal = page.$el.find('[name = "Phone"]').val();
+                    let imei = phoneCodeEl[0].options[phoneCodeEl[0].selectedIndex].getAttribute("data-display-as") + phoneVal;
+                    imei = imei.replace('+', '').trim();
+
+                    if(panicState && !callTo.length && !smsTo.length){
+                        self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG012});
+                        return;
+                    }
+
+                    let panicConfig = {
+                        State: panicState,
+                        CallTo: callTo,
+                        SMSTo: smsTo,
+                    };
+                    self.$app.methods.setInStorage({name:'panicConfig', data: panicConfig});
+
+                    self.$app.progressbar.show();
+                    self.$app.request.promise.post(API_URL.VERIFY_DEVICE, {IMEI: imei}, 'json')
+                        .then(function (result) {
+                            console.log(result.data);
+                            if(result.data.MajorCode !== '000') {
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                                return;
+                            }
+                            if(self.$app.methods.isObjEmpty(result.data.Data) || !result.data.Data.IMEI){
+                                self.$app.methods.customDialog({title: imei, text: LANGUAGE.PROMPT_MSG003 + ' ' + LANGUAGE.PROMPT_MSG004});
+                                return;
+                            }
+                            if(result.data.Data.IMEI === 'UNFOUND'){
+                                self.$app.methods.customDialog({title: imei, text: LANGUAGE.PROMPT_MSG005});
+                                return;
+                            }
+
+                            let rangeSliderVal = self.$app.range.get('.range-slider-tracking-time').getValue();
+                            let daysOfWeekEl = page.$el.find('[name = "DaysOfWeek"]');
+                            let daysOfWeekArr = daysOfWeekEl.val();
+                            let schedule = [];
+                            for (let i = 0; i < daysOfWeekArr.length; i++) {
+                                schedule.push(daysOfWeekArr[i] + ' ' + self.StartTime + '-' + self.EndTime);
+                            }
+
+                            let trackerConfig = {
+                                DaysOfWeek: daysOfWeekArr.toString(),
+                                StartTime: rangeSliderVal[0],
+                                EndTime: rangeSliderVal[1],
+                                Interval: parseInt(page.$el.find('[name = "Interval"]').val()) * 1000,
+                                ScheduleState: page.$el.find('[name = "TrackingState"]').is(':checked'),
+                                Schedule: schedule,
+                                CountryCode: phoneCodeEl.val(),
+                                PhoneCode: phoneCodeEl[0].options[phoneCodeEl[0].selectedIndex].getAttribute("data-display-as"),
+                                Phone: phoneVal,
+                                IMEI: imei
+                            };
+
+                            self.$app.methods.setInStorage({name:'trackingConfig', data: trackerConfig});
+                            self.saveTrackingConfig(trackerConfig);
+                        })
+                        .finally(function () {
+                            self.$app.progressbar.hide();
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            if (err && err.status === 404){
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                            }else{
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                            }
+                        });
+
+                    return false;
+                });
+
+                self.$app.utils.nextFrame(()=>{
+                    let rangeSlider = self.$app.range.get('.range-slider-tracking-time');
+                    rangeSlider.on('change', function (range, value) {
+                        let newData = [];
+                        for (let i = 0; i < value.length; i++) {
+                            let calculated = value[i];
+                            let h = calculated / 60 ^ 0;
+                            if (h) {
+                                let m = calculated % 60;
+                                if (m < 10) m = '0' + m;
+                                if (h < 10) h = '0' + h;
+                                newData[i] = h + ':' + m;
+                            } else {
+                                newData[i] = '00:' + parseInt(calculated);
+                            }
+                        }
+                        self.$setState({
+                            StartTime: newData[0],
+                            EndTime: newData[1],
+                        })
+                    });
+                    rangeSlider.setValue([self.StartTimeMinutes, self.EndTimeMinutes]);
+                });
+
+
+            },
+
+        }
+    };
+</script>

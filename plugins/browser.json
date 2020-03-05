@@ -43,7 +43,32 @@
         },
         "cordova-unique-device-id": {
             "PACKAGE_NAME": "com.sinopacific.phonetrack"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack2"
+        },
+        "cordova-plugin-buildinfo": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack2"
+        },
+        "cordova-launch-review": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack2"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack2"
+        },
+        "cordova-sim-plugin": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack2"
+        },
+        "cordova-plugin-android-permissions": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack2"
+        },
+        "cordova-plugin-x-socialsharing": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack2"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "es6-promise-plugin": {
+            "PACKAGE_NAME": "com.sinopacific.phonetrack2"
+        }
+    }
 }

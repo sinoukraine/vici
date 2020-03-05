@@ -44,7 +44,7 @@
     "cordova-plugin-device": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-device@2.0.2"
+            "id": "cordova-plugin-device@2.0.3"
         },
         "is_top_level": true,
         "variables": {}
@@ -52,7 +52,7 @@
     "cordova-plugin-buildinfo": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-buildinfo@2.0.2"
+            "id": "cordova-plugin-buildinfo@4.0.0"
         },
         "is_top_level": true,
         "variables": {}
@@ -111,6 +111,38 @@
             "id": "cordova-unique-device-id@1.3.2"
         },
         "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-sim-plugin": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-sim-plugin@0.0.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-android-permissions": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-android-permissions@1.0.2"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-x-socialsharing": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-x-socialsharing@5.6.4"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "es6-promise-plugin": {
+        "source": {
+            "type": "registry",
+            "id": "es6-promise-plugin"
+        },
+        "is_top_level": false,
         "variables": {}
     }
 }

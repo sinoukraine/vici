@@ -1,0 +1,341 @@
+<!--suppress JSAnnotator -->
+<template>
+    <!-- Page, data-name contains page name which can be used in callbacks -->
+    <div class="page " > <!-- page-with-subnavbar -->
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                    </a>
+                </div>
+                <div class="title sliding">{{@global.LANGUAGE.MENU_MSG01}}</div>
+                <div class="right">
+                    <label for="{{CurrentFormButtonSubmit}}" class="link icon-only">
+                        <i class="f7-icons icon-apply"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbar tabbar toolbar-top">
+            <div class="toolbar-inner">
+                <a href="#tab1" class="tab-link tab-link-active">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG00}}</a>
+                <a href="#tab2" class="tab-link">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG01}}</a>
+            </div>
+        </div>
+
+        <div class="tabs-animated-wrap">
+            <div class="tabs">
+                <form id="tab1" name="user-profile-form" class="tab page-content tab-active">
+                    <input type="submit" id="submit-form-user" class="display-none" />
+                    <div class="block-title">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG06}}</div>
+                    <div class="list no-hairlines">
+                        <ul>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-name"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG02}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="text" name="FirstName" value="{{FirstName}}" required validate>
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG03}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="text" name="SubName" value="{{SubName}}" required validate>
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-email"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG04}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="email" name="EMail" value="{{EMail}}" required validate>
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-phone"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG05}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="tel" name="Mobile" value="{{Mobile}}" required validate>
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="block-title">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG07}}</div>
+                    <div class="list no-hairlines">
+                        <ul>
+                            {{#EmergencyList}}
+                            <span class="em-contact-wrapper" data-id="{{Id}}">
+                                <li class="item-content item-input">
+                                    <div class="item-media text-color-lightgray"><i class="f7-icons icon-name"></i></div>
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG08}}</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" name="EmContactName" placeholder="Name" value='{{Name}}' >
+                                            <span class="input-clear-button"></span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item-content item-input">
+                                    <div class="item-media text-color-lightgray"><i class="f7-icons icon-phone"></i></div>
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG05}}</div>
+                                        <div class="item-input-wrap">
+                                            <input type="tel" name="EmContactPhone" placeholder="+13001234512" value='{{Phone}}' >
+                                            <span class="input-clear-button"></span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </span>
+                            {{/EmergencyList}}
+                        </ul>
+                    </div>
+                </form>
+
+                <form id="tab2" name="user-password-form" class="tab page-content">
+                    <input type="submit" id="submit-form-password" class="display-none" />
+                    <div class="block-title tooltip-init" data-tooltip="{{@global.LANGUAGE.PROMPT_MSG052}}">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG12}} <span class="badge color-lightblue">?</span></div>
+                    <div class="list no-hairlines">
+                        <ul>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-password"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG09}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="password" name="OldPassword" value="" >
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-password"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG10}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="password" name="NewPassword" value="" >
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-password"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG11}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="password" name="NewPasswordConfirm" value="" >
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+
+</template>
+
+
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            let self = this;
+
+            let userInfo = self.$app.methods.getFromStorage('userInfo');
+            let emListSaved = self.$app.methods.getFromStorage('emergencyList');
+            let emList = [
+                {
+                    Id: '',
+                    Name: '',
+                    Phone: '',
+                },
+                {
+                    Id: '',
+                    Name: '',
+                    Phone: '',
+                },
+                {
+                    Id: '',
+                    Name: '',
+                    Phone: '',
+                },
+            ];
+            if(emListSaved && emListSaved.length){
+                for (let i = 0; i < emListSaved.length; i++) {
+                    emList[i] = emListSaved[i];
+                }
+            }
+            let ret = {
+                ...userInfo,
+                CurrentFormButtonSubmit: 'submit-form-user',
+                EmergencyList: emList,
+            };
+
+            console.log(ret)
+            return ret;
+        },
+
+        methods: {
+            saveUserDetails: function(data){
+                var self = this;
+
+                self.$app.preloader.show();
+                self.$app.request.promise.get(API_URL.EDIT_ACCOUNT, data, 'json')
+                    .then(function (result) {
+                        if(result.data.MajorCode === '000') {
+                            var userInfo = self.$app.methods.getFromStorage('userInfo');
+                            self.$app.utils.extend(userInfo, data);
+                            self.$app.methods.setInStorage({name:'userInfo', data: userInfo });
+                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
+                            mainView.router.back();
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                        }
+                    })
+                    .finally(function () {
+                        self.$app.preloader.hide();
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        if (err && err.status === 404){
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                        }
+                    });
+            },
+            saveNewPassword: function(data){
+                var self = this;
+
+                self.$app.preloader.show();
+                self.$app.request.promise.get(API_URL.NEW_PASSWORD, data, 'json')
+                    .then(function (result) {
+                        if(result.data.MajorCode === '000') {
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG055, function(){
+                                self.$app.methods.logout();
+                                mainView.router.back();
+                            });
+                        }else if(result.data.MajorCode === '100' && result.data.MinorCode === '1004'){
+                            self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG056});
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                        }
+                    })
+                    .finally(function () {
+                        self.$app.preloader.hide();
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        if (err && err.status === 404){
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                        }
+                    });
+            },
+
+        },
+
+        on: {
+            pageInit: function (e, page) {
+                let self = this;
+                let profileForm = page.$pageEl.find('[name = "user-profile-form"]');
+                let passwordForm = page.$pageEl.find('[name = "user-password-form"]');
+                let tabs = page.$pageEl.find('.tab');
+
+                tabs.on('tab:show', function(){
+                    if (this.name === 'user-password-form') {
+                        self.$setState({
+                            CurrentFormButtonSubmit: 'submit-form-password'
+                        });
+                    }else{
+                        self.$setState({
+                            CurrentFormButtonSubmit: 'submit-form-user'
+                        });
+                    }
+                });
+
+                profileForm.on('submit', function (e) {
+                    e.preventDefault();
+
+                    let emNames = page.$el.find('[name="EmContactName"]');
+                    let emPhones = page.$el.find('[name="EmContactPhone"]');
+
+                    if(emNames && emNames.length){
+                        let emList = [];
+                        for (let i = 0; i < emNames.length; i++) {
+                            if(emNames[i].value && emPhones[i] && emPhones[i].value){
+                                let id = $$(emNames[i]).closest('.em-contact-wrapper').data('id');
+                                emList.push({
+                                    Id: !id ? self.$app.utils.id() : id,
+                                    Name: emNames[i].value,
+                                    Phone: emPhones[i].value,
+                                });
+                            }
+                        }
+                        self.$app.methods.setInStorage({name: 'emergencyList', data: emList});
+                    }
+
+                    let data = {
+                        MajorToken: self.$root.MajorToken,
+                        MinorToken: self.$root.MinorToken,
+                        FirstName: page.$el.find('input[name="FirstName"]').val(),
+                        SubName: page.$el.find('input[name="SubName"]').val(),
+                        Mobile: page.$el.find('input[name="Mobile"]').val(),
+                        EMail: page.$el.find('input[name="EMail"]').val(),
+                    };
+
+                    self.saveUserDetails(data);
+
+                    return false;
+                });
+
+                passwordForm.on('submit', function (e) {
+                    e.preventDefault();
+
+                    let data = {
+                        MinorToken: self.$root.MinorToken,
+                        oldpwd: page.$el.find('input[name="OldPassword"]').val(),
+                        newpwd: page.$el.find('input[name="NewPassword"]').val(),
+                    };
+
+                    let confirmpwd = page.$el.find('input[name="NewPasswordConfirm"]').val();
+
+                    if (data.newpwd.length < 6) {
+                        self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG054});
+                        return false;
+                    }
+                    if (data.newpwd !== confirmpwd) {
+                        self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG053});
+                        return false;
+                    }
+
+                    self.saveNewPassword(data);
+
+                    return false;
+                });
+            },
+        }
+    };
+</script>
