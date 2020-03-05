@@ -69,7 +69,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG05}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="tel" name="Mobile" value="{{Mobile}}" required validate>
+                                        <input type="tel" name="Mobile" value="{{Mobile}}" required validate pattern="[0-9]*" data-error-message="{{@global.LANGUAGE.PROMPT_MSG020}}">
                                         <span class="input-clear-button"></span>
                                     </div>
                                 </div>

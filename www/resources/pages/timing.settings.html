@@ -226,7 +226,7 @@
                 countrys.find( ({ CountryCode }) => CountryCode === userInfo.CountryCode ).Selected = true;
                 if(!trackingPhone && userInfo.Mobile){
                     let phoneCode = countrys.find( ({ CountryCode }) => CountryCode === userInfo.CountryCode ).CountryPhoneCode;
-                    trackingPhone = userInfo.Mobile.replace(phoneCode, '');
+                    trackingPhone = userInfo.Mobile.replace(phoneCode.replace('+',''), '').replace('+','');
                 }
             }
 

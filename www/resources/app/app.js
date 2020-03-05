@@ -504,6 +504,7 @@ let app = new Framework7({
 
                 },function(errorCode){
                     self.progressbar.hide();
+                    self.methods.customDialog({text:errorCode});
                     let errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG04;
                     switch (errorCode) {
                         case 0:
@@ -533,7 +534,7 @@ let app = new Framework7({
             }
         },
         callToPhone: function(phone){
-            window.open('tel:'+phone, '_blank');
+            window.open('tel:'+phone, '_system');
         },
 
         setGeolocationPlugin: function(){
