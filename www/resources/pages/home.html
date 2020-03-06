@@ -265,6 +265,7 @@
                             self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
                         }
                     });
+                    self.stopWatchUserLocation();
                 });
                 AppEvents.on('resume', self.watchUserLocation);
                 AppEvents.on('pause', self.stopWatchUserLocation);
