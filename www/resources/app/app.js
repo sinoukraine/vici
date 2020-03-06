@@ -35,7 +35,7 @@ API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
 API_URL.ADD_NEW = API_DOMAIN3 + 'activation/activate';
-API_URL.REGISTER = API_DOMAIN3 + 'activation/register';
+API_URL.REGISTER = API_DOMAIN3 + 'activation/';
 
 //https://api.m2mglobaltech.com/QuikProtect/V1/Client/
 
