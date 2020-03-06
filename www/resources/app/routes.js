@@ -12,6 +12,11 @@ var routes = [
         name: 'panel.left'
     },
     {
+        path: '/forgot-password/',
+        componentUrl: './resources/pages/forgot-password.html?v=1.4',
+        name: 'forgot-password',
+    },
+    {
         path: '/profile-settings/',
         componentUrl: './resources/pages/profile.settings.html?v=2.1',
         name: 'profile.settings',

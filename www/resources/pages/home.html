@@ -161,6 +161,42 @@
                     })
                 });
             },
+            watchUserLocation: function(){
+                let self = this;
+                if (!bgGeo){
+                    return;
+                }
+
+                // Start watching position while app in foreground.
+                bgGeo.watchPosition((location) => {
+                    if(!self.Marker){
+                        self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
+                        self.Marker.addTo(self.MarkersGroup);
+                        self.MarkersGroup.addTo(self.Map);
+                    }
+                    self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                    if (self.MarkersGroup.getBounds().isValid()) {
+                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                    }
+                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                        self.$setState({
+                            Address: address
+                        })
+                    });
+                }, (errorCode) => {
+                    //console.log("[watchPosition] ERROR -", errorCode);
+                    alert("[watchPosition] ERROR -"+ errorCode);
+                }, {
+                    interval: 3000
+                })
+            },
+            stopWatchUserLocation: function(){
+                if (!bgGeo){
+                    return;
+                }
+                // Halt watching position when app goes to background.
+                bgGeo.stopWatchPosition();
+            },
             sharePosition: function () {
                 let self = this;
 
@@ -197,8 +233,10 @@
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
 
                 if(self.LoginDone){
-                    self.refreshMap();
+                    //self.refreshMap();
+                    self.watchUserLocation();
                 }
+
 
                 LoginEvents.on('signedIn', function (userInfo){
                     self.$setState({
@@ -208,7 +246,8 @@
                         Phone: userInfo.Mobile,
                         Email: userInfo.EMail,
                     });
-                    self.refreshMap();
+                    //self.refreshMap();
+                    self.watchUserLocation();
                 });
                 LoginEvents.on('signedOut', function (){
                     self.$setState({
@@ -227,10 +266,14 @@
                         }
                     });
                 });
+                AppEvents.on('resume', self.watchUserLocation);
+                AppEvents.on('pause', self.stopWatchUserLocation);
             },
             pageBeforeRemove: function () {
                 LoginEvents.off('signedIn');
                 LoginEvents.off('signedOut');
+                AppEvents.off('resume', self.watchUserLocation);
+                AppEvents.off('pause', self.stopWatchUserLocation);
                 if(this.MarkersGroup){
                     this.MarkersGroup.clearLayers();
                 }

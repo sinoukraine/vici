@@ -21,13 +21,14 @@ const API_DOMIAN8 = "https://nominatim.openstreetmap.org/";
 const API_DOMIAN9 = "https://upload.quiktrak.co/";*/
 
 const API_URL = {};
-//API_URL.LOGIN = API_DOMIAN1 + 'QuikProtect/V1/Client/Auth';
-//API_URL.LOGOUT = API_DOMIAN1 + 'QuikProtect/V1/Client/Logoff';
-//API_URL.EDIT_ACCOUNT = API_DOMIAN1 + 'QuikProtect/V1/Client/AccountEdit';
+
 API_URL.LOGIN = API_DOMIAN1 + 'QuikTrak/V1/User/Auth';
 API_URL.LOGOUT = API_DOMIAN1 + 'QuikTrak/V1/User/Logoff2';
 API_URL.EDIT_ACCOUNT = API_DOMIAN1 + 'QuikTrak/V1/User/Edit';
 API_URL.NEW_PASSWORD = API_DOMIAN1 + 'QuikTrak/V1/User/Password';
+
+API_URL.VERIFY_BY_EMAIL = API_DOMIAN1 + "QuikProtect/V1/Client/VerifyCodeByEmail";
+API_URL.FORGOT_PASSWORD = API_DOMIAN1 + "QuikProtect/V1/Client/ForgotPassword";
 
 API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
 API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';
@@ -36,16 +37,14 @@ API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
 API_URL.ADD_NEW = API_DOMAIN3 + 'activation/activate';
 API_URL.REGISTER = API_DOMAIN3 + 'activation/register';
 
-//API_URL.URL_GET_LOGIN = API_DOMIAN1 + "User/Auth?username={0}&password={1}&appKey={2}&mobileToken={3}&deviceToken={4}&deviceType={5}";
-//API_URL.URL_GET_LOGOUT = API_DOMIAN1 + "User/Logoff2?mobileToken={0}&deviceToken={1}";
-//API_URL.URL_EDIT_ACCOUNT = API_DOMIAN1 + "AccountEdit?MajorToken={0}&MinorToken={1}&firstName={2}&surName={3}&mobile={4}&email={5}&address0={6}&address1={7}&address2={8}&address3={9}&address4={10}";
-//API_URL.URL_NEW_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
+//https://api.m2mglobaltech.com/QuikProtect/V1/Client/
 
 Framework7.request.setup({
     timeout: 40*1000
 });
 
 const LoginEvents = new Framework7.Events();
+const AppEvents = new Framework7.Events();
 
 let bgGeo;
 // Dom7
@@ -112,8 +111,14 @@ let app = new Framework7({
 
                     self.methods.setGeolocationPlugin();
                     //self.methods.checkTelephonyPermissions();
-
                     //checkTelephonyPermissions();
+
+                    document.addEventListener("resume", function () {
+                        AppEvents.emit('resume');
+                    }, false);
+                    document.addEventListener("pause", function () {
+                        AppEvents.emit('pause');
+                    }, false);
                 }
 
 
@@ -604,9 +609,7 @@ let app = new Framework7({
                 }
             });
         },
-        checkTelephonyPermissions: function(){
 
-        },
         /*
           This method prevents back button tap to exit from app on android.
           In case there is an opened modal it will close that modal instead.
@@ -651,11 +654,11 @@ let app = new Framework7({
                     e.preventDefault();
                     return false;
                 }
-                if ($('.login-screen.modal-in').length) {
+               /* if ($('.login-screen.modal-in').length) {
                     f7.loginScreen.close('.login-screen.modal-in');
                     e.preventDefault();
                     return false;
-                }
+                }*/
 
                 if($('.searchbar-enabled').length){
                     f7.searchbar.disable();
@@ -677,7 +680,7 @@ let app = new Framework7({
                 }
 
                 if (currentView && currentView.router && currentView.router.url === '/') {
-                    f7.dialog.confirm(LANGUAGE.PROMPT_MSG044, function() {
+                    f7.dialog.confirm(LANGUAGE.PROMPT_MSG021, function() {
                         if(navigator){
                             navigator.app.exitApp();
                         }

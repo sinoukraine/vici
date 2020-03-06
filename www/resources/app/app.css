@@ -282,15 +282,15 @@
     .login-screen-content .input-clear-button.password-clear-button{
         margin-right: 48px;
     }
-    .login-screen-content .password-toggle {
-        position: absolute;
-        right: 12px;
-        cursor: pointer;
-        transition: all .3s;
+.password-toggle {
+    position: absolute;
+    right: 8px;
+    cursor: pointer;
+    transition: all .3s;
 
-        margin-top: calc(-1 * 25px / 2);
-        top: calc(var(--f7-input-height)/ 2);
-    }
+    margin-top: calc(-1 * 25px / 2);
+    top: calc(var(--f7-input-height)/ 2);
+}
 
 
     /*HOME PAGE*/
