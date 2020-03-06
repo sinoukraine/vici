@@ -163,7 +163,7 @@
             },
             watchUserLocation: function(){
                 let self = this;
-                if (!bgGeo){
+                if (!bgGeo || !self.LoginDone){
                     return;
                 }
 
