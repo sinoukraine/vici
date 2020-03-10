@@ -24,9 +24,9 @@
         </div>
 
         <div class="page-content">
-            <a href="#" class="float-panic-button panicButton">
+            <!--<a href="#" class="float-panic-button panicButton">
                 <img src="resources/images/panic.svg" alt="">
-            </a>
+            </a>-->
             <div class="home-map-wrapper">
                 <div id="homeMap" class="map"></div>
 
@@ -37,43 +37,39 @@
                     </a>
                 </div>
             </div>
-            <div class="list no-margin no-hairlines no-hairlines-between">
-                <ul>
-                    <li>
-                        <div class="item-content text-color-custom">
-                            <div class="item-media">{{@global.LANGUAGE.HOME_MSG01}}</div>
-                            <div class="item-inner">
-                                <div class="item-title">{{Name}}</div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item-content">
-                            <div class="item-media">{{@global.LANGUAGE.HOME_MSG02}}</div>
+            <div class="list no-margin no-hairlines ">
+                <ul class="row no-gap">
+                    <li class="col-50">
+                        <div class="item-content tooltip-init" data-tooltip="{{Phone}}">
+                            <div class="item-media text-color-custom"><i class="f7-icons icon-mobile-phone"></i></div>
                             <div class="item-inner">
                                 <div class="item-title">{{Phone}}</div>
                             </div>
                         </div>
                     </li>
-                    <li>
-                        <div class="item-content">
-                            <div class="item-media">{{@global.LANGUAGE.HOME_MSG03}}</div>
+                    <li class="col-50">
+                        <div class="item-content tooltip-init" data-tooltip="{{Battery}}">
+                            <div class="item-media text-color-custom"><i class="f7-icons icon-mobile-phone"></i></div>
                             <div class="item-inner">
-                                <div class="item-title">{{Email}}</div>
+                                <div class="item-title">{{Battery}}</div>
                             </div>
                         </div>
                     </li>
-                    <li class="item-divider only-line"></li>
-                    <li>
-                        <div class="item-content">
-                            <div class="item-media text-color-lightgray"><i class="f7-icons icon-tracking"></i></div>
+
+                    <li class="col-100">
+                        <div class="item-content tooltip-init" data-tooltip="{{Address}}">
+                            <div class="item-media text-color-custom"><i class="f7-icons icon-tracking"></i></div>
                             <div class="item-inner">
-                                <div class="item-title only-2-rows">{{Address}}</div>
+                                <div class="item-title only-2-rows md-min-height-48 ios-min-height-46">{{Address}}</div>
                             </div>
                         </div>
                     </li>
                 </ul>
             </div>
+            <div class="block margin-vertical">
+                <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-mobile-phone vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
+            </div>
+
 
 
         </div>
@@ -88,10 +84,11 @@
     return {
         data: function () {
             let ret = {
-                Name: 'test',
+                //Name: 'test',
                 Phone: '+1234567890',
-                Email: 'test@test.com',
+                //Email: 'test@test.com',
                 Address: 'Loading...',
+                Battery: '-',
             };
 
             return ret;
@@ -154,6 +151,10 @@
                     if (self.MarkersGroup.getBounds().isValid()) {
                         self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
                     }
+
+                    self.$setState({
+                        Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
+                    });
                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                         self.$setState({
                             Address: address
@@ -175,9 +176,12 @@
                         self.MarkersGroup.addTo(self.Map);
                     }
                     self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
-                    if (self.MarkersGroup.getBounds().isValid()) {
+                   /* if (self.MarkersGroup.getBounds().isValid()) {
                         self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
-                    }
+                    }*/
+                   self.$setState({
+                       Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
+                   });
                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                         self.$setState({
                             Address: address
@@ -242,9 +246,9 @@
                     self.$setState({
                         LoginDone: true,
 
-                        Name: (userInfo.FirstName + ' ' + userInfo.SubName).trim(),
+                       // Name: (userInfo.FirstName + ' ' + userInfo.SubName).trim(),
                         Phone: userInfo.Mobile,
-                        Email: userInfo.EMail,
+                        //Email: userInfo.EMail,
                     });
                     //self.refreshMap();
                     self.watchUserLocation();

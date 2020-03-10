@@ -148,9 +148,17 @@
     --f7-searchbar-input-extra-padding-right: 96px;
 }
 
+.dialog{
+    overflow: auto;
+    max-height: 90%;
+}
+
 
 .overflow-hidden{
     overflow: hidden;
+}
+.vertical-align-middle{
+    vertical-align: middle;
 }
 .overflow-visible{
     overflow: visible!important;
@@ -188,13 +196,9 @@
     right: 56px;
 
 }
-
-
 .ios .navbars~.page .toolbar-top~.searchbar{
     top: calc(var(--f7-navbar-height) + var(--f7-toolbar-height) + var(--f7-safe-area-top));
 }
-
-
 .searchbar.custom-searchbar button[type="submit"]{
     width: 48px;
     height: 48px;
@@ -211,6 +215,7 @@
 .searchbar.custom-searchbar button[type="submit"] i{
     vertical-align: middle;
 }
+
 
 .smart-select .input-invalid~.item-input-error-message {
     display: block;
@@ -241,6 +246,12 @@
     height: 1px;
 }
 
+.md .md-min-height-48{
+    min-height: 48px;
+}
+.ios .ios-min-height-46{
+    min-height: 46px;
+}
 
 /*PANEL LEFT*/
 /*.user-img{
@@ -298,8 +309,11 @@
 .home-map-wrapper{
     min-height: 200px;
     height: 100%;
-    height: calc(100% - 210px);
+    height: calc(100% - 193px);
     position: relative;
+}
+.ios .home-map-wrapper{
+    height: calc(100% - 183px);
 }
 
 /*TIMING*/

@@ -108,10 +108,7 @@ let app = new Framework7({
                     self.methods.handleAndroidBackButton();
                     self.methods.handleKeyboard();
 
-
                     self.methods.setGeolocationPlugin();
-                    //self.methods.checkTelephonyPermissions();
-                    //checkTelephonyPermissions();
 
                     document.addEventListener("resume", function () {
                         AppEvents.emit('resume');
@@ -580,7 +577,7 @@ let app = new Framework7({
                 scheduleUseAlarmManager: true,
             };
 
-            if  (savedConfig.IMEI){
+            /*if  (savedConfig.IMEI){
                 config.params = {
                     IMEI: savedConfig.IMEI
                 }
@@ -590,11 +587,11 @@ let app = new Framework7({
             }
             if  (savedConfig.Schedule && savedConfig.Schedule.length){
                 config.schedule = savedConfig.Schedule;
-            }
+            }*/
 
             // 2. Execute #ready method:
             bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
-                //alert(JSON.stringify(savedConfig));
+                self.dialog.alert(JSON.stringify(state));
                 if (savedConfig.ScheduleState && savedConfig.ScheduleState === true){
                     bgGeo.requestPermission().then((status) => {
                         bgGeo.startSchedule();

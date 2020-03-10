@@ -136,6 +136,7 @@ window.LanguagePackages= {
 		"PANIC_BUTTON_MSG00": "Panic Button",
 		"PANIC_BUTTON_MSG01": "Emergency Phone",
 		"PANIC_BUTTON_MSG02": "Send SMS",
+		"PANIC_BUTTON_MSG03": "Panic",
 
 		"TRACKING_PLUGIN_MSG00": "Location unknown",
 		"TRACKING_PLUGIN_MSG01": "Location permission denied",
