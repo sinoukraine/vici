@@ -160,6 +160,9 @@
 .vertical-align-middle{
     vertical-align: middle;
 }
+.tooltip-init{
+    user-select: none
+}
 .overflow-visible{
     overflow: visible!important;
 }

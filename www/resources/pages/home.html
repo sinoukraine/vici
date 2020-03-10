@@ -40,7 +40,7 @@
             <div class="list no-margin no-hairlines ">
                 <ul class="row no-gap">
                     <li class="col-50">
-                        <div class="item-content tooltip-init" data-tooltip="{{Phone}}">
+                        <div class="item-content tooltip-init tooltip-init-phone" data-tooltip="{{Phone}}">
                             <div class="item-media text-color-custom"><i class="f7-icons icon-mobile-phone"></i></div>
                             <div class="item-inner">
                                 <div class="item-title">{{Phone}}</div>
@@ -48,8 +48,8 @@
                         </div>
                     </li>
                     <li class="col-50">
-                        <div class="item-content tooltip-init" data-tooltip="{{Battery}}">
-                            <div class="item-media text-color-custom"><i class="f7-icons icon-mobile-phone"></i></div>
+                        <div class="item-content tooltip-init tooltip-init-battery" data-tooltip="{{Battery}}">
+                            <div class="item-media text-color-custom"><i class="f7-icons icon-battery"></i></div>
                             <div class="item-inner">
                                 <div class="item-title">{{Battery}}</div>
                             </div>
@@ -57,7 +57,7 @@
                     </li>
 
                     <li class="col-100">
-                        <div class="item-content tooltip-init" data-tooltip="{{Address}}">
+                        <div class="item-content tooltip-init tooltip-init-address" data-tooltip="{{Address}}">
                             <div class="item-media text-color-custom"><i class="f7-icons icon-tracking"></i></div>
                             <div class="item-inner">
                                 <div class="item-title only-2-rows md-min-height-48 ios-min-height-46">{{Address}}</div>
@@ -67,7 +67,7 @@
                 </ul>
             </div>
             <div class="block margin-vertical">
-                <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-mobile-phone vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
+                <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
             </div>
 
 
@@ -155,10 +155,12 @@
                     self.$setState({
                         Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
                     });
+                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');
                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                         self.$setState({
                             Address: address
-                        })
+                        });
+                        self.$app.tooltip.setText('.tooltip-init-address', address);
                     })
                 });
             },
@@ -182,10 +184,12 @@
                    self.$setState({
                        Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
                    });
+                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');
                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                         self.$setState({
                             Address: address
-                        })
+                        });
+                        self.$app.tooltip.setText('.tooltip-init-address', address);
                     });
                 }, (errorCode) => {
                     //console.log("[watchPosition] ERROR -", errorCode);
@@ -245,13 +249,14 @@
                 LoginEvents.on('signedIn', function (userInfo){
                     self.$setState({
                         LoginDone: true,
-
-                       // Name: (userInfo.FirstName + ' ' + userInfo.SubName).trim(),
                         Phone: userInfo.Mobile,
                         //Email: userInfo.EMail,
                     });
-                    //self.refreshMap();
-                    self.watchUserLocation();
+                    self.$app.utils.nextFrame(()=>{
+                        self.$app.tooltip.setText('.tooltip-init-phone', userInfo.Mobile);
+                        self.refreshMap();
+                        self.watchUserLocation();
+                    });
                 });
                 LoginEvents.on('signedOut', function (){
                     self.$setState({

@@ -561,10 +561,8 @@ let app = new Framework7({
                 //distanceFilter: 10,
                 allowIdenticalLocations: true,
                 distanceFilter: 0,
-                //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
-                //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
                 url: API_URL.UPLOAD_LINK,
-                maxDaysToPersist: 3,
+                maxDaysToPersist: 5,
                 autoSync: true,
                 //autoSyncThreshold: 2,
                 batchSync: true,
@@ -577,21 +575,9 @@ let app = new Framework7({
                 scheduleUseAlarmManager: true,
             };
 
-            /*if  (savedConfig.IMEI){
-                config.params = {
-                    IMEI: savedConfig.IMEI
-                }
-            }
-            if  (savedConfig.Interval){
-                config.locationUpdateInterval = savedConfig.Interval;
-            }
-            if  (savedConfig.Schedule && savedConfig.Schedule.length){
-                config.schedule = savedConfig.Schedule;
-            }*/
-
             // 2. Execute #ready method:
             bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
-                self.dialog.alert(JSON.stringify(state));
+                /*self.dialog.alert(JSON.stringify(state));
                 if (savedConfig.ScheduleState && savedConfig.ScheduleState === true){
                     bgGeo.requestPermission().then((status) => {
                         bgGeo.startSchedule();
@@ -603,7 +589,7 @@ let app = new Framework7({
                     bgGeo.stopSchedule(function() {
                         bgGeo.stop();
                     });
-                }
+                }*/
             });
         },
 
