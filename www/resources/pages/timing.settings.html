@@ -13,6 +13,9 @@
                 </div>
                 <div class="title sliding">{{@global.LANGUAGE.TIMING_MSG00}}</div>
                 <div class="right">
+                    <a href="/share/?imei=" class="link icon-only">
+                        <i class="f7-icons icon-share"></i>
+                    </a>
                     <label for="submit-form-timing" class="link icon-only">
                         <i class="f7-icons icon-apply"></i>
                     </label>
@@ -22,6 +25,8 @@
 
 
         <form name="FormTiming" class="page-content" >
+            <input type="submit" id="submit-form-timing" class="display-none" />
+
             <div class="block-title">{{@global.LANGUAGE.PROMPT_MSG010}}</div>
             <div class="block">
                 {{@global.LANGUAGE.PROMPT_MSG011}}
@@ -80,7 +85,7 @@
             </div>
 
 
-            <input type="submit" id="submit-form-timing" class="display-none" />
+
             <div class="block-title">{{@global.LANGUAGE.TIMING_MSG00}}</div>
             <div class="block">
                 {{@global.LANGUAGE.PROMPT_MSG001}}

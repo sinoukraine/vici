@@ -1,0 +1,120 @@
+<!--suppress JSAnnotator -->
+<template>
+    <!-- Page, data-name contains page name which can be used in callbacks -->
+    <div class="page " > <!-- page-with-subnavbar -->
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                    </a>
+                </div>
+                <div class="title sliding">{{@global.LANGUAGE.DEVICE_SHARE_MSG00}}</div>
+                <div class="right">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div  class="page-content" >
+            <div class="block-title">{{@global.LANGUAGE.DEVICE_SHARE_MSG00}}</div>
+            <div class="block">
+                {{@global.LANGUAGE.PROMPT_MSG024}}
+            </div>
+            <form name="FormAccountSearch" class="list no-hairlines no-margin-bottom">
+                <input type="submit" id="submit-form-account-search" class="display-none" />
+                <ul>
+                    <li class="item-content item-input">
+                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-name"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title item-label">{{@global.LANGUAGE.DEVICE_SHARE_MSG01}}</div>
+                            <div class="item-input-wrap">
+                                <input type="text" name="Account" placeholder="{{@global.LANGUAGE.DEVICE_SHARE_MSG01}}" required validate>
+                                <label for="submit-form-account-search" class="link search-submit text-color-custom"><span class="f7-icons icon-search"></span></label>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+
+    </div>
+
+
+
+</template>
+
+
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            let self = this;
+            let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+
+
+            let ret = {
+                IMEI: trackingConfig && trackingConfig.IMEI ? trackingConfig.IMEI : false
+           };
+
+            return ret;
+        },
+
+        methods: {
+
+
+        },
+
+        on: {
+            pageInit: function (e, page) {
+                let self = this;
+
+                /*if(!self.IMEI){
+                    self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG025});
+                }*/
+                self.$app.methods.customDialog({title: LANGUAGE.DEVICE_SHARE_MSG00, text: LANGUAGE.PROMPT_MSG029});
+
+                let form = page.$el.find('[name = "FormAccountSearch"]');
+
+                form.on('submit', function(e){
+                    e.preventDefault();
+
+                    /*let panicState = page.$el.find('[name = "PanicButtonState"]').is(':checked');
+                    let callTo = page.$el.find('[name = "PanicPhone"]').val();
+                    let smsTo = page.$el.find('[name = "PanicSMS"]').val();
+
+                    self.$app.progressbar.show();
+                    self.$app.request.promise.post(API_URL.VERIFY_DEVICE, {IMEI: imei}, 'json')
+                        .then(function (result) {
+                            console.log(result.data);
+                            if(result.data.MajorCode !== '000') {
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                                return;
+                            }
+
+                        })
+                        .finally(function () {
+                            self.$app.progressbar.hide();
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            if (err && err.status === 404){
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                            }else{
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                            }
+                        });
+*/
+                    return false;
+                });
+
+
+
+            },
+
+        }
+    };
+</script>

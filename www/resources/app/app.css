@@ -325,6 +325,16 @@
     font-weight: var(--f7-list-item-title-font-weight);
 }
 
+/*SHARE*/
+.search-submit {
+    position: absolute;
+    right: 8px;
+    cursor: pointer;
+    transition: all .3s;
+    margin-top: calc(-1 * 25px / 2);
+    top: calc(var(--f7-input-height)/ 2);
+}
+
 
 /* MAP */
 .map{

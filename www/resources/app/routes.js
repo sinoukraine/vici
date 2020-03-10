@@ -26,6 +26,11 @@ var routes = [
         componentUrl: './resources/pages/timing.settings.html?v=2.1',
         name: 'timing.settings',
     },
+    {
+        path: '/share/',
+        componentUrl: './resources/pages/share.html?v=2.1',
+        name: 'share',
+    },
 
     // Default route (404 page). MUST BE THE LAST
     {

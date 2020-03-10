@@ -61,10 +61,12 @@ window.LanguagePackages= {
 		"PROMPT_MSG021": "Are you sure you want to close the application?",
 		"PROMPT_MSG022": "Please set up your Panic Button Behaviour",
 		"PROMPT_MSG023": "Data not saved",
-
+		"PROMPT_MSG024": "In this section you can add the ability to track your device with other accounts",
+		"PROMPT_MSG025": "Turn On tracking first",
 		"PROMPT_MSG026": "Panic Button is turned off. Go to turn it on?",
 		"PROMPT_MSG027": "SMS has been sent",
 		"PROMPT_MSG028": "Emergency phone call executed",
+		"PROMPT_MSG029": "This feature under development",
 
 		"PROMPT_MSG052": "Here you can set new password - min 6, max 32 characters and contains no spaces",
 		"PROMPT_MSG053": "Passwords do not match",
@@ -145,6 +147,9 @@ window.LanguagePackages= {
 		"TRACKING_PLUGIN_MSG04": "Unknown Error",
 		"TRACKING_PLUGIN_MSG05": "Location data is empty",
 		"TRACKING_PLUGIN_MSG06": "Tracking permission denied",
+
+		"DEVICE_SHARE_MSG00": "Device Share",
+		"DEVICE_SHARE_MSG01": "Email / Account name",
 
 
 
