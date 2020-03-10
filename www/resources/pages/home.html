@@ -178,12 +178,16 @@
                         self.MarkersGroup.addTo(self.Map);
                     }
                     self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
-                   /* if (self.MarkersGroup.getBounds().isValid()) {
+                    if (!self.FirstCentered && self.MarkersGroup.getBounds().isValid()) {
                         self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
-                    }*/
-                   self.$setState({
-                       Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
-                   });
+                        self.$setState({
+                            FirstCentered: true
+                        })
+                    }
+
+                    self.$setState({
+                        Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
+                    });
                     self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');
                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                         self.$setState({
@@ -254,7 +258,7 @@
                     });
                     self.$app.utils.nextFrame(()=>{
                         self.$app.tooltip.setText('.tooltip-init-phone', userInfo.Mobile);
-                        self.refreshMap();
+                       // self.refreshMap();
                         self.watchUserLocation();
                     });
                 });
