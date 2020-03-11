@@ -71,10 +71,14 @@
     padding-left: var(--f7-input-padding-left);
     padding-right: var(--f7-input-padding-right);
 }
+.ios .list .custom-smart-select .item-after{
+    padding-top: 11px;
+    padding-bottom: 6px;
+}
 .list .custom-smart-select .item-inner:after{
     content: '';
     position: absolute;
-    background-color: rgba(0,0,0,.12);
+    background-color: var(--f7-list-item-border-color);
     display: block!important;
     z-index: 15;
     top: auto;
@@ -87,15 +91,44 @@
     width: -moz-calc(100% - 16px);
     width: -o-calc(100% - 16px);
     width: calc(100% - 16px);
-    -webkit-transform-origin: 50% 100%;
     transform-origin: 50% 100%;
-
+    transform: scaleY(calc(1 / var(--f7-device-pixel-ratio)));
 }
 .list li:last-child .custom-smart-select .item-inner:after{
     display: none;
 }
 .ios .list .item-media{
     min-width: 25px;
+}
+
+
+.md .navbar label.icon-only {
+    min-width: 0;
+    flex-shrink: 0;
+    width: 56px;
+}
+.md .navbar label.link {
+    padding: 0 16px;
+    min-width: 48px;
+}
+.navbar label.link {
+    display: flex;
+    justify-content: flex-start;
+    line-height: var(--f7-navbar-link-line-height,var(--f7-navbar-height));
+    height: var(--f7-navbar-link-height,var(--f7-navbar-height));
+}
+.ios .navbar label.icon-only{
+    width: 44px;
+    margin: 0;
+    justify-content: center;
+}
+.ios .navbar .left label + a,
+.ios .navbar .right label + a,
+.ios .navbar .left a + label,
+.ios .navbar .right a + label,
+.ios .navbar .left label + label,
+.ios .navbar .right label + label{
+    margin-left: 16px;
 }
 .ios{
     --f7-page-bg-color: #fff;
@@ -179,21 +212,7 @@
 }
 
 
-.md .navbar label.icon-only {
-    min-width: 0;
-    flex-shrink: 0;
-    width: 56px;
-}
-.md .navbar label.link {
-    padding: 0 16px;
-    min-width: 48px;
-}
-.navbar label.link {
-    display: flex;
-    justify-content: flex-start;
-    line-height: var(--f7-navbar-link-line-height,var(--f7-navbar-height));
-    height: var(--f7-navbar-link-height,var(--f7-navbar-height));
-}
+
 
 .md .searchbar.custom-searchbar .input-clear-button{
     right: 48px;
