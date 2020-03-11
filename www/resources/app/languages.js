@@ -149,7 +149,7 @@ window.LanguagePackages= {
 		"TRACKING_PLUGIN_MSG06": "Tracking permission denied",
 
 		"DEVICE_SHARE_MSG00": "Device Share",
-		"DEVICE_SHARE_MSG01": "Email / Account name",
+		"DEVICE_SHARE_MSG01": "Email / Login Name",
 
 
 

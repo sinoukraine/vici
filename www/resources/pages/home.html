@@ -156,12 +156,15 @@
                         Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
                     });
                     self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');
-                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
-                        self.$setState({
-                            Address: address
+                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                            self.$setState({
+                                Address: address,
+                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                            });
+                            self.$app.tooltip.setText('.tooltip-init-address', address);
                         });
-                        self.$app.tooltip.setText('.tooltip-init-address', address);
-                    })
+                    }
                 });
             },
             watchUserLocation: function(){
@@ -189,12 +192,16 @@
                         Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
                     });
                     self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');
-                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
-                        self.$setState({
-                            Address: address
+                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                            self.$setState({
+                                Address: address,
+                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                            });
+                            self.$app.tooltip.setText('.tooltip-init-address', address);
                         });
-                        self.$app.tooltip.setText('.tooltip-init-address', address);
-                    });
+                    }
+
                 }, (errorCode) => {
                     //console.log("[watchPosition] ERROR -", errorCode);
                     alert("[watchPosition] ERROR -"+ errorCode);
@@ -245,7 +252,6 @@
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
 
                 if(self.LoginDone){
-                    //self.refreshMap();
                     self.watchUserLocation();
                 }
 
@@ -254,11 +260,9 @@
                     self.$setState({
                         LoginDone: true,
                         Phone: userInfo.Mobile,
-                        //Email: userInfo.EMail,
                     });
                     self.$app.utils.nextFrame(()=>{
                         self.$app.tooltip.setText('.tooltip-init-phone', userInfo.Mobile);
-                       // self.refreshMap();
                         self.watchUserLocation();
                     });
                 });

@@ -94,6 +94,9 @@
 .list li:last-child .custom-smart-select .item-inner:after{
     display: none;
 }
+.ios .list .item-media{
+    min-width: 25px;
+}
 .ios{
     --f7-page-bg-color: #fff;
 
@@ -115,9 +118,9 @@
 .text-color-custom{
     color: #42B2AA!important;
 }
-.color-theme-custom .navbar{
+/*.color-theme-custom .navbar{
     background: #42B2AA;
-}
+}*/
 .bg-color-lightgray{
     --f7-theme-color-bg-color: #E6E6E6;
 }
@@ -470,8 +473,8 @@ html.color-theme-custom .leaflet-control-layers-overlays label input[type=checkb
     position: absolute;
     right: 16px;
     bottom: 16px;
-    width: 160px;
-    height: 160px;
+    /*width: 160px;
+    height: 160px;*/
     /*border-radius: 50%;*/
     z-index: 1500;
     /*box-shadow: 0 10px 20px rgba(0,0,0,.19), 0 6px 6px rgba(0,0,0,.23);*/
@@ -493,12 +496,13 @@ html.color-theme-custom .leaflet-control-layers-overlays label input[type=checkb
     -webkit-justify-content: center;
     justify-content: center;
 }
+
 .menu-panic-button{
     position: absolute;
     right: 50%;
     bottom: 16px;
-    width: 160px;
-    height: 160px;
+    /*width: 160px;
+    height: 160px;*/
     margin-right: -80px;
     /*border-radius: 50%;*/
     z-index: 1500;
@@ -521,10 +525,14 @@ html.color-theme-custom .leaflet-control-layers-overlays label input[type=checkb
     -webkit-justify-content: center;
     justify-content: center;
 }
-.menu-panic-button img,
+.float-panic-button i,
+.menu-panic-button i{
+    font-size: 160px;
+}
+/*.menu-panic-button img,
 .float-panic-button img{
     width: 100%;
-}
+}*/
 
 .custom-modal-logo-wrapper{
     text-align: center;
