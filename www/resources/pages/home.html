@@ -148,15 +148,17 @@
                         self.Marker
                             .bindPopup(self.getMarkerDataTable(self.getMarkerDataTable(location)), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .on('popupopen', function (e) {
-                                if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
-                                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
-                                        self.$setState({
-                                            Address: address,
-                                            LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                            self.$setState({
+                                                Address: address,
+                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                            });
+                                            e.target.setPopupContent(self.getMarkerDataTable(location));
+                                            e.popup.update();
                                         });
-                                        e.target.setPopupContent(self.getMarkerDataTable(location));
-                                        e.popup.update();
-                                    });
+                                    }
                                 }
                             })
                             .addTo(self.MarkersGroup);
@@ -171,15 +173,17 @@
                         Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
                     });
                     self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');*/
-                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
-                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
-                            self.$setState({
-                                Address: address,
-                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                    if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                        if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                            Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                                self.$setState({
+                                    Address: address,
+                                    LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                });
+                                self.Marker.setPopupContent(self.getMarkerDataTable(location));
+                                //self.$app.tooltip.setText('.tooltip-init-address', address);
                             });
-                            self.Marker.setPopupContent(self.getMarkerDataTable(location));
-                            //self.$app.tooltip.setText('.tooltip-init-address', address);
-                        });
+                        }
                     }
                 });
             },
@@ -197,15 +201,17 @@
                         self.Marker
                             .bindPopup(self.getMarkerDataTable(self.getMarkerDataTable(location)), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .on('popupopen', function (e) {
-                                if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
-                                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
-                                        self.$setState({
-                                            Address: address,
-                                            LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                            self.$setState({
+                                                Address: address,
+                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                            });
+                                            e.target.setPopupContent(self.getMarkerDataTable(location));
+                                            e.popup.update();
                                         });
-                                        e.target.setPopupContent(self.getMarkerDataTable(location));
-                                        e.popup.update();
-                                    });
+                                    }
                                 }
                             })
                             .addTo(self.MarkersGroup);
@@ -223,15 +229,17 @@
                         Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
                     });
                     self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');*/
-                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
-                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
-                            self.$setState({
-                                Address: address,
-                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                    if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                        if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                            Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                                self.$setState({
+                                    Address: address,
+                                    LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                });
+                                self.Marker.setPopupContent(self.getMarkerDataTable(location));
+                                //self.$app.tooltip.setText('.tooltip-init-address', address);
                             });
-                            self.Marker.setPopupContent(self.getMarkerDataTable(location));
-                            //self.$app.tooltip.setText('.tooltip-init-address', address);
-                        });
+                        }
                     }
 
                 }, (errorCode) => {
@@ -250,7 +258,7 @@
             },
             getMarkerDataTable: function(location={}){
                 let self = this;
-console.log(location)
+
                 let markerData = '';
                 let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                 let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
@@ -268,6 +276,7 @@ console.log(location)
                 }
                 let dateTime = '';
                 if(location.timestamp){
+                    self.LasetTimestamp = timestamp;
                     dateTime = moment(location.timestamp).format(window.COM_TIMEFORMAT);
                 }
                 let battery = '';
