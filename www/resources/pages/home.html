@@ -183,57 +183,7 @@
                     }
                 });
             },
-            getMarkerDataTable: function(location){
-                let self = this;
 
-                let markerData = '';
-                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
-                let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
-                let phone = !trackingConfig.IMEI ? '' : trackingConfig.IMEI;
-                if(!phone){
-                    phone = self.Phone;
-                }
-                let pSpeed = '0m/s';
-                if (location.coords.speed > 0){
-                    pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
-                }
-
-                markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
-                markerData +=       '<td class="marker-data-value">'+phone+'</td>';
-                markerData +=   '</tr>';
-
-                /*markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.ASSET_TRACK_MSG03+'</td>';
-                markerData +=       `<td class="marker-data-value">${positionDetails.PositionTimeLocal ? positionDetails.PositionTimeLocal : (positionDetails.PositionTime) ? positionDetails.PositionTime : (positionDetails.CreateDateTime) ? positionDetails.CreateDateTime : positionDetails.time}</td>`;
-                markerData +=   '</tr>';*/
-
-
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG07+'</td>';
-                markerData +=       `<td class="marker-data-value">${pSpeed}</td>`;
-                markerData +=   '</tr>';
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG05+'</td>';
-                markerData +=       '<td class="marker-data-value">'+Helper.Methods.getDirectionCardinal(location.coords.heading)+'</td>';
-                markerData +=   '</tr>';
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG04+'</td>';
-                markerData +=       '<td class="marker-data-value">'+parseInt(location.battery.level * 100) + '%'+'</td>';
-                markerData +=   '</tr>';
-
-                /*markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.ASSET_TRACK_MSG11+'</td>';
-                markerData +=       '<td class="marker-data-value ">'+ Protocol.Helper.convertDMS(location.Lat, location.Lng) +'</td>';
-                markerData +=   '</tr>';*/
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
-                markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
-                markerData +=   '</tr>';
-                markerData += '</table>';
-                return markerData;
-            },
             watchUserLocation: function(){
                 let self = this;
                 if (!bgGeo || !self.LoginDone){
@@ -297,6 +247,57 @@
                 }
                 // Halt watching position when app goes to background.
                 bgGeo.stopWatchPosition();
+            },
+            getMarkerDataTable: function(location={}){
+                let self = this;
+console.log(location)
+                let markerData = '';
+                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
+                let phone = trackingConfig && trackingConfig.IMEI ? trackingConfig.IMEI : '';
+                if(!phone){
+                    phone = self.Phone;
+                }
+                let pSpeed = '0m/s';
+                if (location.coords && location.coords.speed > 0){
+                    pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
+                }
+
+                markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
+                markerData +=       '<td class="marker-data-value">'+phone+'</td>';
+                markerData +=   '</tr>';
+
+                /*markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.ASSET_TRACK_MSG03+'</td>';
+                markerData +=       `<td class="marker-data-value">${positionDetails.PositionTimeLocal ? positionDetails.PositionTimeLocal : (positionDetails.PositionTime) ? positionDetails.PositionTime : (positionDetails.CreateDateTime) ? positionDetails.CreateDateTime : positionDetails.time}</td>`;
+                markerData +=   '</tr>';*/
+
+
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG07+'</td>';
+                markerData +=       `<td class="marker-data-value">${pSpeed}</td>`;
+                markerData +=   '</tr>';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG05+'</td>';
+                markerData +=       '<td class="marker-data-value">'+Helper.Methods.getDirectionCardinal(location.coords.heading)+'</td>';
+                markerData +=   '</tr>';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG04+'</td>';
+                markerData +=       '<td class="marker-data-value">'+parseInt(location.battery.level * 100) + '%'+'</td>';
+                markerData +=   '</tr>';
+
+                /*markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.ASSET_TRACK_MSG11+'</td>';
+                markerData +=       '<td class="marker-data-value ">'+ Protocol.Helper.convertDMS(location.Lat, location.Lng) +'</td>';
+                markerData +=   '</tr>';*/
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
+                markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
+                markerData +=   '</tr>';
+                markerData += '</table>';
+                return markerData;
             },
             sharePosition: function () {
                 let self = this;
