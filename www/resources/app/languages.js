@@ -87,6 +87,7 @@ window.LanguagePackages= {
 		"HOME_MSG05": "Heading",
 		"HOME_MSG06": "Address",
 		"HOME_MSG07": "Speed",
+		"HOME_MSG08": "Date, Time",
 
 		"MENU_MSG00": "Home",
 		"MENU_MSG01": "User Settings",

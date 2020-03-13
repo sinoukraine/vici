@@ -258,40 +258,53 @@ console.log(location)
                 if(!phone){
                     phone = self.Phone;
                 }
-                let pSpeed = '0m/s';
+                let speed = '0m/s';
                 if (location.coords && location.coords.speed > 0){
-                    pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
+                    speed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
                 }
+                let heading ='';
+                if (location.coords && location.coords.heading){
+                    heading = Helper.Methods.getDirectionCardinal(location.coords.heading)
+                }
+                let dateTime = '';
+                if(location.timestamp){
+                    dateTime = moment(location.timestamp).format(window.COM_TIMEFORMAT);
+                }
+                let battery = '';
+                if (location.battery && location.battery.level){
+                    battery =  parseInt(location.battery.level * 100) + '%';
+                }
+
 
                 markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
                 markerData +=   '<tr>';
                 markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
                 markerData +=       '<td class="marker-data-value">'+phone+'</td>';
                 markerData +=   '</tr>';
-
-                /*markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.ASSET_TRACK_MSG03+'</td>';
-                markerData +=       `<td class="marker-data-value">${positionDetails.PositionTimeLocal ? positionDetails.PositionTimeLocal : (positionDetails.PositionTime) ? positionDetails.PositionTime : (positionDetails.CreateDateTime) ? positionDetails.CreateDateTime : positionDetails.time}</td>`;
-                markerData +=   '</tr>';*/
-
-
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG07+'</td>';
-                markerData +=       `<td class="marker-data-value">${pSpeed}</td>`;
-                markerData +=   '</tr>';
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG05+'</td>';
-                markerData +=       '<td class="marker-data-value">'+Helper.Methods.getDirectionCardinal(location.coords.heading)+'</td>';
-                markerData +=   '</tr>';
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG04+'</td>';
-                markerData +=       '<td class="marker-data-value">'+parseInt(location.battery.level * 100) + '%'+'</td>';
-                markerData +=   '</tr>';
-
-                /*markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.ASSET_TRACK_MSG11+'</td>';
-                markerData +=       '<td class="marker-data-value ">'+ Protocol.Helper.convertDMS(location.Lat, location.Lng) +'</td>';
-                markerData +=   '</tr>';*/
+                if(dateTime){
+                    markerData +=   '<tr>';
+                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG08+'</td>';
+                    markerData +=       `<td class="marker-data-value">${dateTime}</td>`;
+                    markerData +=   '</tr>';
+                }
+                if(speed) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG07 + '</td>';
+                    markerData += `<td class="marker-data-value">${speed}</td>`;
+                    markerData += '</tr>';
+                }
+                if(heading) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG05 + '</td>';
+                    markerData += '<td class="marker-data-value">' + heading + '</td>';
+                    markerData += '</tr>';
+                }
+                if(battery) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG04 + '</td>';
+                    markerData += '<td class="marker-data-value">' + battery + '</td>';
+                    markerData += '</tr>';
+                }
                 markerData +=   '<tr>';
                 markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
                 markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
