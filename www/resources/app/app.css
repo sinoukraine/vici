@@ -601,6 +601,19 @@ html.color-theme-custom .leaflet-control-layers-overlays label input[type=checkb
     border: 1px solid #fff;
     box-sizing: border-box;
 }
+
+.fab-custom2{
+    position: absolute;
+    bottom: var(--f7-safe-area-bottom);
+    z-index: 1500;
+    width: 100%;
+    padding: var(--f7-list-item-padding-horizontal);
+    box-sizing: border-box;
+}
+.fab[class*="-bottom2"]{
+    bottom: calc(var(--f7-fab-margin) + var(--f7-safe-area-bottom) + 60px);
+}
+
 .leaflet-control-fullscreen{
     background: #fff;
     padding: 5px;

@@ -24,20 +24,21 @@
         </div>
 
         <div class="page-content">
-            <!--<a href="#" class="float-panic-button panicButton">
-                <img src="resources/images/panic.svg" alt="">
-            </a>-->
-            <div class="home-map-wrapper">
+            <!--<div class="home-map-wrapper">-->
                 <div id="homeMap" class="map"></div>
 
-                <div class="fab fab-right-bottom fab-custom ">
+                <div class="fab fab-right-bottom2 fab-custom ">
                     <a href="#" @click="sharePosition" class="bg-color-custom elevation-hover-10 flex-direction-column shareButton">
                         <i class="f7-icons icon-share"></i>
                         <div class="fab-text">{{@global.LANGUAGE.COM_MSG028}}</div>
                     </a>
                 </div>
+            <div class="fab-custom2">
+                <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
             </div>
-            <div class="list no-margin no-hairlines ">
+
+            <!--</div>-->
+            <!--<div class="list no-margin no-hairlines ">
                 <ul class="row no-gap">
                     <li class="col-50">
                         <div class="item-content tooltip-init tooltip-init-phone" data-tooltip="{{Phone}}">
@@ -65,10 +66,10 @@
                         </div>
                     </li>
                 </ul>
-            </div>
-            <div class="block margin-vertical">
+            </div>-->
+            <!--<div class="block margin-vertical">
                 <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
-            </div>
+            </div>-->
 
 
 
@@ -144,7 +145,21 @@
                 self.getCurrentPosition(function (location) {
                     if(!self.Marker){
                         self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
-                        self.Marker.addTo(self.MarkersGroup);
+                        self.Marker
+                            .bindPopup(self.getMarkerDataTable(asset), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .on('popupopen', function (e) {
+                                if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                        self.$setState({
+                                            Address: address,
+                                            LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                        });
+                                        e.target.setPopupContent(self.getMarkerDataTable(location));
+                                        e.popup.update();
+                                    });
+                                }
+                            })
+                            .addTo(self.MarkersGroup);
                         self.MarkersGroup.addTo(self.Map);
                     }
                     self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
@@ -152,20 +167,72 @@
                         self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
                     }
 
-                    self.$setState({
+                    /*self.$setState({
                         Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
                     });
-                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');
+                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');*/
                     if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
                         Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                             self.$setState({
                                 Address: address,
                                 LastAddressQuery: [location.coords.latitude, location.coords.longitude]
                             });
-                            self.$app.tooltip.setText('.tooltip-init-address', address);
+                            self.Marker.setPopupContent(self.getMarkerDataTable(location));
+                            //self.$app.tooltip.setText('.tooltip-init-address', address);
                         });
                     }
                 });
+            },
+            getMarkerDataTable: function(location){
+                let self = this;
+
+                let markerData = '';
+                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
+                let phone = !trackingConfig.IMEI ? '' : trackingConfig.IMEI;
+                if(!phone){
+                    phone = self.Phone;
+                }
+                let pSpeed = '0m/s';
+                if (location.coords.speed > 0){
+                    pSpeed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
+                }
+
+                markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
+                markerData +=       '<td class="marker-data-value">'+phone+'</td>';
+                markerData +=   '</tr>';
+
+                /*markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.ASSET_TRACK_MSG03+'</td>';
+                markerData +=       `<td class="marker-data-value">${positionDetails.PositionTimeLocal ? positionDetails.PositionTimeLocal : (positionDetails.PositionTime) ? positionDetails.PositionTime : (positionDetails.CreateDateTime) ? positionDetails.CreateDateTime : positionDetails.time}</td>`;
+                markerData +=   '</tr>';*/
+
+
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG07+'</td>';
+                markerData +=       `<td class="marker-data-value">${pSpeed}</td>`;
+                markerData +=   '</tr>';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG05+'</td>';
+                markerData +=       '<td class="marker-data-value">'+Helper.Methods.getDirectionCardinal(location.coords.heading)+'</td>';
+                markerData +=   '</tr>';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG04+'</td>';
+                markerData +=       '<td class="marker-data-value">'+parseInt(location.battery.level * 100) + '%'+'</td>';
+                markerData +=   '</tr>';
+
+                /*markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.ASSET_TRACK_MSG11+'</td>';
+                markerData +=       '<td class="marker-data-value ">'+ Protocol.Helper.convertDMS(location.Lat, location.Lng) +'</td>';
+                markerData +=   '</tr>';*/
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
+                markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
+                markerData +=   '</tr>';
+                markerData += '</table>';
+                return markerData;
             },
             watchUserLocation: function(){
                 let self = this;
@@ -177,7 +244,21 @@
                 bgGeo.watchPosition((location) => {
                     if(!self.Marker){
                         self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
-                        self.Marker.addTo(self.MarkersGroup);
+                        self.Marker
+                            .bindPopup(self.getMarkerDataTable(asset), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .on('popupopen', function (e) {
+                                if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                        self.$setState({
+                                            Address: address,
+                                            LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                        });
+                                        e.target.setPopupContent(self.getMarkerDataTable(location));
+                                        e.popup.update();
+                                    });
+                                }
+                            })
+                            .addTo(self.MarkersGroup);
                         self.MarkersGroup.addTo(self.Map);
                     }
                     self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
@@ -188,17 +269,18 @@
                         })
                     }
 
-                    self.$setState({
+                    /*self.$setState({
                         Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
                     });
-                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');
+                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');*/
                     if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
                         Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                             self.$setState({
                                 Address: address,
                                 LastAddressQuery: [location.coords.latitude, location.coords.longitude]
                             });
-                            self.$app.tooltip.setText('.tooltip-init-address', address);
+                            self.Marker.setPopupContent(self.getMarkerDataTable(location));
+                            //self.$app.tooltip.setText('.tooltip-init-address', address);
                         });
                     }
 

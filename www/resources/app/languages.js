@@ -32,6 +32,8 @@ window.LanguagePackages= {
 		"COM_MSG026": "Northwest",
 		"COM_MSG027": "Unknown",
 		"COM_MSG028": "Share",
+		"COM_MSG029": "Loading...",
+
 
 		"COM_MSG037": "Latitude",
 		"COM_MSG038": "Longitude",
@@ -81,6 +83,10 @@ window.LanguagePackages= {
 		"HOME_MSG01": "Name",
 		"HOME_MSG02": "Phone",
 		"HOME_MSG03": "Email",
+		"HOME_MSG04": "Battery",
+		"HOME_MSG05": "Heading",
+		"HOME_MSG06": "Address",
+		"HOME_MSG07": "Speed",
 
 		"MENU_MSG00": "Home",
 		"MENU_MSG01": "User Settings",

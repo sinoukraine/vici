@@ -82,6 +82,7 @@ let app = new Framework7({
     data: function () {
         return {
             logoDialog: 'resources/images/logo.png',
+            MaxMapPopupWidth: 280,
         };
     },
     on: {
