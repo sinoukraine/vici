@@ -146,7 +146,7 @@
                     if(!self.Marker){
                         self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
                         self.Marker
-                            .bindPopup(self.getMarkerDataTable(asset), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .bindPopup(self.getMarkerDataTable(self.getMarkerDataTable(location)), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .on('popupopen', function (e) {
                                 if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
                                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
@@ -245,7 +245,7 @@
                     if(!self.Marker){
                         self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
                         self.Marker
-                            .bindPopup(self.getMarkerDataTable(asset), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .bindPopup(self.getMarkerDataTable(self.getMarkerDataTable(location)), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .on('popupopen', function (e) {
                                 if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
                                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
