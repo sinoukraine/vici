@@ -267,7 +267,7 @@
                     phone = self.Phone;
                 }
                 let speed = '0m/s';
-                if (location.coords && location.coords.speed > 0){
+                if (location.coords && parseFloat(location.coords.speed) > 0){
                     speed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
                 }
                 let heading ='';
@@ -276,7 +276,7 @@
                 }
                 let dateTime = '';
                 if(location.timestamp){
-                    self.LasetTimestamp = timestamp;
+                    self.LasetTimestamp = location.timestamp;
                     dateTime = moment(location.timestamp).format(window.COM_TIMEFORMAT);
                 }
                 let battery = '';
