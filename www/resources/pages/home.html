@@ -267,12 +267,12 @@
                     phone = self.Phone;
                 }
                 let speed = '0m/s';
-                if (location.coords && parseFloat(location.coords.speed) > 0){
+                if (location.coords && parseInt(location.coords.speed) > 0){
                     speed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
                 }
                 let heading ='';
                 if (location.coords && location.coords.heading){
-                    heading = Helper.Methods.getDirectionCardinal(location.coords.heading)
+                    heading = Helper.Methods.getDirectionCardinal(parseInt(location.coords.heading));
                 }
                 let dateTime = '';
                 if(location.timestamp){
