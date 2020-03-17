@@ -37,42 +37,6 @@
                 <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
             </div>
 
-            <!--</div>-->
-            <!--<div class="list no-margin no-hairlines ">
-                <ul class="row no-gap">
-                    <li class="col-50">
-                        <div class="item-content tooltip-init tooltip-init-phone" data-tooltip="{{Phone}}">
-                            <div class="item-media text-color-custom"><i class="f7-icons icon-mobile-phone"></i></div>
-                            <div class="item-inner">
-                                <div class="item-title">{{Phone}}</div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="col-50">
-                        <div class="item-content tooltip-init tooltip-init-battery" data-tooltip="{{Battery}}">
-                            <div class="item-media text-color-custom"><i class="f7-icons icon-battery"></i></div>
-                            <div class="item-inner">
-                                <div class="item-title">{{Battery}}</div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li class="col-100">
-                        <div class="item-content tooltip-init tooltip-init-address" data-tooltip="{{Address}}">
-                            <div class="item-media text-color-custom"><i class="f7-icons icon-tracking"></i></div>
-                            <div class="item-inner">
-                                <div class="item-title only-2-rows md-min-height-48 ios-min-height-46">{{Address}}</div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>-->
-            <!--<div class="block margin-vertical">
-                <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
-            </div>-->
-
-
-
         </div>
 
 
@@ -142,183 +106,195 @@
             refreshMap: function () {
                 let self = this;
 
-                self.getCurrentPosition(function (location) {
-                    if(!self.Marker){
-                        self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
-                        self.Marker
-                            .bindPopup(self.getMarkerDataTable(self.getMarkerDataTable(location)), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
-                            .on('popupopen', function (e) {
-                                if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+
+                if(!self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.IMEI && !self.$app.methods.isObjEmpty(POSINFOASSETLIST) && POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')]){
+                    self.$app.methods.getAssetListPosInfo(POSINFOASSETLIST, true);
+                }else{
+                    self.getCurrentPosition(function (location) {
+                        if(!self.Marker){
+                            self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
+                            self.Marker
+                                .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                                .on('popupopen', function (e) {
                                     if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
                                         Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
                                             self.$setState({
                                                 Address: address,
                                                 LastAddressQuery: [location.coords.latitude, location.coords.longitude]
                                             });
-                                            e.target.setPopupContent(self.getMarkerDataTable(location));
+                                            e.target.setPopupContent(self.getMarkerDataTable(location, true));
                                             e.popup.update();
                                         });
                                     }
-                                }
-                            })
-                            .addTo(self.MarkersGroup);
-                        self.MarkersGroup.addTo(self.Map);
-                    }
-                    self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
-                    if (self.MarkersGroup.getBounds().isValid()) {
-                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
-                    }
+                                })
+                                .addTo(self.MarkersGroup);
+                            self.MarkersGroup.addTo(self.Map);
+                        }
+                        self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                        if (self.MarkersGroup.getBounds().isValid()) {
+                            self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                        }
 
-                    /*self.$setState({
-                        Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
-                    });
-                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');*/
-                    if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+
                         if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
                             Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                                 self.$setState({
                                     Address: address,
                                     LastAddressQuery: [location.coords.latitude, location.coords.longitude]
                                 });
-                                self.Marker.setPopupContent(self.getMarkerDataTable(location));
-                                //self.$app.tooltip.setText('.tooltip-init-address', address);
+                                self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
                             });
                         }
-                    }
-                });
-            },
 
-            watchUserLocation: function(){
+                    });
+                }
+            },
+            updateMarker: function(){
                 let self = this;
-                if (!bgGeo || !self.LoginDone){
-                    return;
-                }
+                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                if(!self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.IMEI && !self.$app.methods.isObjEmpty(POSINFOASSETLIST) && POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')]){
+                    let asset = POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')];
 
-                // Start watching position while app in foreground.
-                bgGeo.watchPosition((location) => {
-                    if(!self.Marker){
-                        self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
-                        self.Marker
-                            .bindPopup(self.getMarkerDataTable(self.getMarkerDataTable(location)), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
-                            .on('popupopen', function (e) {
-                                if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
-                                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
-                                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                    if (asset && asset.posInfo && parseFloat(asset.posInfo.lat) !== 0 && parseFloat(asset.posInfo.lng) !== 0){
+                        if(!self.Marker){
+                            self.Marker = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: Helper.MarkerIcon[0]});
+                            self.Marker
+                                .bindPopup(self.getMarkerDataTable(asset), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                                .on('popupopen', function (e) {
+                                    if (!self.LastAddressQuery || !self.LastAddressQuery.address) {
+                                        Helper.Methods.getAddressByGeocoder({lat: asset.posInfo.lat, lng: asset.posInfo.lng}, function (address) {
                                             self.$setState({
                                                 Address: address,
-                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                                LastAddressQuery: [asset.posInfo.lat, asset.posInfo.lng]
                                             });
-                                            e.target.setPopupContent(self.getMarkerDataTable(location));
+                                            e.target.setPopupContent(self.getMarkerDataTable(asset));
                                             e.popup.update();
                                         });
                                     }
-                                }
-                            })
-                            .addTo(self.MarkersGroup);
-                        self.MarkersGroup.addTo(self.Map);
-                    }
-                    self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
-                    if (!self.FirstCentered && self.MarkersGroup.getBounds().isValid()) {
-                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
-                        self.$setState({
-                            FirstCentered: true
-                        })
-                    }
-
-                    /*self.$setState({
-                        Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
-                    });
-                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');*/
-                    if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
-                        if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
-                            Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                                })
+                                .addTo(self.MarkersGroup);
+                            self.MarkersGroup.addTo(self.Map);
+                        }
+                        self.Marker.setLatLng([asset.posInfo.lat, asset.posInfo.lng]);
+                        if (self.MarkersGroup.getBounds().isValid()) {
+                            self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                        }
+                        if (!self.LastAddressQuery || asset.posInfo.lat !== self.LastAddressQuery[0] || asset.posInfo.lng !== self.LastAddressQuery[1]){
+                            Helper.Methods.getAddressByGeocoder({lat: asset.posInfo.lat, lng: asset.posInfo.lng}, function (address) {
                                 self.$setState({
                                     Address: address,
-                                    LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                    LastAddressQuery: [asset.posInfo.lat, asset.posInfo.lng]
                                 });
-                                self.Marker.setPopupContent(self.getMarkerDataTable(location));
-                                //self.$app.tooltip.setText('.tooltip-init-address', address);
+                                self.Marker.setPopupContent(self.getMarkerDataTable(asset));
                             });
                         }
                     }
-
-                }, (errorCode) => {
-                    //console.log("[watchPosition] ERROR -", errorCode);
-                    alert("[watchPosition] ERROR -"+ errorCode);
-                }, {
-                    interval: 3000
-                })
-            },
-            stopWatchUserLocation: function(){
-                if (!bgGeo){
-                    return;
                 }
-                // Halt watching position when app goes to background.
-                bgGeo.stopWatchPosition();
+
             },
-            getMarkerDataTable: function(location={}){
+            getMarkerDataTable: function(objData={}, localPosition=false){
                 let self = this;
 
                 let markerData = '';
-                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                 let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
+                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                 let phone = trackingConfig && trackingConfig.IMEI ? trackingConfig.IMEI : '';
                 if(!phone){
                     phone = self.Phone;
                 }
-                let speed = '0m/s';
-                if (location.coords && parseInt(location.coords.speed) > 0){
-                    speed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
-                }
-                let heading ='';
-                if (location.coords && location.coords.heading){
-                    heading = Helper.Methods.getDirectionCardinal(parseInt(location.coords.heading));
-                }
-                let dateTime = '';
-                if(location.timestamp){
-                    self.LasetTimestamp = location.timestamp;
-                    dateTime = moment(location.timestamp).format(window.COM_TIMEFORMAT);
-                }
-                let battery = '';
-                if (location.battery && location.battery.level){
-                    battery =  parseInt(location.battery.level * 100) + '%';
-                }
 
-
-                markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
-                markerData +=       '<td class="marker-data-value">'+phone+'</td>';
-                markerData +=   '</tr>';
-                if(dateTime){
+                if (localPosition){
+                    let speed = '0m/s';
+                    if (objData.coords && parseInt(objData.coords.speed) > 0){
+                        speed = parseFloat(objData.coords.speed).toFixed(2) + 'm/s';
+                    }
+                    let heading ='';
+                    if (objData.coords && objData.coords.heading){
+                        heading = Helper.Methods.getDirectionCardinal(parseInt(objData.coords.heading));
+                    }
+                    let dateTime = '';
+                    if(objData.timestamp){
+                        self.LasetTimestamp = objData.timestamp;
+                        dateTime = moment(objData.timestamp).format(window.COM_TIMEFORMAT);
+                    }
+                    let battery = '';
+                    if (objData.battery && objData.battery.level){
+                        battery =  parseInt(objData.battery.level * 100) + '%';
+                    }
+                    markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
                     markerData +=   '<tr>';
-                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG08+'</td>';
-                    markerData +=       `<td class="marker-data-value">${dateTime}</td>`;
+                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
+                    markerData +=       '<td class="marker-data-value">'+phone+'</td>';
                     markerData +=   '</tr>';
+                    if(dateTime){
+                        markerData +=   '<tr>';
+                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG08+'</td>';
+                        markerData +=       `<td class="marker-data-value">${dateTime}</td>`;
+                        markerData +=   '</tr>';
+                    }
+                    if(speed) {
+                        markerData += '<tr>';
+                        markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG07 + '</td>';
+                        markerData += `<td class="marker-data-value">${speed}</td>`;
+                        markerData += '</tr>';
+                    }
+                    if(heading) {
+                        markerData += '<tr>';
+                        markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG05 + '</td>';
+                        markerData += '<td class="marker-data-value">' + heading + '</td>';
+                        markerData += '</tr>';
+                    }
+                    if(battery) {
+                        markerData += '<tr>';
+                        markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG04 + '</td>';
+                        markerData += '<td class="marker-data-value">' + battery + '</td>';
+                        markerData += '</tr>';
+                    }
+                    markerData +=   '<tr>';
+                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
+                    markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
+                    markerData +=   '</tr>';
+                    markerData += '</table>';
+                }else{
+                    let assetFeaturesStatus = Protocol.Helper.getAssetStateInfo(objData);
+                    if (assetFeaturesStatus && assetFeaturesStatus.stats) {
+                        let speed = 0;
+                        let deirectionCardinal = Helper.Methods.getDirectionCardinal(objData.posInfo.direct);
+                        if (typeof objData.Unit !== "undefined" && typeof objData.posInfo.speed !== "undefined") {
+                            speed = Protocol.Helper.getSpeedValue(objData.Unit, objData.posInfo.speed) + ' ' + Protocol.Helper.getSpeedUnit(objData.Unit);
+                        }
+                        markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
+                        markerData +=   '<tr>';
+                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
+                        markerData +=       '<td class="marker-data-value">'+phone+'</td>';
+                        markerData +=   '</tr>';
+                        markerData +=   '<tr>';
+                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG08+'</td>';
+                        markerData +=       '<td class="marker-data-value">'+objData.posInfo.positionTime.format(window.COM_TIMEFORMAT)+'</td>';
+                        markerData +=   '</tr>';
+                        markerData +=   '<tr>';
+                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG07+'</td>';
+                        markerData +=       '<td class="marker-data-value">'+speed+'</td>';
+                        markerData +=   '</tr>';
+                        if (assetFeaturesStatus.battery) {
+                            markerData +=   '<tr>';
+                            markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG04+'</td>';
+                            markerData +=       '<td class="marker-data-value">'+assetFeaturesStatus.battery.value+'</td>';
+                            markerData +=   '</tr>';
+                        }
+                        markerData +=   '<tr>';
+                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG05+'</td>';
+                        markerData +=       '<td class="marker-data-value">'+deirectionCardinal+'</td>';
+                        markerData +=   '</tr>';
+                        markerData +=   '<tr>';
+                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
+                        markerData +=       '<td class="marker-data-value">'+customAddress+'</td>';
+                        markerData +=   '</tr>';
+                        markerData += '</table>';
+                    }
                 }
-                if(speed) {
-                    markerData += '<tr>';
-                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG07 + '</td>';
-                    markerData += `<td class="marker-data-value">${speed}</td>`;
-                    markerData += '</tr>';
-                }
-                if(heading) {
-                    markerData += '<tr>';
-                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG05 + '</td>';
-                    markerData += '<td class="marker-data-value">' + heading + '</td>';
-                    markerData += '</tr>';
-                }
-                if(battery) {
-                    markerData += '<tr>';
-                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG04 + '</td>';
-                    markerData += '<td class="marker-data-value">' + battery + '</td>';
-                    markerData += '</tr>';
-                }
-                markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
-                markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
-                markerData +=   '</tr>';
-                markerData += '</table>';
+
                 return markerData;
             },
             sharePosition: function () {
@@ -356,22 +332,18 @@
                 self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
 
-                if(self.LoginDone){
-                    self.watchUserLocation();
-                }
+                /*if(self.LoginDone){
+                    //self.watchUserLocation();
+                    self.getCurrentPosition();
+                }*/
 
-
-                LoginEvents.on('signedIn', function (userInfo){
+                AppEvents.on('positionUpdateReceived', self.updateMarker);
+                AppEvents.on('signedIn', function (userInfo){
                     self.$setState({
-                        LoginDone: true,
-                        Phone: userInfo.Mobile,
-                    });
-                    self.$app.utils.nextFrame(()=>{
-                        self.$app.tooltip.setText('.tooltip-init-phone', userInfo.Mobile);
-                        self.watchUserLocation();
+                        LoginDone: true
                     });
                 });
-                LoginEvents.on('signedOut', function (){
+                AppEvents.on('signedOut', function (){
                     self.$setState({
                         LoginDone: false
                     });
@@ -387,16 +359,12 @@
                             self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
                         }
                     });
-                    self.stopWatchUserLocation();
                 });
-                AppEvents.on('resume', self.watchUserLocation);
-                AppEvents.on('pause', self.stopWatchUserLocation);
             },
             pageBeforeRemove: function () {
-                LoginEvents.off('signedIn');
-                LoginEvents.off('signedOut');
-                AppEvents.off('resume', self.watchUserLocation);
-                AppEvents.off('pause', self.stopWatchUserLocation);
+                AppEvents.off('signedIn');
+                AppEvents.off('signedOut');
+                AppEvents.off('positionUpdateReceived', self.updateMarker);
                 if(this.MarkersGroup){
                     this.MarkersGroup.clearLayers();
                 }

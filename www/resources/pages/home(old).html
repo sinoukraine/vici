@@ -1,0 +1,411 @@
+<!--suppress JSAnnotator -->
+<template>
+    <div class="page " data-name="home"> <!-- page-with-subnavbar -->
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="/panel-left/" class="link icon-only " >
+                        <i class="icon material-icons">menu</i>
+                    </a>
+                </div>
+                <div class="title sliding">
+                    {{@global.LANGUAGE.HOME_MSG00}}
+                </div>
+                <div class="right">
+                    <div class="right">
+                        <a href="#" @click="refreshMap" class="link icon-only">
+                            <i class="f7-icons icon-refresh-map"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <!--<div class="home-map-wrapper">-->
+                <div id="homeMap" class="map"></div>
+
+                <div class="fab fab-right-bottom2 fab-custom ">
+                    <a href="#" @click="sharePosition" class="bg-color-custom elevation-hover-10 flex-direction-column shareButton">
+                        <i class="f7-icons icon-share"></i>
+                        <div class="fab-text">{{@global.LANGUAGE.COM_MSG028}}</div>
+                    </a>
+                </div>
+            <div class="fab-custom2">
+                <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
+            </div>
+
+            <!--</div>-->
+            <!--<div class="list no-margin no-hairlines ">
+                <ul class="row no-gap">
+                    <li class="col-50">
+                        <div class="item-content tooltip-init tooltip-init-phone" data-tooltip="{{Phone}}">
+                            <div class="item-media text-color-custom"><i class="f7-icons icon-mobile-phone"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title">{{Phone}}</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col-50">
+                        <div class="item-content tooltip-init tooltip-init-battery" data-tooltip="{{Battery}}">
+                            <div class="item-media text-color-custom"><i class="f7-icons icon-battery"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title">{{Battery}}</div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="col-100">
+                        <div class="item-content tooltip-init tooltip-init-address" data-tooltip="{{Address}}">
+                            <div class="item-media text-color-custom"><i class="f7-icons icon-tracking"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title only-2-rows md-min-height-48 ios-min-height-46">{{Address}}</div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>-->
+            <!--<div class="block margin-vertical">
+                <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
+            </div>-->
+
+
+
+        </div>
+
+
+    </div>
+</template>
+
+
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            let ret = {
+                //Name: 'test',
+                Phone: '+1234567890',
+                //Email: 'test@test.com',
+                Address: 'Loading...',
+                Battery: '-',
+            };
+
+            return ret;
+        },
+        methods: {
+            getCurrentPosition: function(callback){
+                let self = this;
+                if (!bgGeo){
+                    self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG006});
+                    return;
+                }
+                self.$app.progressbar.show('gray');
+                bgGeo.getCurrentPosition({
+                    timeout: 30,          // 30 second timeout to fetch location
+                    persist: true,        // Defaults to state.enabled
+                    maximumAge: 5000,     // Accept the last-known-location if not older than 5000 ms.
+                    desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
+                    samples: 3,           // How many location samples to attempt.
+                }, function(location){
+                    self.$app.progressbar.hide();
+                    if(self.$app.methods.isObjEmpty(location)){
+                        self.$app.methods.customDialog({text:LANGUAGE.TRACKING_PLUGIN_MSG05});
+                        return;
+                    }
+
+                    if (callback instanceof Function) {
+                        callback(location);
+                    }
+
+                },function(errorCode){
+                    self.$app.progressbar.hide();
+                    let errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG04;
+                    switch (errorCode) {
+                        case 0:
+                            errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG00;
+                            break;
+                        case 1:
+                            errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG01;
+                            break;
+                        case 2:
+                            errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG02;
+                            break;
+                        case 408:
+                            errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG03;
+                            break;
+                    }
+                    self.$app.methods.customDialog({text:errorMsg});
+                });
+            },
+            refreshMap: function () {
+                let self = this;
+
+                self.getCurrentPosition(function (location) {
+                    if(!self.Marker){
+                        self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
+                        self.Marker
+                            .bindPopup(self.getMarkerDataTable(self.getMarkerDataTable(location)), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .on('popupopen', function (e) {
+                                if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                            self.$setState({
+                                                Address: address,
+                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                            });
+                                            e.target.setPopupContent(self.getMarkerDataTable(location));
+                                            e.popup.update();
+                                        });
+                                    }
+                                }
+                            })
+                            .addTo(self.MarkersGroup);
+                        self.MarkersGroup.addTo(self.Map);
+                    }
+                    self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                    if (self.MarkersGroup.getBounds().isValid()) {
+                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                    }
+
+                    /*self.$setState({
+                        Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
+                    });
+                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');*/
+                    if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                        if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                            Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                                self.$setState({
+                                    Address: address,
+                                    LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                });
+                                self.Marker.setPopupContent(self.getMarkerDataTable(location));
+                                //self.$app.tooltip.setText('.tooltip-init-address', address);
+                            });
+                        }
+                    }
+                });
+            },
+
+            watchUserLocation: function(){
+                let self = this;
+                if (!bgGeo || !self.LoginDone){
+                    return;
+                }
+
+                // Start watching position while app in foreground.
+                bgGeo.watchPosition((location) => {
+                    if(!self.Marker){
+                        self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
+                        self.Marker
+                            .bindPopup(self.getMarkerDataTable(self.getMarkerDataTable(location)), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .on('popupopen', function (e) {
+                                if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                            self.$setState({
+                                                Address: address,
+                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                            });
+                                            e.target.setPopupContent(self.getMarkerDataTable(location));
+                                            e.popup.update();
+                                        });
+                                    }
+                                }
+                            })
+                            .addTo(self.MarkersGroup);
+                        self.MarkersGroup.addTo(self.Map);
+                    }
+                    self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                    if (!self.FirstCentered && self.MarkersGroup.getBounds().isValid()) {
+                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                        self.$setState({
+                            FirstCentered: true
+                        })
+                    }
+
+                    /*self.$setState({
+                        Battery: location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-'
+                    });
+                    self.$app.tooltip.setText('.tooltip-init-battery', location.battery && location.battery.level ? parseInt(location.battery.level * 100) + '%' : '-');*/
+                    if (location.timestamp && !self.LasetTimestamp || location.timestamp && self.LasetTimestamp < location.timestamp){
+                        if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                            Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                                self.$setState({
+                                    Address: address,
+                                    LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                });
+                                self.Marker.setPopupContent(self.getMarkerDataTable(location));
+                                //self.$app.tooltip.setText('.tooltip-init-address', address);
+                            });
+                        }
+                    }
+
+                }, (errorCode) => {
+                    //console.log("[watchPosition] ERROR -", errorCode);
+                    alert("[watchPosition] ERROR -"+ errorCode);
+                }, {
+                    interval: 3000
+                })
+            },
+            stopWatchUserLocation: function(){
+                if (!bgGeo){
+                    return;
+                }
+                // Halt watching position when app goes to background.
+                bgGeo.stopWatchPosition();
+            },
+            getMarkerDataTable: function(location={}){
+                let self = this;
+
+                let markerData = '';
+                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
+                let phone = trackingConfig && trackingConfig.IMEI ? trackingConfig.IMEI : '';
+                if(!phone){
+                    phone = self.Phone;
+                }
+                let speed = '0m/s';
+                if (location.coords && parseInt(location.coords.speed) > 0){
+                    speed = parseFloat(location.coords.speed).toFixed(2) + 'm/s';
+                }
+                let heading ='';
+                if (location.coords && location.coords.heading){
+                    heading = Helper.Methods.getDirectionCardinal(parseInt(location.coords.heading));
+                }
+                let dateTime = '';
+                if(location.timestamp){
+                    self.LasetTimestamp = location.timestamp;
+                    dateTime = moment(location.timestamp).format(window.COM_TIMEFORMAT);
+                }
+                let battery = '';
+                if (location.battery && location.battery.level){
+                    battery =  parseInt(location.battery.level * 100) + '%';
+                }
+
+
+                markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
+                markerData +=       '<td class="marker-data-value">'+phone+'</td>';
+                markerData +=   '</tr>';
+                if(dateTime){
+                    markerData +=   '<tr>';
+                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG08+'</td>';
+                    markerData +=       `<td class="marker-data-value">${dateTime}</td>`;
+                    markerData +=   '</tr>';
+                }
+                if(speed) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG07 + '</td>';
+                    markerData += `<td class="marker-data-value">${speed}</td>`;
+                    markerData += '</tr>';
+                }
+                if(heading) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG05 + '</td>';
+                    markerData += '<td class="marker-data-value">' + heading + '</td>';
+                    markerData += '</tr>';
+                }
+                if(battery) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG04 + '</td>';
+                    markerData += '<td class="marker-data-value">' + battery + '</td>';
+                    markerData += '</tr>';
+                }
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
+                markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
+                markerData +=   '</tr>';
+                markerData += '</table>';
+                return markerData;
+            },
+            sharePosition: function () {
+                let self = this;
+
+                self.getCurrentPosition(function (location) {
+                    // this is the complete list of currently supported params you can pass to the plugin (all optional)
+                    var options = {
+                        message: LANGUAGE.PROMPT_MSG019, // not supported on some apps (Facebook, Instagram)
+                        subject: LANGUAGE.PROMPT_MSG019, // fi. for email
+                        //files: [`https://maps.googleapis.com/maps/api/staticmap?center=${location.coords.latitude},${location.coords.longitude}&zoom=13&scale=1&size=600x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:P%7C${location.coords.latitude},${location.coords.longitude}`], // an array of filenames either locally or remotely
+                        url: API_URL.SHARE_POSITION + `?z=18&q=${location.coords.latitude},${location.coords.longitude}`,
+                        //chooserTitle: 'Pick an app', // Android only, you can override the default share sheet title
+                        //appPackageName: 'com.apple.social.facebook', // Android only, you can provide id of the App you want to share with
+                        //iPadCoordinates: '0,0,0,0' //IOS only iPadCoordinates for where the popover should be point.  Format with x,y,width,height
+                    };
+
+                    window.plugins.socialsharing.shareWithOptions(options, function(result) {
+                        //alert("Done" + JSON.stringify(result));
+
+                        //console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+                        //console.log("Shared to app: " + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+                    }, function(msg) {
+                        alert("Sharing failed with message: " + msg);
+                    });
+                });
+
+            }
+        },
+
+        on: {
+            pageInit: function (e, page) {
+                let self = this;
+
+                self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
+                self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
+
+                if(self.LoginDone){
+                    self.watchUserLocation();
+                }
+
+
+                LoginEvents.on('signedIn', function (userInfo){
+                    self.$setState({
+                        LoginDone: true,
+                        Phone: userInfo.Mobile,
+                    });
+                    self.$app.utils.nextFrame(()=>{
+                        self.$app.tooltip.setText('.tooltip-init-phone', userInfo.Mobile);
+                        self.watchUserLocation();
+                    });
+                });
+                LoginEvents.on('signedOut', function (){
+                    self.$setState({
+                        LoginDone: false
+                    });
+                    if(!bgGeo){
+                        return;
+                    }
+                    bgGeo.stopSchedule(function() {
+                        let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                        if( !self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.ScheduleState){
+                            self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});
+                            // You must explicitly stop tracking if currently enabled
+                            bgGeo.stop();
+                            self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
+                        }
+                    });
+                    self.stopWatchUserLocation();
+                });
+                AppEvents.on('resume', self.watchUserLocation);
+                AppEvents.on('pause', self.stopWatchUserLocation);
+            },
+            pageBeforeRemove: function () {
+                LoginEvents.off('signedIn');
+                LoginEvents.off('signedOut');
+                AppEvents.off('resume', self.watchUserLocation);
+                AppEvents.off('pause', self.stopWatchUserLocation);
+                if(this.MarkersGroup){
+                    this.MarkersGroup.clearLayers();
+                }
+                if(this.Map){
+                    this.Map.remove()
+                }
+            }
+
+
+        }
+    };
+</script>

@@ -33,6 +33,7 @@ window.LanguagePackages= {
 		"COM_MSG027": "Unknown",
 		"COM_MSG028": "Share",
 		"COM_MSG029": "Loading...",
+		"COM_MSG030": "n/a",
 
 
 		"COM_MSG037": "Latitude",
