@@ -146,10 +146,10 @@
                             self.MarkersGroup.addTo(self.Map);
                         }
                         self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                        self.Marker.setPopupContent(self.getMarkerDataTable(location));
                         if (self.MarkersGroup.getBounds().isValid()) {
                             self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
                         }
-
 
                         if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
                             Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
@@ -160,7 +160,6 @@
                                 self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
                             });
                         }
-
                     });
                 }
             },
@@ -189,7 +188,7 @@
                                                 Address: address,
                                                 LastAddressQuery: [asset.posInfo.lat, asset.posInfo.lng]
                                             });
-                                            e.target.setPopupContent(self.getMarkerDataTable(asset));
+                                            self.Marker.setPopupContent(self.getMarkerDataTable(asset));
                                             e.popup.update();
                                         });
                                     }
@@ -198,6 +197,7 @@
                             self.MarkersGroup.addTo(self.Map);
                         }
                         self.Marker.setLatLng([asset.posInfo.lat, asset.posInfo.lng]);
+                        self.Marker.setPopupContent(self.getMarkerDataTable(asset));
                         if (self.MarkersGroup.getBounds().isValid()) {
                             self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
                         }

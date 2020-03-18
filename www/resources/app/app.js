@@ -627,10 +627,10 @@ let app = new Framework7({
                             AppEvents.emit('positionUpdateReceived');
                         }
                     }
-                    if (!update) {
+                    /*if (!update) {
                         self.dialog.close();
                         AppEvents.emit('signedIn', assetList);
-                    }
+                    }*/
                     if (callback instanceof Function) {
                         callback();
                     }
