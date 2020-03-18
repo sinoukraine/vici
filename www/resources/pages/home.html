@@ -146,7 +146,7 @@
                             self.MarkersGroup.addTo(self.Map);
                         }
                         self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
-                        self.Marker.setPopupContent(self.getMarkerDataTable(location));
+                        self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
                         if (self.MarkersGroup.getBounds().isValid()) {
                             self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
                         }
