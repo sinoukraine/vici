@@ -108,8 +108,22 @@
 
                 let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
 
+                if(self.$app.methods.isObjEmpty(trackingConfig)){
+                    self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG057, callback: function () {
+                            self.$app.view.main.router.navigate('/timing-settings/');
+                        }})
+                }
+                if(!self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.IMEI && !self.$app.methods.isObjEmpty(POSINFOASSETLIST) && !POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')]){
+                    self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG058, title: trackingConfig.IMEI});
+                }
+
                 if(!self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.IMEI && !self.$app.methods.isObjEmpty(POSINFOASSETLIST) && POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')]){
-                    self.$app.methods.getAssetListPosInfo(POSINFOASSETLIST, true);
+                    self.$app.methods.getAssetListPosInfo(POSINFOASSETLIST, true, function () {
+                        let asset = POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')];
+                        if(!asset.posInfo || parseFloat(asset.posInfo.lat) === 0 && parseFloat(asset.posInfo.lng) === 0){
+                            self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG059, title: trackingConfig.IMEI});
+                        }
+                    });
                 }else{
                     self.getCurrentPosition(function (location) {
                         if(!self.Marker){
@@ -155,7 +169,14 @@
                 let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                 if(!self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.IMEI && !self.$app.methods.isObjEmpty(POSINFOASSETLIST) && POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')]){
                     let asset = POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')];
-
+                    /*if(!asset){
+                        self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG058, title: trackingConfig.IMEI});
+                        return;
+                    }*/
+                    /*if(!asset.posInfo || parseFloat(asset.posInfo.lat) === 0 && parseFloat(asset.posInfo.lng) === 0){
+                        self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG059, title: trackingConfig.IMEI});
+                        return;
+                    }*/
                     if (asset && asset.posInfo && parseFloat(asset.posInfo.lat) !== 0 && parseFloat(asset.posInfo.lng) !== 0){
                         if(!self.Marker){
                             self.Marker = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: Helper.MarkerIcon[0]});
@@ -340,7 +361,8 @@
                 AppEvents.on('positionUpdateReceived', self.updateMarker);
                 AppEvents.on('signedIn', function (userInfo){
                     self.$setState({
-                        LoginDone: true
+                        LoginDone: true,
+                        Phone: userInfo.Mobile,
                     });
                 });
                 AppEvents.on('signedOut', function (){

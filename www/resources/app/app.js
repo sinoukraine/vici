@@ -73,7 +73,7 @@ let app = new Framework7({
     name: 'PhoneTrack',
     theme: theme,
     view: {
-        stackPages: true,
+        //stackPages: true,
     },
     input: {
         scrollIntoViewOnFocus: true,
@@ -425,9 +425,6 @@ let app = new Framework7({
         customNotification: function(params){
             let self = this;
             self.notification.create({
-
-
-                //icon: '<img src="'+self.data.AppDetails.favicon+'" class="icon-notification" alt="" />',
                 title: self.name,
                 //titleRightText: 'now',
                 subtitle: params.title ? params.title : '',
@@ -437,7 +434,10 @@ let app = new Framework7({
                 //closeButton: true,
                 on: {
                     close: function (notification) {
-                        notification.$el.remove();
+                        //notification.$el.remove();
+                        if(params.callback instanceof Function){
+                            params.callback();
+                        }
                     }
                 },
 

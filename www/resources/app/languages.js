@@ -76,6 +76,9 @@ window.LanguagePackages= {
 		"PROMPT_MSG054": "Password should contain at least 6 characters",
 		"PROMPT_MSG055": "Password has been changed. Please, login with new credential",
 		"PROMPT_MSG056": "Wrong current password",
+		"PROMPT_MSG057": "Phone Timing is not setted",
+		"PROMPT_MSG058": "Asset not belong to current account",
+		"PROMPT_MSG059": "No Position Data",
 
 		"PROMPT_MSG068": "You haven't added any Emergency Contact, please go to User Settings to add them",
 
