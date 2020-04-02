@@ -818,7 +818,7 @@ let app = new Framework7({
             });
 
             push.on('registration', function(data) {
-                alert(JSON.stringify(data));
+                alert('reg = ' + JSON.stringify(data));
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
                 /*if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
@@ -834,7 +834,7 @@ let app = new Framework7({
 
             push.on('error', function(e) {
                 //console.log("push error = " + e.message);
-                alert(JSON.stringify(e));
+                alert("push error = " + JSON.stringify(e));
                 //alert("push error = " + e.message);
             });
 
