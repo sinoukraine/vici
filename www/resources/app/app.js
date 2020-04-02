@@ -817,11 +817,11 @@ let app = new Framework7({
                 "windows": {}
             });
 
-            push.on('registration', function(data) {
+            /*push.on('registration', function(data) {
                 alert('reg = ' + JSON.stringify(data));
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
-                /*if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
+                /!*if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
                     // Save new registration ID
                     localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
                     // Post registrationId to your app server as the value has changed
@@ -829,7 +829,12 @@ let app = new Framework7({
                         self.methods.refreshToken(data.registrationId);
                         self.methods.getNewData(true);
                     },1000);
-                }*/
+                }*!/
+            });*/
+
+            push.on('registration', data => {
+                alert(data.registrationId);
+                console.log(data.registrationType);
             });
 
             push.on('error', function(e) {
