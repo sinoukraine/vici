@@ -51,9 +51,9 @@
 
 	  	
         <!-- sms plugin -->        
-        <!-- <config-file target="AndroidManifest.xml" parent="/manifest" mode="merge" > 
+        <config-file target="AndroidManifest.xml" parent="/manifest" mode="merge" > 
             <uses-permission android:name="android.permission.SEND_SMS" />            
-        </config-file> -->
+        </config-file>
         <!-- /sms plugin -->
 	  	
 	</platform>
@@ -78,8 +78,8 @@
 	
 	
 	
-   <plugin name="phonegap-plugin-push" source="npm" spec="2.3.0">
-   	<param name="SENDER_ID" value="1097482483564" />   	    
+   <plugin name="phonegap-plugin-push" source="npm" spec="2.1.2"> <!-- 2.3.0 -->
+   		<param name="SENDER_ID" value="1097482483564" />   	    
    </plugin>
    	<!-- <plugin name="phonegap-plugin-push-dual" source="npm" spec="2.2.8">
    	    <variable name="SENDER_ID" value="1097482483564" />
