@@ -118,7 +118,7 @@ let app = new Framework7({
                     self.methods.handleKeyboard();
 
                     self.methods.setupPush();
-                    //self.methods.setGeolocationPlugin();
+                    self.methods.setGeolocationPlugin();
 
                     document.addEventListener("resume", function () {
                         AppEvents.emit('resume');
@@ -834,8 +834,8 @@ let app = new Framework7({
 
             push.on('error', function(e) {
                 //console.log("push error = " + e.message);
-                alert("push error = " + JSON.stringify(e));
-                //alert("push error = " + e.message);
+               // alert("push error = " + JSON.stringify(e));
+                alert("push error = " + e.message);
             });
 
             push.on('notification', function(data) {
