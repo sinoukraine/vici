@@ -844,7 +844,7 @@ let app = new Framework7({
             });
 
             push.on('notification', function(data) {
-                alert('Notification recieved');
+                alert(JSON.stringify(data));
                 /*if (localStorage.ACCOUNT && localStorage.PASSWORD) {
                     //if user using app and push notification comes
                     if (data && data.additionalData && data.additionalData.foreground) {
