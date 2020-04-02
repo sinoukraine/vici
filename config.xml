@@ -51,9 +51,9 @@
 
 	  	
         <!-- sms plugin -->        
-        <config-file target="AndroidManifest.xml" parent="/manifest" mode="merge" > 
+        <!-- <config-file target="AndroidManifest.xml" parent="/manifest" mode="merge" > 
             <uses-permission android:name="android.permission.SEND_SMS" />            
-        </config-file>
+        </config-file> -->
         <!-- /sms plugin -->
 	  	
 	</platform>
@@ -93,7 +93,7 @@
     <platform name="ios">
       <resource-file src="GoogleService-Info.plist" />
     </platform>
-   <!--  <plugin name="cordova-background-geolocation-lt" spec="3.4.2" source="npm"> </plugin> -->
+    <plugin name="cordova-background-geolocation-lt" spec="3.4.2" source="npm"> </plugin>
 
     <!-- <plugin name="cordova-plugin-console" source="npm" spec="1.0.7" /> -->
     <plugin name="cordova-plugin-statusbar" source="npm" spec="2.1.3" />  
