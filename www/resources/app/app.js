@@ -118,7 +118,7 @@ let app = new Framework7({
                     self.methods.handleKeyboard();
 
                     self.methods.setupPush();
-                    self.methods.setGeolocationPlugin();
+                    //self.methods.setGeolocationPlugin();
 
                     document.addEventListener("resume", function () {
                         AppEvents.emit('resume');
