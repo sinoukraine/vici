@@ -64,7 +64,7 @@
 	<preference name="load-url-timeout" value="140000" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="Orientation" value="portrait" />
-    <preference name="android-minSdkVersion" value="19" />
+    <preference name="android-minSdkVersion" value="21" />
     <preference name="android-targetSdkVersion" value="28" />
     <preference name="deployment-target" value="10.2" />
     <preference name="StatusBarOverlaysWebView" value="false" />
@@ -78,21 +78,21 @@
 	
 	
 	
-   <!-- 	<plugin name="phonegap-plugin-push" source="npm" spec="2.3.0">
+   <plugin name="phonegap-plugin-push" source="npm" spec="2.3.0">
    	<param name="SENDER_ID" value="1097482483564" />   	    
-   </plugin> -->
+   </plugin>
    	<!-- <plugin name="phonegap-plugin-push-dual" source="npm" spec="2.2.8">
    	    <variable name="SENDER_ID" value="1097482483564" />
    	</plugin> -->
    <!-- <plugin source="git" spec="https://github.com/mslobodan/phonegap-plugin-push">
        <param name="SENDER_ID" value="1097482483564" />
-   </plugin>
+   </plugin> -->
     <platform name="android">
       <resource-file src="google-services.json" target="app/google-services.json" />
     </platform>
     <platform name="ios">
       <resource-file src="GoogleService-Info.plist" />
-    </platform> -->
+    </platform>
     <plugin name="cordova-background-geolocation-lt" spec="3.4.2" source="npm"> </plugin>
 
     <!-- <plugin name="cordova-plugin-console" source="npm" spec="1.0.7" /> -->

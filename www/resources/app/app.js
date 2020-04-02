@@ -39,6 +39,8 @@ API_URL.REGISTER = API_DOMAIN3 + 'activation/';
 
 API_URL.GET_ALL_POSITIONS = API_DOMIAN1 + "QuikTrak/V1/Device/GetPosInfos2";
 
+API_URL.REFRESH_TOKEN = API_DOMIAN1 + "User/RefreshToken";
+
 //https://api.m2mglobaltech.com/QuikProtect/V1/Client/
 
 Framework7.request.setup({
@@ -52,6 +54,7 @@ const AppEvents = new Framework7.Events();
 let bgGeo;
 let UpdateAssetsPosInfoTimer = false;
 let POSINFOASSETLIST = {};
+let push;
 // Dom7
 let $$ = Dom7;
 
@@ -114,6 +117,7 @@ let app = new Framework7({
                     self.methods.handleAndroidBackButton();
                     self.methods.handleKeyboard();
 
+                    self.methods.setupPush();
                     self.methods.setGeolocationPlugin();
 
                     document.addEventListener("resume", function () {
@@ -794,7 +798,139 @@ let app = new Framework7({
                 }*/
             });
         },
+        setupPush: function() {
+            let self = this;
+            push = PushNotification.init({
+                "android": {
+                    //"senderID": "264121929701"
+                    //icon: 'notification',
+                    //iconColor: 'blue'
+                },
+                "browser": {
+                    pushServiceURL: 'https://push.api.phonegap.com/v1/push'
+                },
+                "ios": {
+                    "sound": true,
+                    "vibration": true,
+                    "badge": true
+                },
+                "windows": {}
+            });
 
+            push.on('registration', function(data) {
+                alert(JSON.stringify(data));
+                console.log('registration event: ' + data.registrationId);
+                // alert('registered '+ data.registrationId);
+                /*if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
+                    // Save new registration ID
+                    localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+                    // Post registrationId to your app server as the value has changed
+                    setTimeout(function() {
+                        self.methods.refreshToken(data.registrationId);
+                        self.methods.getNewData(true);
+                    },1000);
+                }*/
+            });
+
+            push.on('error', function(e) {
+                //console.log("push error = " + e.message);
+                alert(JSON.stringify(e));
+                //alert("push error = " + e.message);
+            });
+
+            push.on('notification', function(data) {
+                alert('Notification recieved');
+                /*if (localStorage.ACCOUNT && localStorage.PASSWORD) {
+                    //if user using app and push notification comes
+                    if (data && data.additionalData && data.additionalData.foreground) {
+                        // if application open, show popup
+                        let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
+                        self.methods.displayNewNotificationArrived(alertData);
+                    } else if (data && data.additionalData && data.additionalData.payload) {
+                        //if user NOT using app and push notification comes
+                        self.preloader.show();
+                        window.loginTimer = setInterval(function() {
+                            if (window.loginDone) {
+                                clearInterval(window.loginTimer);
+                                setTimeout(function() {
+                                    let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
+                                    if(mainView.router.currentRoute.name && mainView.router.currentRoute.name === 'notification'){
+                                        mainView.router.navigate('/notification/',{context: { AlertData: alertData }, reloadCurrent: true, ignoreCache: true, });
+                                    }else {
+                                        mainView.router.navigate('/notification/',{context: { AlertData: alertData } });
+                                    }
+
+                                    self.preloader.hide();
+                                }, 1000);
+                            }
+                        }, 1000);
+                    }
+                }*/
+
+                if (self.device && self.device && self.device.ios) {
+                    push.finish(
+                        () => {
+                            console.log('processing of push data is finished');
+                        },
+                        () => {
+                            console.log(
+                                'something went wrong with push.finish for ID =',
+                                data.additionalData.notId
+                            );
+                        },
+                        data.additionalData.notId
+                    );
+                }
+            });
+
+            if　 (!localStorage.ACCOUNT && push) {
+                push.clearAllNotifications(
+                    () => {
+                        console.log('success');
+                    },
+                    () => {
+                        console.log('error');
+                    }
+                );
+            }
+        },
+        unregisterPush: function(){
+            if(push){
+                push.unregister(
+                    () => {
+                        // alert('unregistered');
+                        console.log('success');
+                    },
+                    () => {
+                        // alert('fail to unregister');
+                        console.log('error');
+                    });
+            }
+
+        },
+        refreshToken: function(newDeviceToken) {
+            let self = this;
+
+            if (localStorage.PUSH_MOBILE_TOKEN && self.data.MajorToken && self.data.MinorToken && newDeviceToken) {
+                let data = {
+                    MajorToken: self.data.MajorToken,
+                    MinorToken: self.data.MinorToken,
+                    MobileToken: localStorage.PUSH_MOBILE_TOKEN,
+                    DeviceToken: newDeviceToken,
+                };
+                self.request.promise.post(API_URL.REFRESH_TOKEN, data, 'json')
+                    .then(function (result) {
+                        if(result.data.MajorCode === '000') {
+
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
+            } else {
+                console.log('not loggined');
+            }
+        },
         /*
           This method prevents back button tap to exit from app on android.
           In case there is an opened modal it will close that modal instead.
