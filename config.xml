@@ -77,7 +77,7 @@
     
 	
 	
-	
+	<plugin name="cordova-support-google-services" source="npm" spec="1.4.0" /> 
   <!--  <plugin name="phonegap-plugin-push" source="npm" spec="2.3.0"> 
   		<param name="SENDER_ID" value="1097482483564" />   	    
   </plugin> -->
