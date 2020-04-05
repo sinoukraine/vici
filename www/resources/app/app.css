@@ -1,17 +1,18 @@
 :root {
-    --f7-bars-bg-color: #42B2AA;
-    --f7-bars-bg-color-rgb: 66,178,170;
+    --f7-bars-bg-color: #fff;
+    --f7-bars-bg-color-rgb: 255,255,255;
 
-    --f7-bars-link-color: #fff;
-    --f7-bars-text-color: #fff;
-    --f7-theme-color: #42B2AA;
-    --f7-bars-border-color:#42B2AA;
+    --f7-bars-link-color: #000;
+    --f7-bars-text-color: #000;
 
-    --f7-tabbar-link-active-color:#fff;
-    --f7-tabbar-link-active-border-color:#fff;
-    --f7-tabbar-link-inactive-color: rgba(255, 255, 255, 0.7);
+    --f7-theme-color: #D00000;
+    --f7-bars-border-color:#fff;
 
-    --f7-navbar-bg-color: #42B2AA;
+    --f7-tabbar-link-active-color:#000;
+    --f7-tabbar-link-active-border-color:#000;
+    --f7-tabbar-link-inactive-color: rgba(0, 0, 0, 0.7);
+
+    --f7-navbar-bg-color: #fff;
     /*
     --f7-toolbar-bg-image: var(--f7-bars-bg-image);
     */
@@ -140,19 +141,19 @@
     --f7-searchbar-bg-color: #F2F2F2;
 }
 .color-theme-custom {
-    --f7-theme-color: #42B2AA;
-    --f7-theme-color-rgb: 66,178,170;
-    --f7-theme-color-shade: #69c8c1;
-    --f7-theme-color-tint: #69c8c1; /*358e88*/
+    --f7-theme-color: #D00000;
+    --f7-theme-color-rgb: 208,0,0;
+    --f7-theme-color-shade: #a60000;
+    --f7-theme-color-tint: #ff0505; /*358e88*/
 }
 .bg-color-custom{
-    background: #42B2AA!important;
+    background: #D00000!important;
 }
 .text-color-custom{
-    color: #42B2AA!important;
+    color: #D00000!important;
 }
 /*.color-theme-custom .navbar{
-    background: #42B2AA;
+    background: #D00000;
 }*/
 .bg-color-lightgray{
     --f7-theme-color-bg-color: #E6E6E6;
@@ -167,10 +168,10 @@
     --f7-theme-color-text-color: #333333;
 }
 .color-custom {
-    --f7-theme-color: #42B2AA;
-    --f7-theme-color-rgb: 66,178,170;
-    --f7-theme-color-shade: #358e88;
-    --f7-theme-color-tint: #69c8c1;
+    --f7-theme-color: #D00000;
+    --f7-theme-color-rgb: 208,0,0;
+    --f7-theme-color-shade: #a60000;
+    --f7-theme-color-tint: #ff0505;
 }
 
 .color-darkgray {
@@ -285,28 +286,31 @@
     border-radius: 100%;
 }*/
 .panel-header {
-    background: url('../images/header_menu.png') no-repeat center center;
+    /*background: url('../images/header_menu.png') no-repeat center center;*/
     background-size: cover;
-    height: 120px;
+    /*height: 120px;*/
     width: 100%;
-    text-align: center;
+    text-align: right;
 }
     .panel-header .logo{
-        width: 80%;
+        width: 100%;
     }
         .panel-header .logo img{
+            max-width: 220px;
             width: 100%;
         }
 
 /*LOGIN SCREEN*/
 .login-screen-content{
     --f7-list-bg-color: trasparent;
-    background: url('../images/bg.png') no-repeat center center;
+    /*background: url('../images/bg.png') no-repeat center center;*/
+    background: #fff;
     background-size: cover;
     height: 100%!important;
 }
     .login-screen-content .logo{
         margin-top: 48px;
+        text-align: right;
     }
         .login-screen-content .logo img{
             max-width: 320px;

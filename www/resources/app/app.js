@@ -73,7 +73,7 @@ $$('#app').append(compiledTemplate({RegisterUrl: API_URL.REGISTER}));
 let app = new Framework7({
     id: 'com.sinopacific.phonetrack',
     root: '#app',
-    name: 'PhoneTrack',
+    name: 'ViCi',
     theme: theme,
     view: {
         //stackPages: true,

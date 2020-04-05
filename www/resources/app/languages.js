@@ -34,6 +34,11 @@ window.LanguagePackages= {
 		"COM_MSG028": "Share",
 		"COM_MSG029": "Loading...",
 		"COM_MSG030": "n/a",
+		"COM_MSG031": "n/a",
+		"COM_MSG032": "Covid-19",
+		"COM_MSG033": "Recovered",
+		"COM_MSG034": "Yes",
+		"COM_MSG035": "Cancel",
 
 
 		"COM_MSG037": "Latitude",
@@ -70,6 +75,11 @@ window.LanguagePackages= {
 		"PROMPT_MSG027": "SMS has been sent",
 		"PROMPT_MSG028": "Emergency phone call executed",
 		"PROMPT_MSG029": "This feature under development",
+
+		"PROMPT_MSG030": "You want to report a disease COVID-19 virus?",
+		"PROMPT_MSG031": "You want to report recovery?",
+		"PROMPT_MSG032": "Thank you, your status will be changed",
+
 
 		"PROMPT_MSG052": "Here you can set new password - min 6, max 32 characters and contains no spaces",
 		"PROMPT_MSG053": "Passwords do not match",
