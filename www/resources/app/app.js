@@ -34,8 +34,8 @@ API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
 API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
-API_URL.ADD_NEW = API_DOMAIN3 + 'activation/activate';
-API_URL.REGISTER = API_DOMAIN3 + 'activation/';
+API_URL.ADD_NEW = API_DOMAIN3 + 'vici.activation/activate';
+API_URL.REGISTER = API_DOMAIN3 + 'vici.activation/';
 
 API_URL.GET_ALL_POSITIONS = API_DOMIAN1 + "QuikTrak/V1/Device/GetPosInfos2";
 

@@ -170,7 +170,7 @@
                 </ul>
             </div>
 
-            <div class="list no-hairlines margin-top-half">
+            <div class="list no-hairlines margin-top-half overflow-hidden">
                 <ul>
                     <li class="item-content">
                         <div class="item-inner">
@@ -264,8 +264,8 @@
                 Countrys: countrys,
                 DaysOfWeekArr: daysOfWeekArr,
                 IntervalList: intervalList,
-                StartTimeMinutes: !trackingConfig.StartTime ? 540 : trackingConfig.StartTime,
-                EndTimeMinutes: !trackingConfig.EndTime ? 1080 : trackingConfig.EndTime,
+                StartTimeMinutes: !trackingConfig.StartTime ? 0 : trackingConfig.StartTime,
+                EndTimeMinutes: !trackingConfig.EndTime ? 1439 : trackingConfig.EndTime,
                 Phone: trackingPhone,
                 TrackingState: trackingConfig.ScheduleState
            };

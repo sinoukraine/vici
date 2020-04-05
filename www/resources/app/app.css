@@ -194,6 +194,9 @@
 .overflow-hidden{
     overflow: hidden;
 }
+.overflow-y-hidden{
+    overflow-y: hidden;
+}
 .vertical-align-middle{
     vertical-align: middle;
 }
@@ -309,7 +312,7 @@
     height: 100%!important;
 }
     .login-screen-content .logo{
-        margin-top: 48px;
+        /*margin-top: 48px;*/
         text-align: right;
     }
         .login-screen-content .logo img{
