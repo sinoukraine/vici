@@ -80,7 +80,7 @@ let app = new Framework7({
     name: 'ViCi',
     theme: theme,
     view: {
-        //stackPages: true,
+        stackPages: true,
     },
     input: {
         scrollIntoViewOnFocus: true,
@@ -93,7 +93,7 @@ let app = new Framework7({
     },
     data: function () {
         return {
-            logoDialog: 'resources/images/logo.png',
+            logoDialog: 'resources/images/logo.jpg',
             MaxMapPopupWidth: 280,
         };
     },
