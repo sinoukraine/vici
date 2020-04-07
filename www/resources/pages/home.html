@@ -65,6 +65,34 @@
             return ret;
         },
         methods: {
+            setCovid19Status: function(data){
+                //API_URL.SET_COVID19_STATUS
+                let self = this;
+
+                self.$app.progressbar.show('gray');
+                self.$app.request.promise.get(API_URL.SET_COVID19_STATUS, data, 'json')
+                    .then(function (result) {
+                        if(result.data.MajorCode === '000') {
+                            self.$setState({
+                                CovidSatusPositive: data.status
+                            });
+                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG032});
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                        }
+                    })
+                    .finally(function () {
+                        self.$app.progressbar.hide();
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        if (err && err.status === 404){
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                        }
+                    });
+            },
             changeCovidStatus: function(){
                 let self = this;
                 let text = LANGUAGE.PROMPT_MSG031;
@@ -87,10 +115,21 @@
                             color: 'custom',
                             bold: true,
                             onClick: function () {
-                                self.$setState({
-                                    CovidSatusPositive: !self.CovidSatusPositive
+                                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+
+                                if(self.$app.methods.isObjEmpty(trackingConfig)){
+                                    self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG057, callback: function () {
+                                            self.$app.view.main.router.navigate('/timing-settings/');
+                                        }})
+                                }
+                                self.getCurrentPosition(function (location) {
+                                    self.setCovid19Status({
+                                        imei: trackingConfig.IMEI,
+                                        status: !self.CovidSatusPositive,
+                                        lat: location.coords.latitude,
+                                        lng: location.coords.longitude
+                                    });
                                 });
-                                self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG032});
                             }
                         },
                     ]
