@@ -89,7 +89,9 @@
                         }
                     })
                     .finally(function () {
-                        self.$app.progressbar.hide();
+                        self.utils.nextFrame(()=>{
+                            self.$app.progressbar.hide();
+                        });
                     })
                     .catch(function (err) {
                         console.log(err);
