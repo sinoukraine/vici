@@ -42,6 +42,7 @@ API_URL.GET_ALL_POSITIONS = API_DOMIAN1 + "QuikTrak/V1/Device/GetPosInfos2";
 API_URL.REFRESH_TOKEN = API_DOMIAN1 + "User/RefreshToken";
 
 API_URL.SET_COVID19_STATUS = API_DOMIAN1 + "PhoneProtect/V1/Client/SetNCoV19";
+API_URL.GET_COVID19_STATUS = API_DOMIAN1 + "PhoneProtect/V1/Client/GetNCoV19";
 
 
 //https://api.m2mglobaltech.com/QuikProtect/V1/Client/

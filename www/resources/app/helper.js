@@ -7,7 +7,19 @@ const Helper = {
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         }),
         L.icon({
+            iconUrl: 'resources/images/marker1.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
+        }),
+        L.icon({
             iconUrl: 'resources/images/marker2.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
+        }),
+        L.icon({
+            iconUrl: 'resources/images/marker3.svg',
             iconSize:     [60, 60], // size of the icon
             iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
