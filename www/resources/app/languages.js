@@ -40,9 +40,10 @@ window.LanguagePackages= {
 		"COM_MSG034": "Yes",
 		"COM_MSG035": "Cancel",
 
-
 		"COM_MSG037": "Latitude",
 		"COM_MSG038": "Longitude",
+		"COM_MSG039": "Infected",
+		"COM_MSG040": "Not Infected",
 
 
 		"PROMPT_MSG000": "Nothing found",
@@ -102,6 +103,7 @@ window.LanguagePackages= {
 		"HOME_MSG06": "Address",
 		"HOME_MSG07": "Speed",
 		"HOME_MSG08": "Date, Time",
+		"HOME_MSG09": "Covid19 Status",
 
 		"MENU_MSG00": "Home",
 		"MENU_MSG01": "User Settings",

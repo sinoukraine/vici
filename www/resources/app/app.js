@@ -96,6 +96,7 @@ let app = new Framework7({
         return {
             logoDialog: 'resources/images/logo.jpg',
             MaxMapPopupWidth: 280,
+            UTCOFFSET: moment().utcOffset(),
         };
     },
     on: {
