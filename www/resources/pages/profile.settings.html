@@ -34,6 +34,24 @@
                     <div class="block-title">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG06}}</div>
                     <div class="list no-hairlines">
                         <ul>
+                            <li class="item-content bg-color-lightgray">
+                                <div class="item-media text-color-gray"><!--<i class="f7-icons icon-name"></i>--></div>
+                                <div class="item-inner">
+                                    <div class="item-title">
+                                        <div class="item-header text-color-gray">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG13}}</div>
+                                        {{UserID}}
+                                    </div>
+                                </div>
+                            </li>
+                            <!--<li class="item-content item-input bg-color-lightgray disabled">
+                                <div class="item-media text-color-lightgray"></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG13}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="text" name="UserID" value="{{UserID}}" readonly required validate>
+                                    </div>
+                                </div>
+                            </li>-->
                             <li class="item-content item-input">
                                 <div class="item-media text-color-lightgray"><i class="f7-icons icon-name"></i></div>
                                 <div class="item-inner">
@@ -190,6 +208,7 @@
                 ...userInfo,
                 CurrentFormButtonSubmit: 'submit-form-user',
                 EmergencyList: emList,
+                UserID: '123456789012345',
             };
 
             console.log(ret)
