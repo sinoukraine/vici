@@ -14,30 +14,41 @@
                     {{@global.LANGUAGE.HOME_MSG00}}
                 </div>
                 <div class="right">
-                    <div class="right">
-                        <a href="#" @click="refreshMap" class="link icon-only">
-                            <i class="f7-icons icon-refresh-map"></i>
-                        </a>
-                    </div>
+                    <a href="#" @click="showShieldStatusPopover" class="link icon-only {{StatusShieldColor}}" >
+                        <i class="f7-icons icon-shield position-relative">{{#if StatusDaysCount}}<span class="badge badge-with-border color-red">{{StatusDaysCount}}</span>{{/if}}</i>
+                    </a>
+                    <a href="#" class="link icon-only " >
+                        <i class="f7-icons icon-notifications position-relative">{{#if NotificationCount}}<span class="badge badge-with-border color-red">{{NotificationCount}}</span>{{/if}}</i>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="page-content">
-            <!--<div class="home-map-wrapper">-->
-                <div id="homeMap" class="map"></div>
-                <div class="fab fab-right-bottom2 fab-custom ">
-                    <a href="#" @click="changeCovidStatus" class="elevation-hover-10 flex-direction-column {{#if CovidSatusPositive}}bg-color-green{{else}}bg-color-custom {{/if}}">
-                        <i class="f7-icons {{#if CovidSatusPositive}}icon-recovered{{else}}icon-covid19{{/if}}"></i>
-                        <div class="fab-text">{{#if CovidSatusPositive}}{{@global.LANGUAGE.COM_MSG033}}{{else}}{{@global.LANGUAGE.COM_MSG032}}{{/if}}</div>
-                    </a>
-                </div>
-                <div class="fab fab-left-bottom2 fab-custom ">
-                    <a href="#" @click="sharePosition" class="bg-color-darkgray elevation-hover-10 flex-direction-column shareButton">
-                        <i class="f7-icons icon-share"></i>
-                        <div class="fab-text">{{@global.LANGUAGE.COM_MSG028}}</div>
-                    </a>
-                </div>
+
+            <div id="homeMap" class="map"></div>
+
+            <div class="fab fab-left-bottom3 fab-custom ">
+                <a href="#" @click="refreshMap" class="bg-color-darkgray elevation-hover-10 flex-direction-column shareButton">
+                    <i class="f7-icons icon-refresh-map"></i>
+                    <div class="fab-text">{{@global.LANGUAGE.HOME_MSG10}}</div>
+                </a>
+            </div>
+
+            <div class="fab fab-left-bottom2 fab-custom ">
+                <a href="#" @click="sharePosition" class="bg-color-darkgray elevation-hover-10 flex-direction-column shareButton">
+                    <i class="f7-icons icon-share"></i>
+                    <div class="fab-text">{{@global.LANGUAGE.COM_MSG028}}</div>
+                </a>
+            </div>
+
+            <div class="fab fab-right-bottom2 fab-custom ">
+                <a href="{{InformButtonLink}}" class="elevation-hover-10 flex-direction-column {{InformButtonBgClass}}">
+                    <i class="f7-icons icon-covid19"></i>
+                    <div class="fab-text">{{@global.LANGUAGE.COM_MSG032}}</div>
+                </a>
+            </div>
+
             <div class="fab-custom2">
                 <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
             </div>
@@ -59,13 +70,102 @@
                 //Email: 'test@test.com',
                 Address: 'Loading...',
                 Battery: '-',
-                CovidSatusPositive: false,
+                //CovidSatusPositive: false,
+
+                Covid19Status: this.$app.data.CovidSatus,
+                Covid19StatusType: this.$app.data.CovidSatusType,
+
             };
 
             return ret;
         },
         methods: {
-            setCovid19Status: function(data){
+            updateCovidStatus: function(data={}){
+                let self = this;
+                if(!self.$app.methods.isObjEmpty(data) && data.Covid19StatusType){
+                    let statusObj = Helper.Methods.covid19Enum(data.Covid19StatusType);
+
+                    data.StatusShieldColor = statusObj.textColor;
+                    data.Covid19StatusType = parseInt(data.Covid19StatusType);
+                    data.InformButtonLink = '/inform-about-test/';
+                    data.InformButtonBgClass = 'bg-color-custom';
+
+                    switch (data.Covid19StatusType) {
+                        case 2:
+                            data.InformButtonLink = '/inform-about-recovery/';
+                            data.InformButtonBgClass = 'bg-color-orange';
+
+                            break;
+                        case 3:
+                            data.InformButtonLink = '/inform-about-recovery/';
+                            data.InformButtonBgClass = 'bg-color-blue';
+
+                            break;
+                        case 4:
+                           /* data.InformButtonLink = '/inform-about-test/';
+                            data.InformButtonBgClass = 'bg-color-custom';*/
+
+                            break;
+                        case 5:
+                            /*data.InformButtonLink = '/inform-about-test/';
+                            data.InformButtonBgClass = 'bg-color-custom';*/
+                            break;
+                    }
+                }
+
+                self.$setState(data,()=>{
+                    if(self.Marker){
+                        self.Marker.setIcon(Helper.Methods.getCovid19Marker(self.Covid19StatusType));
+                        if(self.LastPosInfo){
+                            self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
+                        }
+                    }
+                });
+            },
+            showShieldStatusPopover: function(e){
+                let self = this;
+
+                let dateTitle = '';
+                switch (self.Covid19StatusType) {
+                    case 2: case 3: case 4:
+                        dateTitle = LANGUAGE.PROMPT_MSG061;
+                        break;
+                    case 5:
+                        dateTitle = LANGUAGE.PROMPT_MSG063;
+                        break;
+                }
+                let content =   `<div class="popover menu-popover" >
+                                        <div class="popover-inner">
+                                            <div class="block-title">${ LANGUAGE.PROMPT_MSG060 }</div>
+                                            <div class="block">
+                                                <p>${LANGUAGE.PROMPT_MSG062}: <span class="${self.StatusShieldColor}">${ self.$app.data.Covid19Status }</span></p>`;
+                if (self.Covid19StatusDate){
+                    content +=`                 <p>${ dateTitle }: ${ self.Covid19StatusDate }</p>`;
+                }
+                content +=`                    <a href="/qr-code/" class="margin-top color-blue button button-outline button-raised popover-close">${ LANGUAGE.PROMPT_MSG064 }</a>
+                                            </div>
+
+                                        </div>
+                                    </div>`;
+
+                self.$app.popover.create({
+                    //backdrop: true,
+                    closeByOutsideClick: true,
+                    targetEl: $$(e.target).closest('a'),
+                    content: content,
+                    on: {
+                        opened: function(popover){
+
+                        },
+                        closed: function(popover){
+                            popover.destroy();
+                        }
+                    }
+                }).open();
+            },
+
+
+            /*setCovid19Status: function(data){
                 //API_URL.SET_COVID19_STATUS
                 let self = this;
 
@@ -105,8 +205,8 @@
                             self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
                         }
                     });
-            },
-            changeCovidStatus: function(){
+            },*/
+            /*changeCovidStatus: function(){
                 let self = this;
                 let text = LANGUAGE.PROMPT_MSG031;
                 let title = LANGUAGE.COM_MSG033;
@@ -137,13 +237,13 @@
                                     return;
                                 }
 
-                               /* let asset = POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')];
+                               /!* let asset = POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')];
                                 self.setCovid19Status({
                                     imei: asset.IMEI,
                                     status: self.CovidSatusPositive ? 0 : 1,
                                     lat: asset.posInfo.lat,
                                     lng: asset.posInfo.lng
-                                });*/
+                                });*!/
 
                                 self.getCurrentPosition(function (location) {
                                     self.setCovid19Status({
@@ -157,8 +257,8 @@
                         },
                     ]
                 }).open();
-            },
-            getMyCurrentCovid19Status: function(){
+            },*/
+            /*getMyCurrentCovid19Status: function(){
                 let self = this;
                 let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                 if(self.$app.methods.isObjEmpty(trackingConfig)){
@@ -183,8 +283,8 @@
                                 }
                                 if(self.LastPosInfo){
                                     self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
-                                   /* self.Marker.getPopup().update();
-                                    console.log(self.Marker.getPopup())*/
+                                   /!* self.Marker.getPopup().update();
+                                    console.log(self.Marker.getPopup())*!/
                                 }
                             }
                         }else{
@@ -202,7 +302,7 @@
                             self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
                         }
                     });
-            },
+            },*/
             getCurrentPosition: function(callback){
                 let self = this;
                 if (!bgGeo){
@@ -275,7 +375,9 @@
                             LastPosInfoLocal: true
                         });
                         if(!self.Marker){
-                            self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: self.CovidSatusPositive ? Helper.MarkerIcon[3] : Helper.MarkerIcon[2]});
+                            /*self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: self.CovidSatusPositive ? Helper.MarkerIcon[3] : Helper.MarkerIcon[2]});*/
+                            self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
+
                             self.Marker
                                 .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                                 .on('popupopen', function (e) {
@@ -334,7 +436,9 @@
                             LastPosInfoLocal: false
                         });
                         if(!self.Marker){
-                            self.Marker = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: self.CovidSatusPositive ? Helper.MarkerIcon[3] : Helper.MarkerIcon[2]});
+                            //self.Marker = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: self.CovidSatusPositive ? Helper.MarkerIcon[3] : Helper.MarkerIcon[2]});
+                            self.Marker = L.marker([asset.posInfo.lat, asset.posInfo.lng], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
+
                             self.Marker
                                 .bindPopup(self.getMarkerDataTable(asset), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                                 .on('popupopen', function (e) {
@@ -434,7 +538,7 @@
                     }
                     markerData +=   '<tr>';
                     markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
-                    markerData +=       `<td class="marker-data-value">${ self.CovidSatusPositive ? LANGUAGE.COM_MSG039 +'('+self.CovidSatusPositiveBeginDate+')' : LANGUAGE.COM_MSG040 }</td>`;
+                    markerData +=       `<td class="marker-data-value">${ self.Covid19Status } ${self.StatusDaysCount ? self.StatusDaysCount+' '+COM_MSG045 : '' }</td>`;
                     markerData +=   '</tr>';
                     markerData +=   '<tr>';
                     markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
@@ -474,7 +578,7 @@
                         markerData +=   '</tr>';
                         markerData +=   '<tr>';
                         markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
-                        markerData +=       `<td class="marker-data-value">${ self.CovidSatusPositive ? LANGUAGE.COM_MSG039 +'('+self.CovidSatusPositiveBeginDate+')' : LANGUAGE.COM_MSG040 }</td>`;
+                        markerData +=       `<td class="marker-data-value">${ self.Covid19Status } ${self.StatusDaysCount ? self.StatusDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
                         markerData +=   '</tr>';
                         markerData +=   '<tr>';
                         markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
@@ -483,7 +587,6 @@
                         markerData += '</table>';
                     }
                 }
-
                 return markerData;
             },
             sharePosition: function () {
@@ -527,13 +630,19 @@
                 }*/
 
 
+                AppEvents.on('covidStatusChanged', self.updateCovidStatus);
                 AppEvents.on('positionUpdateReceived', self.updateMarker);
                 AppEvents.on('signedIn', function (userInfo){
                     self.$setState({
                         LoginDone: true,
                         Phone: userInfo.Mobile,
                     });
-                    self.getMyCurrentCovid19Status();
+                    //self.getMyCurrentCovid19Status();
+                    self.updateCovidStatus({
+                        Covid19StatusType: 1,
+                        Covid19Status: LANGUAGE.COM_MSG041,
+                        StatusDaysCount: 0
+                    })
                 });
                 AppEvents.on('signedOut', function (){
                     self.$setState({

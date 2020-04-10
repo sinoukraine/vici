@@ -44,6 +44,11 @@ window.LanguagePackages= {
 		"COM_MSG038": "Longitude",
 		"COM_MSG039": "Infected",
 		"COM_MSG040": "Not Infected",
+		"COM_MSG041": "Untested",
+		"COM_MSG042": "Pending",
+		"COM_MSG043": "Recovered",
+		"COM_MSG044": "day",
+		"COM_MSG045": "day(s)",
 
 
 		"PROMPT_MSG000": "Nothing found",
@@ -76,10 +81,13 @@ window.LanguagePackages= {
 		"PROMPT_MSG027": "SMS has been sent",
 		"PROMPT_MSG028": "Emergency phone call executed",
 		"PROMPT_MSG029": "This feature under development",
-
 		"PROMPT_MSG030": "You want to report a disease COVID-19 virus?",
 		"PROMPT_MSG031": "You want to report recovery?",
-		"PROMPT_MSG032": "Thank you, your status will be changed",
+		"PROMPT_MSG032": "Thank you, your status will be changed to Pending",
+
+		"PROMPT_MSG033": "Please, submit below form when COVID-19 test samples was taken from you.",
+		"PROMPT_MSG034": "Please fill in below form when you got recovered from virus COVID-19",
+		"PROMPT_MSG035": "Thank you, your status will be changed to Recovered",
 
 
 		"PROMPT_MSG052": "Here you can set new password - min 6, max 32 characters and contains no spaces",
@@ -90,6 +98,13 @@ window.LanguagePackages= {
 		"PROMPT_MSG057": "Phone Timing is not setted",
 		"PROMPT_MSG058": "Asset not belong to current account",
 		"PROMPT_MSG059": "No Position Data",
+		"PROMPT_MSG060": "Covid-19 Info",
+		"PROMPT_MSG061": "Test Date",
+		"PROMPT_MSG062": "Status",
+		"PROMPT_MSG063": "Recovery Date",
+		"PROMPT_MSG064": "Show QR-Code",
+		"PROMPT_MSG065": "Show below QR code on demand to identify you COVID-19 status",
+		"PROMPT_MSG066": "Your current Status",
 
 		"PROMPT_MSG068": "You haven't added any Emergency Contact, please go to User Settings to add them",
 
@@ -104,11 +119,13 @@ window.LanguagePackages= {
 		"HOME_MSG07": "Speed",
 		"HOME_MSG08": "Date, Time",
 		"HOME_MSG09": "Covid19 Status",
+		"HOME_MSG10": "Update",
 
 		"MENU_MSG00": "Home",
 		"MENU_MSG01": "User Settings",
 		"MENU_MSG02": "Sign Out",
 		"MENU_MSG03": "Add New",
+		"MENU_MSG04": "QR-Code",
 
 		"LOGIN_SCREEN_MSG00": "Login Name / Email",
 		"LOGIN_SCREEN_MSG01": "Password",
@@ -146,6 +163,7 @@ window.LanguagePackages= {
 		"PROFILE_SETTINGS_MSG10": "New Password",
 		"PROFILE_SETTINGS_MSG11": "Confirm New Password",
 		"PROFILE_SETTINGS_MSG12": "Change Password",
+		"PROFILE_SETTINGS_MSG13": "User ID",
 
 		"TIMING_MSG00": "Phone Timing",
 		"TIMING_MSG01": "Turn On / Off Tracking",
@@ -173,6 +191,18 @@ window.LanguagePackages= {
 
 		"DEVICE_SHARE_MSG00": "Device Share",
 		"DEVICE_SHARE_MSG01": "Email / Login Name",
+
+		"INFORM_ABOUT_MSG00": "Covid-19 Test",
+		"INFORM_ABOUT_MSG01": "Lab name",
+		"INFORM_ABOUT_MSG02": "Lab address",
+		"INFORM_ABOUT_MSG03": "Test date",
+		"INFORM_ABOUT_MSG04": "Lab Doctor First Name",
+		"INFORM_ABOUT_MSG05": "Lab Doctor Last Name",
+		"INFORM_ABOUT_MSG06": "Covid-19 Recovery",
+		"INFORM_ABOUT_MSG07": "Recovered Date",
+
+		"QR_CODE_MSG00": "QR Code",
+
 
 
 

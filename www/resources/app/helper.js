@@ -1,31 +1,84 @@
 const Helper = {
     MarkerIcon: [
         L.icon({
-            iconUrl: 'resources/images/marker.svg',
+            iconUrl: 'resources/images/pins/marker.svg',
             iconSize:     [60, 60], // size of the icon
             iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         }),
         L.icon({
-            iconUrl: 'resources/images/marker1.svg',
+            iconUrl: 'resources/images/pins/pin-gray.svg',
             iconSize:     [60, 60], // size of the icon
             iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         }),
         L.icon({
-            iconUrl: 'resources/images/marker2.svg',
+            iconUrl: 'resources/images/pins/pin-orange.svg',
             iconSize:     [60, 60], // size of the icon
             iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         }),
         L.icon({
-            iconUrl: 'resources/images/marker3.svg',
+            iconUrl: 'resources/images/pins/pin-red.svg',
             iconSize:     [60, 60], // size of the icon
             iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
-        })
+        }),
+        L.icon({
+            iconUrl: 'resources/images/pins/pin-green.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
+        }),
+        L.icon({
+            iconUrl: 'resources/images/pins/pin-blue.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
+        }),
     ],
     Methods: {
+        covid19Enum: function(num){
+            num = parseInt(num);
+            let ret = {
+                type: num,
+                text: LANGUAGE.COM_MSG041,//not tested
+                textColor: 'text-color-gray',
+                bgColor: 'bg-color-gray',
+            };
+
+            switch (num) {
+                case 2:
+                    ret.text = LANGUAGE.COM_MSG042; //pending
+                    ret.textColor = 'text-color-orange';
+                    ret.bgColor = 'bg-color-orange';
+                    break;
+                case 3:
+                    ret.text = LANGUAGE.COM_MSG039; //infected
+                    ret.textColor = 'text-color-red';
+                    ret.bgColor = 'bg-color-red';
+                    break;
+                case 4:
+                    ret.text = LANGUAGE.COM_MSG040; //not infected
+                    ret.textColor = 'text-color-green';
+                    ret.bgColor = 'bg-color-green';
+                    break;
+                case 5:
+                    ret.text = LANGUAGE.COM_MSG043; //recovered
+                    ret.textColor = 'text-color-blue';
+                    ret.bgColor = 'bg-color-blue';
+                    break;
+            }
+            return ret;
+        },
+        getCovid19Marker: function(num){
+            let ret = Helper.MarkerIcon[0];
+            num = parseInt(num);
+            if(num){
+                ret = Helper.MarkerIcon[num];
+            }
+            return ret;
+        },
         getWeekDaysArr: function(){
             return [
                 {

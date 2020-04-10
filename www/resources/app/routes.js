@@ -31,6 +31,21 @@ var routes = [
         componentUrl: './resources/pages/share.html?v=2.1',
         name: 'share',
     },
+    {
+        path: '/inform-about-test/',
+        componentUrl: './resources/pages/inform.about.test.html?v=2.1',
+        name: 'inform.about.test',
+    },
+    {
+        path: '/inform-about-recovery/',
+        componentUrl: './resources/pages/inform.about.recovery.html?v=2.1',
+        name: 'inform.about.recovery',
+    },
+    {
+        path: '/qr-code/',
+        componentUrl: './resources/pages/qr.code.html?v=2.1',
+        name: 'qr.code',
+    },
 
     // Default route (404 page). MUST BE THE LAST
     {

@@ -97,6 +97,8 @@ let app = new Framework7({
             logoDialog: 'resources/images/logo.jpg',
             MaxMapPopupWidth: 280,
             UTCOFFSET: moment().utcOffset(),
+            Covid19Status: LANGUAGE.COM_MSG041, //untested
+            Covid19StatusType: 1,
         };
     },
     on: {

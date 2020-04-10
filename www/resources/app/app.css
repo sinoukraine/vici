@@ -190,7 +190,9 @@
     max-height: 90%;
 }
 
-
+.position-relative{
+    position: relative;
+}
 .overflow-hidden{
     overflow: hidden;
 }
@@ -215,7 +217,12 @@
     white-space: normal !important;
 }
 
-
+.toolbar-bottom.toolbar-size-2{
+    height: calc(var(--f7-toolbar-height)*2 + var(--f7-safe-area-bottom));
+}
+.toolbar-bottom.toolbar-size-2 ~ *{
+    --f7-page-toolbar-bottom-offset: calc(var(--f7-toolbar-height)*2);
+}
 
 
 .md .searchbar.custom-searchbar .input-clear-button{
@@ -261,6 +268,9 @@
 .notification .icon-notification{
     height: 16px;
     width: 16px;
+}
+.badge-with-border{
+    border: 1px solid #fff;
 }
 
 
@@ -620,6 +630,9 @@ html.color-theme-custom .leaflet-control-layers-overlays label input[type=checkb
 .fab[class*="-bottom2"]{
     bottom: calc(var(--f7-fab-margin) + var(--f7-safe-area-bottom) + 60px);
 }
+.fab[class*="-bottom3"]{
+    bottom: calc(var(--f7-fab-margin) + var(--f7-safe-area-bottom) + 130px);
+}
 
 .leaflet-control-fullscreen{
     background: #fff;
@@ -648,4 +661,9 @@ html.color-theme-custom .leaflet-control-layers-overlays label input[type=checkb
 }
 .fab-pano-close>a{
     background: rgba(0,0,0,.4);
+}
+
+.block-qr{
+    text-align: center;
+    min-height: 420px;
 }

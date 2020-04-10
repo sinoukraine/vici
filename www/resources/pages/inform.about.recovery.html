@@ -1,0 +1,157 @@
+<!--suppress JSAnnotator -->
+<template>
+    <!-- Page, data-name contains page name which can be used in callbacks -->
+    <div class="page " > <!-- page-with-subnavbar -->
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                    </a>
+                </div>
+                <div class="title sliding">{{@global.LANGUAGE.INFORM_ABOUT_MSG06}}</div>
+                <div class="right">
+                    <label for="submit-test-send" class="link icon-only">
+                        <i class="f7-icons icon-apply"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div  class="page-content" >
+         <!--   <div class="block-title">{{@global.LANGUAGE.DEVICE_SHARE_MSG00}}</div>-->
+            <div class="block">
+                {{@global.LANGUAGE.PROMPT_MSG034}}
+            </div>
+            <form name="FormTestSend" class="list no-hairlines no-margin-bottom">
+                <input type="submit" id="submit-test-send" class="display-none" />
+                <ul>
+                    <li>
+                        <div class="item-content item-input">
+                            <div class="item-media text-color-lightgray">
+                                <i class="f7-icons icon-day-of-week"></i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title item-floating-label item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG07}}</div>
+                                <div class="item-input-wrap">
+                                    <input type="text" placeholder="Select date and time" readonly="readonly" name="RecoveredDate" />
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </form>
+        </div>
+
+    </div>
+
+
+
+</template>
+
+
+<script>
+    // script must return component object
+    return {
+        data: function () {
+            let self = this;
+
+            let ret = {
+
+           };
+
+            return ret;
+        },
+
+        methods: {
+
+
+        },
+
+        on: {
+            pageInit: function (e, page) {
+                let self = this;
+
+                /*if(!self.IMEI){
+                    self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG025});
+                }*/
+                //self.$app.methods.customDialog({title: LANGUAGE.DEVICE_SHARE_MSG00, text: LANGUAGE.PROMPT_MSG029});
+
+                let form = page.$el.find('[name = "FormTestSend"]');
+                let recoveredDateEl = page.$el.find('[name="RecoveredDate"]');
+                self.CalendarTestDate = self.$app.calendar.create({
+                    inputEl: recoveredDateEl,
+                    timePicker: true,
+                    dateFormat: 'MM dd yyyy, HH::mm',
+                    value: [moment().format('MMMM DD YYYY, HH:mm')],
+                    maxDate: new Date(),
+                });
+
+                form.on('submit', function(e){
+                    e.preventDefault();
+
+                    let data = {
+                        TestDate: moment.utc(self.CalendarTestDate.getValue()[0]).format(window.COM_TIMEFORMAT2),
+                    };
+                    console.log(data);
+
+
+                    self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG035});
+                    self.$app.data.Covid19Status = LANGUAGE.COM_MSG043;
+                    self.$app.data.Covid19StatusType = 5;
+                    AppEvents.emit('covidStatusChanged', {
+                        Covid19StatusType:5,
+                        Covid19Status: LANGUAGE.COM_MSG043,
+                        Covid19StatusDate: moment.utc(self.CalendarTestDate.getValue()[0]).format(window.COM_TIMEFORMAT4),
+                        StatusDaysCount: moment().diff(self.CalendarTestDate.getValue()[0], 'days')
+                    });
+                    self.$app.view.main.router.back();
+
+
+                    /*let panicState = page.$el.find('[name = "PanicButtonState"]').is(':checked');
+                    let callTo = page.$el.find('[name = "PanicPhone"]').val();
+                    let smsTo = page.$el.find('[name = "PanicSMS"]').val();
+
+                    self.$app.progressbar.show();
+                    self.$app.request.promise.post(API_URL.VERIFY_DEVICE, {IMEI: imei}, 'json')
+                        .then(function (result) {
+                            console.log(result.data);
+                            if(result.data.MajorCode !== '000') {
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                                return;
+                            }
+
+                        })
+                        .finally(function () {
+                            self.$app.progressbar.hide();
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            if (err && err.status === 404){
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                            }else{
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                            }
+                        });
+*/
+                    return false;
+                });
+
+
+
+            },
+            pageBeforeRemove: function () {
+                let self = this;
+                if (self.CalendarTestDate) {
+                    self.CalendarTestDate.destroy();
+                }
+
+            }
+
+        }
+    };
+</script>

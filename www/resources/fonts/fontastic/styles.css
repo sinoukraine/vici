@@ -2,10 +2,10 @@
 
 @font-face {
   font-family: "phonelocator-app";
-  src:url("fonts/phonelocator-app.eot?v=1.1");
+  src:url("fonts/phonelocator-app.eot");
   src:url("fonts/phonelocator-app.eot?#iefix") format("embedded-opentype"),
-    url("fonts/phonelocator-app.woff?v=1.1") format("woff"),
-    url("fonts/phonelocator-app.ttf?v=1.1") format("truetype"),
+    url("fonts/phonelocator-app.woff") format("woff"),
+    url("fonts/phonelocator-app.ttf") format("truetype"),
     url("fonts/phonelocator-app.svg#phonelocator-app") format("svg");
   font-weight: normal;
   font-style: normal;
@@ -133,4 +133,16 @@
 }
 .icon-covid19:before {
   content: "\46";
+}
+.icon-labname:before {
+  content: "\47";
+}
+.icon-qrcode:before {
+  content: "\48";
+}
+.icon-notifications:before {
+  content: "\49";
+}
+.icon-shield:before {
+  content: "\4a";
 }
