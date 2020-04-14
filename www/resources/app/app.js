@@ -884,6 +884,7 @@ window.app = new Framework7({
                 //alert(data.registrationId);
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
+                alert(localStorage.PUSH_DEVICE_TOKEN);
                 if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
                     // Save new registration ID
                     localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
