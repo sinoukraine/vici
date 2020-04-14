@@ -138,7 +138,7 @@ window.app = new Framework7({
                     self.methods.handleKeyboard();
 
                     //self.methods.setupPush();
-                    self.methods.setGeolocationPlugin();
+                    //self.methods.setGeolocationPlugin();
                     self.methods.setupPush();
 
 
@@ -882,7 +882,7 @@ window.app = new Framework7({
         setupPush: function() {
             let self = this;
 
-            if(push){
+            if(!window.PushNotification){
                 return;
             }
             push = PushNotification.init({
