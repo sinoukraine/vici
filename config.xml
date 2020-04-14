@@ -49,9 +49,9 @@
 	</platform>
 
 	<!-- sms plugin -->        
-    <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
-        <uses-permission android:name="android.permission.SEND_SMS" />            
-    </config-file>
+   <!--  <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
+       <uses-permission android:name="android.permission.SEND_SMS" />            
+   </config-file> -->
     <!-- /sms plugin -->
 
 
