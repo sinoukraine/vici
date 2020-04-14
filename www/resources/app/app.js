@@ -903,6 +903,7 @@ window.app = new Framework7({
             });
 
             push.on('registration', function(data) {
+                self.dialog.alert(data.registrationId);
                 //alert(data.registrationId);
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
