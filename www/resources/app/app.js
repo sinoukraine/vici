@@ -28,6 +28,8 @@ API_URL.PREREGISTRATION = API_DOMIAN2 + 'Contact/PreRegister';
 //API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
 API_URL.LOGIN = API_DOMIAN2 + 'Contact/Auth';
 API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Contact/Auth';
+//API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
+API_URL.UPLOAD_LINK = 'http://test.m2mdata.co:5000/' + 'Position/Upload';
 
 
 
@@ -41,7 +43,7 @@ API_URL.FORGOT_PASSWORD = API_DOMIAN1 + "QuikProtect/V1/Client/ForgotPassword";
 
 API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
 //API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';//http://194.247.12.103:5000/Position/Upload
-API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
+
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
 API_URL.ADD_NEW = API_DOMAIN3 + 'vici.activation/activate';
