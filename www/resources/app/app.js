@@ -362,6 +362,7 @@ window.app = new Framework7({
                         self.utils.nextFrame(()=>{
                             self.loginScreen.close();
                             self.dialog.close();
+                            self.dialog.alert(localStorage.PUSH_DEVICE_TOKEN);
                         });
 
                     }else {

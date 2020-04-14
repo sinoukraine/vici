@@ -358,7 +358,9 @@
                 }
 
                 bgGeo.watchPosition((location) => {
-                    self.updateMarker(location);
+                    if(location.timestamp > self.LastPosInfo.timestamp){
+                        self.updateMarker(location);
+                    }
                     console.log("[watchPosition] -", location);
                 }, (errorCode) => {
                     console.log("[watchPosition] ERROR -", errorCode);
