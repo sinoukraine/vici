@@ -744,10 +744,17 @@
                 }, function (state) {
                     console.log('here1');
                     console.log(state);
-
-                    bgGeo.start(function() {
-                        console.log('here2');
-                        self.refreshMap();
+                    bgGeo.requestPermission().then((status) => {
+                        console.log(status);
+                        bgGeo.start(function() {
+                            console.log('here2');
+                            //self.refreshMap();
+                            self.watchUserLocation();
+                        });
+                    }).catch((status) => {
+                        self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
+                        console.log('[requestPermission] REJECTED', status);
+                        // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
                     });
                     /*bgGeo.start().then(function() {
 
@@ -810,7 +817,7 @@
                         //Schedule: ["1-7 00:00-23:59"],
                         //ScheduleState: true
                     });
-                    self.watchUserLocation();
+
                 });
                 AppEvents.on('appResume', function (){
                     if(self.LoginDone){
@@ -847,6 +854,8 @@
             },
 
             pageBeforeRemove: function () {
+                AppEvents.off('appResume');
+                AppEvents.off('signedOut');
                 AppEvents.off('signedIn');
                 AppEvents.off('signedOut');
                 AppEvents.off('positionUpdateReceived', self.updateMarker);
