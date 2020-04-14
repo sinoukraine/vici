@@ -732,6 +732,7 @@
                     self.$app.dialog.alert(LANGUAGE.PROMPT_MSG006);
                     return;
                 }
+                console.log('here');
                 bgGeo.setConfig({
                     distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
                     locationUpdateInterval: data.Interval,  // Get a location every 5 seconds
@@ -741,8 +742,10 @@
                         ID: data.ID,
                     }
                 }, function (state) {
+                    console.log('here1');
                     if (!state.enabled) {
                         bgGeo.start().then(function() {
+                            console.log('here2');
                             self.refreshMap();
                             //alert('- BackgroundGeolocation tracking started')
                             // console.log('- BackgroundGeolocation tracking started');
@@ -790,6 +793,7 @@
                         Covid19Status: LANGUAGE.COM_MSG041,
                         StatusDaysCount: 0
                     });
+                    console.log('here0');
                     self.startTracking({
                         Interval: 60*1000,
                         ID: userInfo.id,
