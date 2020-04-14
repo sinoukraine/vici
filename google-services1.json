@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1048274347661",
+    "firebase_url": "https://vici-app.firebaseio.com",
+    "project_id": "vici-app",
+    "storage_bucket": "vici-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048274347661:android:2a1994bccc1acddb0064c4",
+        "android_client_info": {
+          "package_name": "com.vici.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048274347661-1nmvplegtdb553i8jul2rt1248dh1qr9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7SyLJxoNNHpNPjqatOpVSGMUd-UDlk-o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048274347661-1nmvplegtdb553i8jul2rt1248dh1qr9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

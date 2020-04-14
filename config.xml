@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
-	id="com.vici.app" 
+	id="com.sinopacific.vici" 
 	version="1.0.0"
 	android-versionCode="1"
     ios-CFBundleVersion="1"
@@ -9,6 +9,8 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	defaultlocale="en-US">
     <name>ViCi</name>
+    <!--    id="com.vici.app" 
+            id="com.sinopacific.vici" -->
     <description>
         ViCi gps tracking app
     </description>
