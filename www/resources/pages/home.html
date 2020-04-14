@@ -303,9 +303,71 @@
                         }
                     });
             },*/
+            updateMarker: function (location) {
+                let self = this;
+                self.$setState({
+                    LastPosInfo: location,
+                    LastPosInfoLocal: true
+                });
+                if(!self.Marker){
+                    self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
+                    self.Marker
+                            .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .on('popupopen', function (e) {
+                                if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                        self.$setState({
+                                            Address: address,
+                                            LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                                            LastPosInfo: location,
+                                            LastPosInfoLocal: true
+                                        });
+                                        e.target.setPopupContent(self.getMarkerDataTable(location, true));
+                                        e.popup.update();
+                                    });
+                                }
+                            })
+                            .addTo(self.MarkersGroup);
+                    self.MarkersGroup.addTo(self.Map);
+                }
+                self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                if (self.MarkersGroup.getBounds().isValid()) {
+                    self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                }
+
+                if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                        self.$setState({
+                            Address: address,
+                            LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                            LastPosInfo: location,
+                            LastPosInfoLocal: true
+                        });
+                        self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                    });
+                }
+            },
+
+
             watchUserLocation: function(){
                 let self = this;
 
+                if(!bgGeo){
+                    return;
+                }
+
+                bgGeo.watchPosition((location) => {
+                    self.updateMarker(location);
+                    console.log("[watchPosition] -", location);
+                }, (errorCode) => {
+                    console.log("[watchPosition] ERROR -", errorCode);
+                }, {
+                    interval: 30*1000,
+                    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+                    persist: true,
+                    timeout: 60000
+                });
             },
             getCurrentPosition: function(callback){
                 let self = this;
@@ -355,7 +417,9 @@
                 let self = this;
 
                 self.getCurrentPosition(function (location) {
-                    self.$setState({
+                    self.updateMarker(location);
+                });
+                    /*self.$setState({
                         LastPosInfo: location,
                         LastPosInfoLocal: true
                     });
@@ -398,9 +462,9 @@
                             self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
                         });
                     }
-                });
+                });*/
 
-                /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                    /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
 
                 if(self.$app.methods.isObjEmpty(trackingConfig)){
                     self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG057, callback: function () {
@@ -466,20 +530,13 @@
                         }
                     });
                 }*/
+
             },
-            updateMarker: function(){
+            /*updateMarker: function(){
                 let self = this;
                 let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                 if(!self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.IMEI && !self.$app.methods.isObjEmpty(POSINFOASSETLIST) && POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')]){
                     let asset = POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')];
-                    /*if(!asset){
-                        self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG058, title: trackingConfig.IMEI});
-                        return;
-                    }*/
-                    /*if(!asset.posInfo || parseFloat(asset.posInfo.lat) === 0 && parseFloat(asset.posInfo.lng) === 0){
-                        self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG059, title: trackingConfig.IMEI});
-                        return;
-                    }*/
                     if (asset && asset.posInfo && parseFloat(asset.posInfo.lat) !== 0 && parseFloat(asset.posInfo.lng) !== 0){
                         self.$setState({
                             LastPosInfo: asset,
@@ -527,7 +584,7 @@
                     }
                 }
 
-            },
+            },*/
             getMarkerDataTable: function(objData={}, localPosition=false){
                 let self = this;
 
@@ -738,6 +795,16 @@
                     });
                     self.watchUserLocation();
                 });
+                AppEvents.on('appResume', function (){
+                    self.watchUserLocation();
+                });
+                AppEvents.on('appPause', function (){
+                    if(!bgGeo){
+                        return;
+                    }
+                    bgGeo.stopWatchPosition();
+                });
+
                 AppEvents.on('signedOut', function (){
                     self.$setState({
                         LoginDone: false
@@ -745,6 +812,7 @@
                     if(!bgGeo){
                         return;
                     }
+                    bgGeo.stopWatchPosition();
                     bgGeo.stop();
                     bgGeo.stopSchedule(function() {
                         //bgGeo.stop();

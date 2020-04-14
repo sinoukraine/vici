@@ -143,10 +143,10 @@ window.app = new Framework7({
 
 
                     document.addEventListener("resume", function () {
-                        AppEvents.emit('resume');
+                        AppEvents.emit('appResume');
                     }, false);
                     document.addEventListener("pause", function () {
-                        AppEvents.emit('pause');
+                        AppEvents.emit('appPause');
                     }, false);
                 }
 
@@ -383,6 +383,9 @@ window.app = new Framework7({
                     }
                     window.loginDone = 1;
                 });
+        },
+        afterLogin: function(data){
+
         },
         getFromStorage: function(name){
             let ret = [];
