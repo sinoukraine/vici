@@ -917,7 +917,7 @@ let app = new Framework7({
             });*/
 
             push.on('registration', data => {
-                self.dialog.alert(data.registrationId);
+               // self.dialog.alert(data.registrationId);
                 console.log(data.registrationType);
                 if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
                     // Save new registration ID
@@ -1018,9 +1018,9 @@ let app = new Framework7({
                 };
                 self.request.promise.post(API_URL.REFRESH_TOKEN, data, 'json')
                     .then(function (result) {
-                        if(result.data.MajorCode === '000') {
+                        /*if(result.data.MajorCode === '000') {
 
-                        }
+                        }*/
                     })
                     .catch(function (err) {
                         console.log(err);
