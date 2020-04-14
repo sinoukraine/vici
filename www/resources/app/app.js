@@ -298,12 +298,12 @@ window.app = new Framework7({
             }
             self.methods.getPlusInfo();
 
-            let account = $$("input[name='username']").replace('+', '').trim();
+            let account = $$("input[name='username']");
             let password = $$("input[name='password']");
 
             let data = {
                 //account: account.val() ? account.val() : localStorage.ACCOUNT,
-                PhoneNumber: account.val() ? account.val() : localStorage.ACCOUNT,
+                PhoneNumber: account.val() ? account.val().replace('+', '').trim() : localStorage.ACCOUNT,
                 Password: password.val() ? password.val() : localStorage.PASSWORD,
                 PushToken: localStorage.PUSH_DEVICE_TOKEN ? localStorage.PUSH_DEVICE_TOKEN : '',
                 /*appKey: localStorage.PUSH_APP_KEY ? localStorage.PUSH_APP_KEY : '',
@@ -878,7 +878,7 @@ window.app = new Framework7({
             });
 
             push.on('registration', function(data) {
-                alert(data.registrationId);
+                //alert(data.registrationId);
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
                 if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
@@ -887,7 +887,7 @@ window.app = new Framework7({
                     // Post registrationId to your app server as the value has changed
                     setTimeout(function() {
                         self.methods.refreshToken(data.registrationId);
-                        self.methods.getNewData(true);
+                        //self.methods.getNewData(true);
                     },1000);
                 }
             });
@@ -976,10 +976,12 @@ window.app = new Framework7({
         refreshToken: function(newDeviceToken) {
             let self = this;
 
-            if (self.data.Token && newDeviceToken) {
+            if (self.data.Token && newDeviceToken && localStorage.ACCOUNT && localStorage.PASSWORD) {
                 let data = {
                     Token: self.data.Token,
                     PushToken: newDeviceToken,
+                    PhoneNumber: localStorage.ACCOUNT,
+                    Password: localStorage.PASSWORD
                 };
                 self.request.promise.post(API_URL.REFRESH_TOKEN, data, 'json')
                     .then(function (result) {
