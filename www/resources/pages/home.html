@@ -799,7 +799,9 @@
                     self.watchUserLocation();
                 });
                 AppEvents.on('appResume', function (){
-                    self.watchUserLocation();
+                    if(self.LoginDone){
+                        self.watchUserLocation();
+                    }
                 });
                 AppEvents.on('appPause', function (){
                     if(!bgGeo){
