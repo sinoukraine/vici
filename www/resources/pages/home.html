@@ -367,7 +367,7 @@
                     console.log("[watchPosition] ERROR -", errorCode);
                 }, {
                     interval: 30*1000,
-                    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+                    desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
                     persist: true,
                     timeout: 60000
                 });
@@ -783,10 +783,10 @@
                 self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
 
-                if(self.LoginDone){
+                /*if(self.LoginDone){
                     self.watchUserLocation();
                     self.refreshMap();
-                }
+                }*/
 
 
                 AppEvents.on('covidStatusChanged', self.updateCovidStatus);
