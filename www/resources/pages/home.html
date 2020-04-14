@@ -631,7 +631,14 @@
                         IMEI: data.IMEI,
                     }
                 }, function (state) {
-                    bgGeo.requestPermission().then((status) => {
+                    if (!state.enabled) {
+                        bgGeo.start().then(function() {
+                            alert('- BackgroundGeolocation tracking started')
+                            // console.log('- BackgroundGeolocation tracking started');
+                        });
+                    }
+
+                    /*bgGeo.requestPermission().then((status) => {
                         bgGeo.startSchedule(function() {
                             //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
                             self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG074});
@@ -641,7 +648,7 @@
                         self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
                         console.log('[requestPermission] REJECTED', status);
                        // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
-                    });
+                    });*/
                 });
             }
         },
