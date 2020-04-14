@@ -743,12 +743,15 @@
                     }
                 }, function (state) {
                     console.log('here1');
-                    bgGeo.start().then(function() {
+                    console.log(state);
+
+                    bgGeo.start(function() {
                         console.log('here2');
                         self.refreshMap();
-                        //alert('- BackgroundGeolocation tracking started')
-                        // console.log('- BackgroundGeolocation tracking started');
                     });
+                    /*bgGeo.start().then(function() {
+
+                    });*/
                     /*if (!state.enabled) {
                         bgGeo.start().then(function() {
                             console.log('here2');
