@@ -362,7 +362,7 @@ let app = new Framework7({
                         self.utils.nextFrame(()=>{
                             self.loginScreen.close();
                             self.dialog.close();
-                            self.dialog.alert(localStorage.PUSH_DEVICE_TOKEN);
+                            //self.dialog.alert(localStorage.PUSH_DEVICE_TOKEN);
                         });
 
                     }else {
@@ -919,6 +919,15 @@ let app = new Framework7({
             push.on('registration', data => {
                 self.dialog.alert(data.registrationId);
                 console.log(data.registrationType);
+                if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
+                    // Save new registration ID
+                    localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+                    // Post registrationId to your app server as the value has changed
+                    setTimeout(function() {
+                        self.methods.refreshToken(data.registrationId);
+                        //self.methods.getNewData(true);
+                    },3000);
+                }
             });
 
             push.on('error', function(e) {
@@ -1000,12 +1009,12 @@ let app = new Framework7({
         refreshToken: function(newDeviceToken) {
             let self = this;
 
-            if (self.data.Token && newDeviceToken && localStorage.ACCOUNT && localStorage.PASSWORD) {
+            if (self.data.Token && newDeviceToken) {
                 let data = {
                     Token: self.data.Token,
                     PushToken: newDeviceToken,
-                    PhoneNumber: localStorage.ACCOUNT,
-                    Password: localStorage.PASSWORD
+                    /*PhoneNumber: localStorage.ACCOUNT,
+                    Password: localStorage.PASSWORD*/
                 };
                 self.request.promise.post(API_URL.REFRESH_TOKEN, data, 'json')
                     .then(function (result) {
