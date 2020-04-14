@@ -78,6 +78,11 @@
 	<plugin name="phonegap-plugin-push" source="npm" spec="2.3.0"> 
         <variable name="SENDER_ID" value="1097482483564" /> 
   	</plugin>
+
+    <plugin name="cordova-android-play-services-gradle-release" spec="^4.0.0">
+        <!-- <variable name="play-services-location" value="17.0.0" /> -->
+    </plugin>
+   
     <!-- Fix to make push plugin return registration token when app build with background tracking plugin-->
 	<plugin name="cordova-support-google-services" source="npm" spec="1.3.1" /> 
 	<edit-config file="res/values/strings.xml" mode="add" target="/resources"> 		
