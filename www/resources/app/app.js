@@ -298,7 +298,7 @@ window.app = new Framework7({
             }
             self.methods.getPlusInfo();
 
-            let account = $$("input[name='username']");
+            let account = $$("input[name='username']").replace('+', '').trim();
             let password = $$("input[name='password']");
 
             let data = {
@@ -813,7 +813,7 @@ window.app = new Framework7({
             bgGeo = window.BackgroundGeolocation;
             let self = this;
 
-            let savedConfig = self.methods.getFromStorage('trackingConfig'); //trackerGetSavedConfig();
+            //let savedConfig = self.methods.getFromStorage('trackingConfig'); //trackerGetSavedConfig();
             let config = {
                 //reset: true,
                 reset: false,

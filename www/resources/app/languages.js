@@ -77,7 +77,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG010": "Panic Button Behaviour",
 		"PROMPT_MSG011": "This is an emergency call button and SMS alerts to the numbers you specify in user settings page, in case something happened to you and help is needed.",
 		"PROMPT_MSG012": "Set Panic Button behaviour, please",
-		"PROMPT_MSG013": "The login(email) or password you entered is incorrect.",
+		"PROMPT_MSG013": "The Phone Number or password you entered is incorrect.",
 		"PROMPT_MSG014": "Data saved",
 		"PROMPT_MSG015": "I'm in emergency, my location",
 		"PROMPT_MSG016": 'My phone Battery lvl',
