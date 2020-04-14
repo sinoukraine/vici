@@ -142,12 +142,12 @@ let app = new Framework7({
 
 
 
-                   /* document.addEventListener("resume", function () {
+                    document.addEventListener("resume", function () {
                         AppEvents.emit('appResume');
                     }, false);
                     document.addEventListener("pause", function () {
                         AppEvents.emit('appPause');
-                    }, false);*/
+                    }, false);
                 }
 
 

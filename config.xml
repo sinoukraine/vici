@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
-	id="com.sinopacific.vici"
+	id="com.vici.app"
 	version="1.0.0"
 	android-versionCode="1"
     ios-CFBundleVersion="1"
@@ -49,9 +49,9 @@
 	</platform>
 
 	<!-- sms plugin -->        
-   <!--  <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
+   <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
        <uses-permission android:name="android.permission.SEND_SMS" />            
-   </config-file> -->
+   </config-file>
     <!-- /sms plugin -->
 
 
