@@ -137,6 +137,8 @@ window.app = new Framework7({
 
                     //self.methods.setupPush();
                     self.methods.setGeolocationPlugin();
+                    self.methods.setupPush();
+
 
                     document.addEventListener("resume", function () {
                         AppEvents.emit('resume');
@@ -863,6 +865,10 @@ window.app = new Framework7({
         },
         setupPush: function() {
             let self = this;
+
+            if(push){
+                return;
+            }
             push = PushNotification.init({
                 "android": {
                     //"senderID": "264121929701"
@@ -881,7 +887,7 @@ window.app = new Framework7({
             });
 
             push.on('registration', function(data) {
-                //alert(data.registrationId);
+                alert(data.registrationId);
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
                 alert(localStorage.PUSH_DEVICE_TOKEN);
