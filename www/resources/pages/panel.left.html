@@ -48,9 +48,9 @@
                         </li>
                         <li>
                             <a href="/timing-settings/" class="item-link item-content panel-close">
-                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-timing"></i></div>
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-panic"></i></div>
                                 <div class="item-inner">
-                                    <div class="item-title">{{@global.LANGUAGE.TIMING_MSG00}}</div>
+                                    <div class="item-title">{{@global.LANGUAGE.TIMING_MSG10}}</div>
                                 </div>
                             </a>
                         </li>
@@ -95,8 +95,8 @@
             let self = this;
             let userInfo = self.$app.methods.getFromStorage('userInfo');
             return {
-                AddNewUrl: API_URL.ADD_NEW + '?account='+localStorage.ACCOUNT+'&countryCode='+userInfo.CountryCode,
-                UserID: '123456789012345'
+                //AddNewUrl: API_URL.ADD_NEW + '?account='+localStorage.ACCOUNT+'&countryCode='+userInfo.CountryCode,
+                UserID: userInfo.id
                 /*Initials: 'UN',
                 FirstName: 'User',
                 LastName: 'Name',

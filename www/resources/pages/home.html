@@ -17,7 +17,7 @@
                     <a href="#" @click="showShieldStatusPopover" class="link icon-only {{StatusShieldColor}}" >
                         <i class="f7-icons icon-shield position-relative">{{#if StatusDaysCount}}<span class="badge badge-with-border color-red">{{StatusDaysCount}}</span>{{/if}}</i>
                     </a>
-                    <a href="#" class="link icon-only " >
+                    <a href="/notifications/" class="link icon-only " >
                         <i class="f7-icons icon-notifications position-relative">{{#if NotificationCount}}<span class="badge badge-with-border color-red">{{NotificationCount}}</span>{{/if}}</i>
                     </a>
                 </div>
@@ -303,6 +303,10 @@
                         }
                     });
             },*/
+            watchUserLocation: function(){
+                let self = this;
+
+            },
             getCurrentPosition: function(callback){
                 let self = this;
                 if (!bgGeo){
@@ -350,7 +354,53 @@
             refreshMap: function () {
                 let self = this;
 
-                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                self.getCurrentPosition(function (location) {
+                    self.$setState({
+                        LastPosInfo: location,
+                        LastPosInfoLocal: true
+                    });
+                    if(!self.Marker){
+                        self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
+
+                        self.Marker
+                                .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                                .on('popupopen', function (e) {
+                                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                            self.$setState({
+                                                Address: address,
+                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                                                LastPosInfo: location,
+                                                LastPosInfoLocal: true
+                                            });
+                                            e.target.setPopupContent(self.getMarkerDataTable(location, true));
+                                            e.popup.update();
+                                        });
+                                    }
+                                })
+                                .addTo(self.MarkersGroup);
+                        self.MarkersGroup.addTo(self.Map);
+                    }
+                    self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                    self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                    if (self.MarkersGroup.getBounds().isValid()) {
+                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                    }
+
+                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                            self.$setState({
+                                Address: address,
+                                LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                                LastPosInfo: location,
+                                LastPosInfoLocal: true
+                            });
+                            self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                        });
+                    }
+                });
+
+                /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
 
                 if(self.$app.methods.isObjEmpty(trackingConfig)){
                     self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG057, callback: function () {
@@ -375,7 +425,7 @@
                             LastPosInfoLocal: true
                         });
                         if(!self.Marker){
-                            /*self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: self.CovidSatusPositive ? Helper.MarkerIcon[3] : Helper.MarkerIcon[2]});*/
+                            /!*self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: self.CovidSatusPositive ? Helper.MarkerIcon[3] : Helper.MarkerIcon[2]});*!/
                             self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
 
                             self.Marker
@@ -415,7 +465,7 @@
                             });
                         }
                     });
-                }
+                }*/
             },
             updateMarker: function(){
                 let self = this;
@@ -633,7 +683,8 @@
                 }, function (state) {
                     if (!state.enabled) {
                         bgGeo.start().then(function() {
-                            alert('- BackgroundGeolocation tracking started')
+                            self.refreshMap();
+                            //alert('- BackgroundGeolocation tracking started')
                             // console.log('- BackgroundGeolocation tracking started');
                         });
                     }
@@ -685,6 +736,7 @@
                         //Schedule: ["1-7 00:00-23:59"],
                         //ScheduleState: true
                     });
+                    self.watchUserLocation();
                 });
                 AppEvents.on('signedOut', function (){
                     self.$setState({
@@ -693,8 +745,9 @@
                     if(!bgGeo){
                         return;
                     }
+                    bgGeo.stop();
                     bgGeo.stopSchedule(function() {
-                        bgGeo.stop();
+                        //bgGeo.stop();
                         /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                         if( !self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.ScheduleState){
                             self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});

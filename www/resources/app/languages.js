@@ -49,7 +49,6 @@ window.LanguagePackages= {
 		"COM_MSG043": "Recovered",
 		"COM_MSG044": "day",
 		"COM_MSG045": "day(s)",
-
 		"COM_MSG046": "January",
 		"COM_MSG047": "February",
 		"COM_MSG048": "March",
@@ -62,7 +61,8 @@ window.LanguagePackages= {
 		"COM_MSG055": "October",
 		"COM_MSG056": "November",
 		"COM_MSG057": "December",
-
+		"COM_MSG058": "Delete",
+		"COM_MSG059": "Open",
 
 		"PROMPT_MSG000": "Nothing found",
 		"PROMPT_MSG001": "In this section, you can edit the timing for tracking the device.",
@@ -97,11 +97,10 @@ window.LanguagePackages= {
 		"PROMPT_MSG030": "You want to report a disease COVID-19 virus?",
 		"PROMPT_MSG031": "You want to report recovery?",
 		"PROMPT_MSG032": "Thank you, your status will be changed to Pending",
-
 		"PROMPT_MSG033": "Please, submit below form when COVID-19 test samples was taken from you.",
 		"PROMPT_MSG034": "Please fill in below form when you got recovered from virus COVID-19",
 		"PROMPT_MSG035": "Thank you, your status will be changed to Recovered",
-
+		"PROMPT_MSG036": "Under development",
 
 		"PROMPT_MSG052": "Here you can set new password - min 6, max 32 characters and contains no spaces",
 		"PROMPT_MSG053": "Passwords do not match",
@@ -127,6 +126,11 @@ window.LanguagePackages= {
 		"PROMPT_MSG072": "Congratulations! You have successfully registered!",
 		"PROMPT_MSG073": "This Phone Number is already registered",
 		"PROMPT_MSG074": "Tracking configured",
+		"PROMPT_MSG075": "You are going to delete all notifications",
+		"PROMPT_MSG076": "Proceed?",
+		"PROMPT_MSG077": "You have no Notifications",
+		"PROMPT_MSG078": "Are you sure want to delete this notification?",
+		"PROMPT_MSG079": "Delete notification.",
 
 
 
@@ -196,6 +200,7 @@ window.LanguagePackages= {
 		"TIMING_MSG07": "min",
 		"TIMING_MSG08": "Phone Number",
 		"TIMING_MSG09": "Country Code",
+		"TIMING_MSG10": "Panic Button",
 
 		"PANIC_BUTTON_MSG00": "Panic Button",
 		"PANIC_BUTTON_MSG01": "Emergency Phone",
@@ -245,6 +250,7 @@ window.LanguagePackages= {
 		"REGISTRATION_MSG18": "Female",
 		"REGISTRATION_MSG19": "minimum 6 characters",
 
+		"NOTIFICATIONS_MSG00": "Notifications",
 
 	},
 	"ua":{

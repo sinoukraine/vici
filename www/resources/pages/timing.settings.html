@@ -11,7 +11,7 @@
                         <i class="icon icon-back"></i>
                     </a>
                 </div>
-                <div class="title sliding">{{@global.LANGUAGE.TIMING_MSG00}}</div>
+                <div class="title sliding">{{@global.LANGUAGE.TIMING_MSG10}}</div>
                 <div class="right">
                     <!--<a href="/share/?imei=" class="link icon-only">
                         <i class="f7-icons icon-share"></i>
@@ -85,7 +85,7 @@
             </div>
 
 
-
+<!--
             <div class="block-title">{{@global.LANGUAGE.TIMING_MSG00}}</div>
             <div class="block">
                 {{@global.LANGUAGE.PROMPT_MSG001}}
@@ -185,7 +185,7 @@
                                         <p class="text-color-black timing-time-label no-margin-top margin-bottom-half">{{EndTime}}</p>
                                     </span>
                                 </div>
-                                <!-- Dual range slider with all the parameters passed via data- attributes -->
+                                &lt;!&ndash; Dual range slider with all the parameters passed via data- attributes &ndash;&gt;
                                 <div
                                         class="range-slider range-slider-init range-slider-tracking-time color-green"
                                         data-dual="true"
@@ -199,7 +199,7 @@
                         </div>
                     </li>
                 </ul>
-            </div>
+            </div>-->
         </form>
 
     </div>
@@ -215,11 +215,11 @@
         data: function () {
             let self = this;
 
-            let userInfo = self.$app.methods.getFromStorage('userInfo');
-            let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
             let panicConfig = self.$app.methods.getFromStorage('panicConfig');
             let emergencyList = self.$app.methods.getFromStorage('emergencyList');
 
+            /*let userInfo = self.$app.methods.getFromStorage('userInfo');
+            let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
             let daysOfWeekArr = Helper.Methods.getWeekDaysArr();
             let countrys = Helper.Methods.getCountrys();
             let intervalList = Helper.Methods.getIntervalList();
@@ -242,7 +242,7 @@
             daysOfWeek = daysOfWeek.split(',');
             for (let i = 0; i < daysOfWeek.length; i++) {
                 daysOfWeekArr.find( ({ Val }) => Val === parseInt(daysOfWeek[i])).Selected = true;
-            }
+            }*/
 
             if(!self.$app.methods.isObjEmpty(panicConfig)){
                 if(!self.$app.methods.isObjEmpty(panicConfig.CallTo)){
@@ -261,20 +261,20 @@
                 EmergencyList: emergencyList && emergencyList.length ? emergencyList : false,
                 PanicButtonState: panicConfig.State,
 
-                Countrys: countrys,
+                /*Countrys: countrys,
                 DaysOfWeekArr: daysOfWeekArr,
                 IntervalList: intervalList,
                 StartTimeMinutes: !trackingConfig.StartTime ? 0 : trackingConfig.StartTime,
                 EndTimeMinutes: !trackingConfig.EndTime ? 1439 : trackingConfig.EndTime,
                 Phone: trackingPhone,
-                TrackingState: trackingConfig.ScheduleState
+                TrackingState: trackingConfig.ScheduleState*/
            };
 
             return ret;
         },
 
         methods: {
-            saveTrackingConfig: function (data) {
+            /*saveTrackingConfig: function (data) {
                 let self = this;
 
                 if (!bgGeo) {
@@ -313,7 +313,7 @@
                         });
                     }
                 });
-            }
+            }*/
 
         },
 
@@ -342,10 +342,10 @@
                     let callTo = page.$el.find('[name = "PanicPhone"]').val();
                     let smsTo = page.$el.find('[name = "PanicSMS"]').val();
 
-                    let phoneCodeEl = page.$el.find('[name = "CountryCode"]');
+                   /* let phoneCodeEl = page.$el.find('[name = "CountryCode"]');
                     let phoneVal = page.$el.find('[name = "Phone"]').val();
                     let imei = phoneCodeEl[0].options[phoneCodeEl[0].selectedIndex].getAttribute("data-display-as") + phoneVal;
-                    imei = imei.replace('+', '').trim();
+                    imei = imei.replace('+', '').trim();*/
 
                     if(panicState && !callTo.length && !smsTo.length){
                         self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG012});
@@ -362,8 +362,9 @@
                     };
                     self.$app.methods.setInStorage({name:'panicConfig', data: panicConfig});
 
-
-
+                    self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
+                    mainView.router.back();
+/*
                     self.$app.progressbar.show();
                     self.$app.request.promise.post(API_URL.VERIFY_DEVICE, {IMEI: imei}, 'json')
                         .then(function (result) {
@@ -415,11 +416,11 @@
                             }else{
                                 self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
                             }
-                        });
+                        });*/
 
                     return false;
                 });
-
+/*
                 self.$app.utils.nextFrame(()=>{
                     let rangeSlider = self.$app.range.get('.range-slider-tracking-time');
                     rangeSlider.on('change', function (range, value) {
@@ -442,7 +443,7 @@
                         })
                     });
                     rangeSlider.setValue([self.StartTimeMinutes, self.EndTimeMinutes]);
-                });
+                });*/
 
 
             },

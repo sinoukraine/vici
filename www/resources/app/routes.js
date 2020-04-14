@@ -52,6 +52,11 @@ var routes = [
         componentUrl: './resources/pages/registration.html?v=2.1',
         name: 'registration',
     },
+    {
+        path: '/notifications/',
+        componentUrl: './resources/pages/notifications.html?v=2.1',
+        name: 'notifications',
+    },
 
     // Default route (404 page). MUST BE THE LAST
     {

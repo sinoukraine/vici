@@ -26,7 +26,7 @@ const API_URL = {};
 API_URL.REGISTRATION = API_DOMIAN2 + 'Contact/Register';
 API_URL.PREREGISTRATION = API_DOMIAN2 + 'Contact/PreRegister';
 //API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
-API_URL.LOGIN = API_DOMIAN2 + 'Contact/Auth';
+API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
 API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Contact/Auth';
 //API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
 API_URL.UPLOAD_LINK = 'http://test.m2mdata.co:5000/' + 'Position/Upload';
@@ -234,10 +234,10 @@ window.app = new Framework7({
             let self = this;
 
             let deviceToken = localStorage.PUSH_DEVICE_TOKEN;
-            let mobileToken = localStorage.PUSH_MOBILE_TOKEN;
-            //let notifications = self.methods.getFromStorage('notifications');
+            //let mobileToken = localStorage.PUSH_MOBILE_TOKEN;
+            let notifications = self.methods.getFromStorage('notifications');
             //let mapSettings = self.methods.getFromStorage('mapSettings');
-            let trackingConfig = self.methods.getFromStorage('trackingConfig');
+            //let trackingConfig = self.methods.getFromStorage('trackingConfig');
             let panicConfig = self.methods.getFromStorage('panicConfig');
             let emList = self.methods.getFromStorage('emergencyList');
 
@@ -253,16 +253,16 @@ window.app = new Framework7({
             if (deviceToken) {
                 localStorage.PUSH_DEVICE_TOKEN = deviceToken;
             }
-            if (mobileToken) {
+            /*if (mobileToken) {
                 localStorage.PUSH_MOBILE_TOKEN = mobileToken;
-            }
+            }*/
 
-            if (UpdateAssetsPosInfoTimer) {
+            /*if (UpdateAssetsPosInfoTimer) {
                 clearInterval(UpdateAssetsPosInfoTimer);
-            }
-            if (!self.methods.isObjEmpty(trackingConfig)){
+            }*/
+            /*if (!self.methods.isObjEmpty(trackingConfig)){
                 self.methods.setInStorage({name:'trackingConfig', data:trackingConfig});
-            }
+            }*/
             if (!self.methods.isObjEmpty(panicConfig)){
                 self.methods.setInStorage({name:'panicConfig', data:panicConfig});
             }
@@ -271,7 +271,7 @@ window.app = new Framework7({
             }
 
 
-            let data = {
+            /*let data = {
                 MinorToken: self.data.MinorToken,
                 deviceToken: deviceToken,
                 mobileToken: mobileToken,
@@ -279,7 +279,7 @@ window.app = new Framework7({
             self.request.promise.get(API_URL.LOGOUT, data, 'json')
                 .then(function (result) {
                     //console.log(result);
-                });
+                });*/
             self.utils.nextTick(()=>{
                 AppEvents.emit('signedOut');
                 mainView.router.back('/',{force: true});
@@ -421,6 +421,13 @@ window.app = new Framework7({
                         }
                         break;
 
+                    case 'notifications':
+                        str = localStorage.getItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS");
+                        if(str) {
+                            ret = JSON.parse(str);
+                        }
+                        break;
+
                     default:
                         self.dialog.alert('There is no item saved with such name - '+name);
                 }
@@ -455,6 +462,9 @@ window.app = new Framework7({
 
                     case 'emergencyList':
                         localStorage.setItem("COM.QUIKTRAK.PHONETRACK.EMERGENCYLIST", JSON.stringify(params.data));
+                        break;
+                    case 'notifications':
+                        localStorage.setItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS", JSON.stringify(params.data));
                         break;
 
                     default:

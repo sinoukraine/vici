@@ -39,7 +39,7 @@
                                 <div class="item-inner">
                                     <div class="item-title">
                                         <div class="item-header text-color-gray">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG13}}</div>
-                                        {{UserID}}
+                                        {{id}}
                                     </div>
                                 </div>
                             </li>
@@ -57,8 +57,8 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG02}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="text" name="FirstName" value="{{FirstName}}" required validate>
-                                        <span class="input-clear-button"></span>
+                                        <input type="text" name="FirstName" value="{{firstName}}" required validate readonly>
+                                       <!-- <span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
                             </li>
@@ -67,28 +67,28 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG03}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="text" name="SubName" value="{{SubName}}" required validate>
-                                        <span class="input-clear-button"></span>
+                                        <input type="text" name="SubName" value="{{subName}}" required validate readonly>
+                                        <!--<span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
                             </li>
-                            <li class="item-content item-input">
+                            <!--<li class="item-content item-input">
                                 <div class="item-media text-color-lightgray"><i class="f7-icons icon-email"></i></div>
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG04}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="email" name="EMail" value="{{EMail}}" required validate>
+                                        <input type="email" name="EMail" value="{{EMail}}" required validate readonly>
                                         <span class="input-clear-button"></span>
                                     </div>
                                 </div>
-                            </li>
+                            </li>-->
                             <li class="item-content item-input">
                                 <div class="item-media text-color-lightgray"><i class="f7-icons icon-phone"></i></div>
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG05}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="tel" name="Mobile" value="{{Mobile}}" required validate pattern="[0-9]*" data-error-message="{{@global.LANGUAGE.PROMPT_MSG020}}">
-                                        <span class="input-clear-button"></span>
+                                        <input type="tel" name="Mobile" value="{{phoneNumber}}" required validate readonly>
+                                       <!-- <span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
                             </li>
@@ -208,46 +208,48 @@
                 ...userInfo,
                 CurrentFormButtonSubmit: 'submit-form-user',
                 EmergencyList: emList,
-                UserID: '123456789012345',
+                //UserID: '123456789012345',
             };
 
-            console.log(ret)
+            //console.log(ret)
             return ret;
         },
 
         methods: {
-            saveUserDetails: function(data){
+            saveUserDetails: function (data) {
                 var self = this;
 
                 self.$app.preloader.show();
                 self.$app.request.promise.get(API_URL.EDIT_ACCOUNT, data, 'json')
-                    .then(function (result) {
-                        if(result.data.MajorCode === '000') {
-                            var userInfo = self.$app.methods.getFromStorage('userInfo');
-                            self.$app.utils.extend(userInfo, data);
-                            self.$app.methods.setInStorage({name:'userInfo', data: userInfo });
-                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
-                            mainView.router.back();
-                        }else{
-                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
-                        }
-                    })
-                    .finally(function () {
-                        self.$app.preloader.hide();
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                        if (err && err.status === 404){
-                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
-                        }else{
-                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
-                        }
-                    });
+                        .then(function (result) {
+                            if (result.data.MajorCode === '000') {
+                                var userInfo = self.$app.methods.getFromStorage('userInfo');
+                                self.$app.utils.extend(userInfo, data);
+                                self.$app.methods.setInStorage({name: 'userInfo', data: userInfo});
+                                self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG014});
+                                mainView.router.back();
+                            } else {
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                            }
+                        })
+                        .finally(function () {
+                            self.$app.preloader.hide();
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            if (err && err.status === 404) {
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                            } else {
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                            }
+                        });
             },
-            saveNewPassword: function(data){
+            saveNewPassword: function (data) {
                 var self = this;
 
-                self.$app.preloader.show();
+                self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG036});
+
+                /*self.$app.preloader.show();
                 self.$app.request.promise.get(API_URL.NEW_PASSWORD, data, 'json')
                     .then(function (result) {
                         if(result.data.MajorCode === '000') {
@@ -272,10 +274,10 @@
                             self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
                         }
                     });
+            */
+
             },
-
         },
-
         on: {
             pageInit: function (e, page) {
                 let self = this;
@@ -316,7 +318,10 @@
                         self.$app.methods.setInStorage({name: 'emergencyList', data: emList});
                     }
 
-                    let data = {
+                    self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
+                    mainView.router.back();
+
+                   /* let data = {
                         MajorToken: self.$root.MajorToken,
                         MinorToken: self.$root.MinorToken,
                         FirstName: page.$el.find('input[name="FirstName"]').val(),
@@ -325,7 +330,7 @@
                         EMail: page.$el.find('input[name="EMail"]').val(),
                     };
 
-                    self.saveUserDetails(data);
+                    self.saveUserDetails(data);*/
 
                     return false;
                 });
@@ -356,5 +361,5 @@
                 });
             },
         }
-    };
+    }
 </script>
