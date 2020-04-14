@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1097482483564-noqsaqk7f7s4o9ubaad9bf9l14ud5kkh.apps.googleusercontent.com</string>
+	<string>1048274347661-gbopbmls17fba46vu23vl78lkq623a17.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1097482483564-noqsaqk7f7s4o9ubaad9bf9l14ud5kkh</string>
+	<string>com.googleusercontent.apps.1048274347661-gbopbmls17fba46vu23vl78lkq623a17</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBIAv1FSX73w5zpZNX3mXeUl-DkyN6r7EA</string>
+	<string>AIzaSyC2AA8PoaXg2ZMsKpNjxfDc1H2or-KnW8c</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1097482483564</string>
+	<string>1048274347661</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.sinopacific.phonetrack</string>
+	<string>com.vici.app</string>
 	<key>PROJECT_ID</key>
-	<string>quiktrak-1a820</string>
+	<string>vici-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>quiktrak-1a820.appspot.com</string>
+	<string>vici-app.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1097482483564:ios:25583118290d32c18d2549</string>
+	<string>1:1048274347661:ios:5af4a6186f1a29670064c4</string>
 	<key>DATABASE_URL</key>
-	<string>https://quiktrak-1a820.firebaseio.com</string>
+	<string>https://vici-app.firebaseio.com</string>
 </dict>
 </plist>
