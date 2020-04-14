@@ -625,10 +625,10 @@
                 bgGeo.setConfig({
                     distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
                     locationUpdateInterval: data.Interval,  // Get a location every 5 seconds
-                    schedule: data.Schedule,
-                    url: API_URL.UPLOAD_LINK,
+                    //schedule: data.Schedule,
+                    //url: API_URL.UPLOAD_LINK,
                     params: {
-                        IMEI: data.IMEI,
+                        ID: data.ID,
                     }
                 }, function (state) {
                     if (!state.enabled) {
@@ -681,9 +681,9 @@
                     });
                     self.startTracking({
                         Interval: 60*1000,
-                        IMEI: userInfo.phoneNumber,
-                        Schedule: ["1-7 00:00-23:59"],
-                        ScheduleState: true
+                        ID: userInfo.id,
+                        //Schedule: ["1-7 00:00-23:59"],
+                        //ScheduleState: true
                     });
                 });
                 AppEvents.on('signedOut', function (){
