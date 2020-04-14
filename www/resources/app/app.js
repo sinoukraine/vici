@@ -303,7 +303,7 @@ window.app = new Framework7({
 
             let data = {
                 //account: account.val() ? account.val() : localStorage.ACCOUNT,
-                PhoneNumber: account.val() ? account.val().replace('+', '').trim() : localStorage.ACCOUNT,
+                PhoneNumber: account.val() ? account.val().replace('+', '').trim() : localStorage.ACCOUNT.replace('+', '').trim(),
                 Password: password.val() ? password.val() : localStorage.PASSWORD,
                 PushToken: localStorage.PUSH_DEVICE_TOKEN ? localStorage.PUSH_DEVICE_TOKEN : '',
                 /*appKey: localStorage.PUSH_APP_KEY ? localStorage.PUSH_APP_KEY : '',
@@ -312,9 +312,12 @@ window.app = new Framework7({
                 deviceType: localStorage.DEVICE_TYPE ? localStorage.DEVICE_TYPE : '',*/
             };
 
+            alert(JSON.stringify(data));
+
             self.dialog.progress();
             self.request.promise.post(API_URL.LOGIN, data, 'json')
                 .then(function (result) {
+                    alert(JSON.stringify(result.data));
                     console.log(result.data);
                     if(result.data && result.data.majorCode === '000') {
                         if(account.val()) {
