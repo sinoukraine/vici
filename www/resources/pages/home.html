@@ -743,14 +743,20 @@
                     }
                 }, function (state) {
                     console.log('here1');
-                    if (!state.enabled) {
+                    bgGeo.start().then(function() {
+                        console.log('here2');
+                        self.refreshMap();
+                        //alert('- BackgroundGeolocation tracking started')
+                        // console.log('- BackgroundGeolocation tracking started');
+                    });
+                    /*if (!state.enabled) {
                         bgGeo.start().then(function() {
                             console.log('here2');
                             self.refreshMap();
                             //alert('- BackgroundGeolocation tracking started')
                             // console.log('- BackgroundGeolocation tracking started');
                         });
-                    }
+                    }*/
 
                     /*bgGeo.requestPermission().then((status) => {
                         bgGeo.startSchedule(function() {
@@ -794,6 +800,7 @@
                         StatusDaysCount: 0
                     });
                     console.log('here0');
+
                     self.startTracking({
                         Interval: 60*1000,
                         ID: userInfo.id,
