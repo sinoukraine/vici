@@ -1111,6 +1111,7 @@ Protocol = {
 };
 
 
+/*
 
 Protocol.Common = JClass({
     STATIC: {
@@ -1292,4 +1293,4 @@ Protocol.ClassManager = {
         }
         return ret;
     }
-};
+};*/
