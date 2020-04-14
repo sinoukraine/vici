@@ -214,8 +214,8 @@ let app = new Framework7({
                 if (!localStorage.PUSH_DEVICE_TOKEN)
                     localStorage.PUSH_DEVICE_TOKEN = uid;
                 //localStorage.PUSH_DEVICE_TOKEN = "75ba1639-92ae-0c4c-d423-4fad1e48a49d"
-                localStorage.PUSH_APPID_ID = 'android.app.quiktrak.eu.phonetrack';
-                localStorage.DEVICE_TYPE = "android.app.quiktrak.eu.phonetrack";
+                localStorage.PUSH_APPID_ID = 'android.app.quiktrak.eu.vici';
+                localStorage.DEVICE_TYPE = "android.app.quiktrak.eu.vici";
             }
         },
         clearUserInfo: function(){
@@ -231,7 +231,7 @@ let app = new Framework7({
 
             localStorage.clear();
 
-            //self.methods.unregisterPush();
+            self.methods.unregisterPush();
             /*if (notifications) {
                 localStorage.setItem("COM.QUIKTRAK.NEW.NOTIFICATIONS", JSON.stringify(notifications));
             }*/
@@ -285,6 +285,9 @@ let app = new Framework7({
         },
         login: function(){
             let self = this;
+            if(window.hasOwnProperty("cordova")){
+                self.methods.setupPush();
+            }
             self.methods.getPlusInfo();
 
             let account = $$("input[name='username']");
@@ -755,6 +758,36 @@ let app = new Framework7({
             window.open('tel:'+phone, '_system');
         },
 
+        getNewData: function(noPosInfoUpdate = false, emitDataUpdated = false){
+            let self = this;
+            self.methods.getPlusInfo();
+
+            let data = {
+                account: localStorage.ACCOUNT,
+                password: localStorage.PASSWORD,
+
+                appKey: localStorage.PUSH_APP_KEY,
+                mobileToken: localStorage.PUSH_MOBILE_TOKEN,
+                deviceToken: localStorage.PUSH_DEVICE_TOKEN,
+                deviceType: localStorage.DEVICE_TYPE,
+            };
+
+            self.request.promise.get(API_URL.LOGIN, data, 'json')
+                .then(function (result) {
+                    if(result.data && result.data.MajorCode === '000') {
+                        self.methods.setInStorage({
+                            name: 'userInfo',
+                            data:  result.data.Data.User
+                        });
+                        self.data.MinorToken = result.data.Data.MinorToken;
+                        self.data.MajorToken = result.data.Data.MajorToken;
+                    }
+                })
+                .catch(function (err) {
+                    console.log(err);
+
+                });
+        },
         setGeolocationPlugin: function(){
             if(!window.BackgroundGeolocation){
                 return;
@@ -827,11 +860,11 @@ let app = new Framework7({
                 "windows": {}
             });
 
-            /*push.on('registration', function(data) {
-                alert('reg = ' + JSON.stringify(data));
+            push.on('registration', function(data) {
+                alert(data.registrationId);
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
-                /!*if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
+                if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
                     // Save new registration ID
                     localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
                     // Post registrationId to your app server as the value has changed
@@ -839,13 +872,13 @@ let app = new Framework7({
                         self.methods.refreshToken(data.registrationId);
                         self.methods.getNewData(true);
                     },1000);
-                }*!/
-            });*/
+                }
+            });
 
-            push.on('registration', data => {
+            /*push.on('registration', data => {
                 alert(data.registrationId);
                 console.log(data.registrationType);
-            });
+            });*/
 
             push.on('error', function(e) {
                 //console.log("push error = " + e.message);
