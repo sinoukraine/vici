@@ -74,7 +74,7 @@ const Helper = {
         getCovid19Marker: function(num){
             let ret = Helper.MarkerIcon[0];
             num = parseInt(num);
-            if(num){
+            if(num && Helper.MarkerIcon[num]){
                 ret = Helper.MarkerIcon[num];
             }
             return ret;

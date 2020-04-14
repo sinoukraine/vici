@@ -4,6 +4,7 @@ window.COM_TIMEFORMAT3 = 'DD/MM/YYYY HH:mm:ss';
 window.COM_TIMEFORMAT4 = 'YYYY-MM-DD';
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
+const API_DOMIAN2 = "http://194.247.12.103:5000/";
 
 const API_DOMAIN3 = "https://app.phonetrack.co/";
 const API_DOMAIN4 = "https://maps.google.com/";
@@ -31,7 +32,8 @@ API_URL.VERIFY_BY_EMAIL = API_DOMIAN1 + "QuikProtect/V1/Client/VerifyCodeByEmail
 API_URL.FORGOT_PASSWORD = API_DOMIAN1 + "QuikProtect/V1/Client/ForgotPassword";
 
 API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
-API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';
+//API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';//http://194.247.12.103:5000/Position/Upload
+API_URL.UPLOAD_LINK = API_DOMIAN1 + 'Position/Upload';
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
 API_URL.ADD_NEW = API_DOMAIN3 + 'vici.activation/activate';
