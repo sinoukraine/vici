@@ -39,7 +39,7 @@ window.LanguagePackages= {
 		"COM_MSG033": "Recovered",
 		"COM_MSG034": "Yes",
 		"COM_MSG035": "Cancel",
-
+		"COM_MSG036": "+27XXXXXXXXX",
 		"COM_MSG037": "Latitude",
 		"COM_MSG038": "Longitude",
 		"COM_MSG039": "Infected",
@@ -49,6 +49,19 @@ window.LanguagePackages= {
 		"COM_MSG043": "Recovered",
 		"COM_MSG044": "day",
 		"COM_MSG045": "day(s)",
+
+		"COM_MSG046": "January",
+		"COM_MSG047": "February",
+		"COM_MSG048": "March",
+		"COM_MSG049": "April",
+		"COM_MSG050": "May",
+		"COM_MSG051": "June",
+		"COM_MSG052": "July",
+		"COM_MSG053": "August",
+		"COM_MSG054": "September",
+		"COM_MSG055": "October",
+		"COM_MSG056": "November",
+		"COM_MSG057": "December",
 
 
 		"PROMPT_MSG000": "Nothing found",
@@ -107,6 +120,14 @@ window.LanguagePackages= {
 		"PROMPT_MSG066": "Your current Status",
 
 		"PROMPT_MSG068": "You haven't added any Emergency Contact, please go to User Settings to add them",
+
+		"PROMPT_MSG069": "Enter confirmation code from SMS",
+		"PROMPT_MSG070": "Incorrect confirmation code, try again",
+		"PROMPT_MSG071": "Error",
+		"PROMPT_MSG072": "Congratulations! You have successfully registered!",
+		"PROMPT_MSG073": "This Phone Number is already registered",
+		"PROMPT_MSG074": "Tracking configured",
+
 
 
 		"HOME_MSG00": "Home",
@@ -203,7 +224,26 @@ window.LanguagePackages= {
 
 		"QR_CODE_MSG00": "QR Code",
 
-
+		"REGISTRATION_MSG00": "Registration",
+		"REGISTRATION_MSG01": "Phone Number",
+		"REGISTRATION_MSG02": "Country Code",
+		"REGISTRATION_MSG03": "First Name",
+		"REGISTRATION_MSG04": "Last Name",
+		"REGISTRATION_MSG05": "Password",
+		"REGISTRATION_MSG06": "Password Confirm",
+		"REGISTRATION_MSG07": "Gender",
+		"REGISTRATION_MSG08": "Birth Date",
+		"REGISTRATION_MSG09": "Province / Sate",
+		"REGISTRATION_MSG10": "City",
+		"REGISTRATION_MSG11": "Region",
+		"REGISTRATION_MSG12": "Street",
+		"REGISTRATION_MSG13": "Address Details",
+		"REGISTRATION_MSG14": "Account",
+		"REGISTRATION_MSG15": "Personal",
+		"REGISTRATION_MSG16": "Address",
+		"REGISTRATION_MSG17": "Male",
+		"REGISTRATION_MSG18": "Female",
+		"REGISTRATION_MSG19": "minimum 6 characters",
 
 
 	},

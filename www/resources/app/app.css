@@ -332,7 +332,7 @@
     .login-screen-content .list input{
         background: rgba(255,255,255,.6)!important;
     }
-    .login-screen-content .input-clear-button.password-clear-button{
+    .input-clear-button.password-clear-button{
         margin-right: 48px;
     }
 .password-toggle {
@@ -587,6 +587,9 @@ html.color-theme-custom .leaflet-control-layers-overlays label input[type=checkb
     margin-top: 10px;
     color: #757575;
     font-size: 16px;
+}
+input.dialog-input[type] {
+    color: #000;
 }
 
 

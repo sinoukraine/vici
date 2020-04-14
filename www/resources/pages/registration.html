@@ -1,0 +1,503 @@
+<!--suppress JSAnnotator -->
+<template>
+<!-- Page, data-name contains page name which can be used in callbacks -->
+        <div class="page " data-name="forgot-password"> <!-- page-with-subnavbar -->
+        <!-- Top Navbar -->
+            <div class="navbar">
+                <div class="navbar-bg"></div>
+                <div class="navbar-inner">
+                    <div class="left">
+                        <a href="#" class="link back">
+                            <i class="icon icon-back"></i>
+                        </a>
+                    </div>
+                    <div class="title sliding">{{@global.LANGUAGE.REGISTRATION_MSG00}}</div>
+                    <div class="right">
+                        <label for="submit-form-registration" class="link icon-only">
+                            <i class="f7-icons icon-apply"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Scrollable page content-->
+            <form name="form-registration" class="page-content">
+                <input type="submit" id="submit-form-registration" class="display-none" />
+                <div class="block-title">{{@global.LANGUAGE.REGISTRATION_MSG14}}</div>
+                <div  class="list no-hairline-bottom">
+                    <ul>
+                       <!-- <li class="item-divider">{{@global.LANGUAGE.REGISTRATION_MSG14}}</li>-->
+                        <li class="item-content item-input">
+                            <div class="item-media text-color-lightgray"><i class="f7-icons icon-mobile-phone"></i></div>
+                            <div class="row no-gap width-100">
+                                <div class="col-40">
+                                    <a class="item-link smart-select custom-smart-select smart-select-init no-chevron disabled" data-open-in="popup"
+                                       data-searchbar="true" data-close-on-select="true" data-form-color-theme="green">
+                                        <select name="CountryCode"  required validate>
+                                        {{#Countrys}}
+                                        <option value="{{CountryCode}}" data-display-as="{{CountryPhoneCode}}" {{#if Selected}}selected{{/if}}>({{CountryPhoneCode}}) {{Country}}</option>
+                                        {{/Countrys}}
+                                        </select>
+                                        <div class="item-content item-input">
+                                            <div class="item-inner padding-bottom-quarter">
+                                                <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG02}}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-60">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG01}}</div>
+                                        <div class="item-input-wrap">
+                                            <input type="tel" name="Phone" value="" required validate>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-media text-color-lightgray"><i class="f7-icons icon-password"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG05}} <i>({{@global.LANGUAGE.REGISTRATION_MSG19}})</i></div>
+                                <div class="item-input-wrap">
+                                    <input type="password" name="Password" value="" pattern="^\\S+\\w{4,32}\\S{1,}" maxlength="32" minlength="6" required validate>
+                                    <span class="input-clear-button password-clear-button"></span>
+                                    <span class="password-toggle text-color-gray"><i class="f7-icons icon-view-password "></i></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-password"></i>--></div>
+                            <div class="item-inner">
+                                <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG06}}</div>
+                                <div class="item-input-wrap">
+                                    <input type="password" name="PasswordConfirm" value="" required validate>
+                                    <span class="input-clear-button password-clear-button"></span>
+                                    <span class="password-toggle text-color-gray"><i class="f7-icons icon-view-password "></i></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="block-title">{{@global.LANGUAGE.REGISTRATION_MSG15}}</div>
+                <div  class="list no-hairline-bottom">
+                    <ul>
+                        <!--<li class="item-divider">{{@global.LANGUAGE.REGISTRATION_MSG15}}</li>-->
+                        <li class="item-content item-input">
+                            <div class="item-media text-color-lightgray"><i class="f7-icons icon-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG03}}</div>
+                                <div class="item-input-wrap">
+                                    <input type="text" name="FirstName" value="" required validate>
+                                    <span class="input-clear-button"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
+                            <div class="item-inner">
+                                <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG04}}</div>
+                                <div class="item-input-wrap">
+                                    <input type="text" name="LastName" value="" required validate>
+                                    <span class="input-clear-button"></span>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <a class="item-link smart-select smart-select-init" data-open-in="popover" data-close-on-select="true" data-form-color-theme="green">
+                                <select name="Gender" required validate>
+                                {{#each GenderList}}
+                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                {{/each}}
+                                </select>
+                                <div class="item-content">
+                                    <div class="item-media text-color-lightgray">
+                                       <!-- <i class="f7-icons icon-timing"></i>-->
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG07}}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="item-content item-input">
+                                <div class="item-media text-color-lightgray">
+                                   <!-- <i class="material-icons">favorite_border</i>-->
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG08}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="text" placeholder="Select Birth Date" readonly="readonly" name="BirthDate" required validate/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="block-title">{{@global.LANGUAGE.REGISTRATION_MSG16}}</div>
+                <div  class="list no-hairline-bottom">
+                    <ul>
+                        <!--<li class="item-divider">{{@global.LANGUAGE.REGISTRATION_MSG16}}</li>-->
+                        <li>
+                            <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-form-color-theme="green">
+                                <select name="Province" required validate>
+                                    {{#each ProvinceList}}
+                                    <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                    {{/each}}
+                                </select>
+                                <div class="item-content">
+                                    <div class="item-media text-color-lightgray">
+                                         <i class="f7-icons icon-tracking"></i>
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG09}}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-form-color-theme="green">
+                                <select name="City" required validate>
+                                    {{#each CityList}}
+                                    <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                    {{/each}}
+                                </select>
+                                <div class="item-content">
+                                    <div class="item-media text-color-lightgray">
+                                        <!-- <i class="f7-icons icon-timing"></i>-->
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG10}}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!--<li>
+                            <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-form-color-theme="green">
+                                <select name="Region" required validate>
+                                    {{#each RegionList}}
+                                    <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                    {{/each}}
+                                </select>
+                                <div class="item-content">
+                                    <div class="item-media text-color-lightgray">
+                                        &lt;!&ndash; <i class="f7-icons icon-timing"></i>&ndash;&gt;
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG11}}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>-->
+                        <li class="item-content item-input">
+                            <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
+                            <div class="item-inner">
+                                <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG12}}</div>
+                                <div class="item-input-wrap">
+                                    <input type="text" name="Street" value="" required validate>
+                                    <span class="input-clear-button"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
+                            <div class="item-inner">
+                                <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG13}}</div>
+                                <div class="item-input-wrap">
+                                    <input type="text" name="AddressDetails" value="" required validate>
+                                    <span class="input-clear-button"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+
+                
+            </form>
+        </div>
+</template>
+
+
+<script>
+  // script must return component object
+    return {
+        data: function () {
+            let countrys = Helper.Methods.getCountrys();
+            countrys.find( ({ CountryCode }) => CountryCode === 'ZAF' ).Selected = true;
+            let genderList = Helper.Methods.getGenderList();
+            let provinceList = Helper.Methods.getProvinceList();
+            let cityList = Helper.Methods.getCityList();
+            let regionList = '';
+
+            return {
+                Countrys: countrys,
+                GenderList: genderList,
+                ProvinceList: provinceList,
+                CityList: cityList,
+                RegionList: regionList,
+               // CurrentFormButtonSubmit: 'submit-forgot-pwd-email',
+            };
+        },
+        methods: {
+            initPickerBirthDate: function (el) {
+                let self = this;
+                //let birthYearsArr = Helper.Methods.getBirthYearsList();
+
+                self.PickerBirthDate = self.$app.picker.create({
+                    inputEl: el,
+                    value: ['01', '01', '1970'],
+                    formatValue: function (values, displayValues) {
+                        //return displayValues[0] + ' ' + values[1] + ', ' + values[2] + ' ' + values[3] + ':' + values[4];
+                        return values[0] + '/' + values[1] + '/' + values[2];
+                    },
+                    cols: [
+                        // Days
+                        {
+                            values: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'],
+                            textAlign: 'left'
+                        },
+                        // Months
+                        {
+                            values: ['01','02','03','04','05','06','07','08','09','10','11','12'],
+                            displayValues: [LANGUAGE.COM_MSG046, LANGUAGE.COM_MSG047, LANGUAGE.COM_MSG048, LANGUAGE.COM_MSG049, LANGUAGE.COM_MSG050, LANGUAGE.COM_MSG051, LANGUAGE.COM_MSG052, LANGUAGE.COM_MSG053, LANGUAGE.COM_MSG054, LANGUAGE.COM_MSG055, LANGUAGE.COM_MSG056, LANGUAGE.COM_MSG057],
+                            textAlign: 'center'
+                        },
+                        // Years
+                        {
+                            values: (function () {
+                                var arr = [];
+                                for (var i = 1920; i <= 2020; i++) { arr.push(i); }
+                                return arr;
+                            })(),
+                            textAlign: 'right'
+                        },
+                    ]
+                });
+            },
+            verifyPhoneNumber: function(phone, form){
+                let self = this;
+
+                self.showConfirmPhoneDialog('123456', form);
+
+                /*self.$app.request.get(window.API_URL.CHECK_PHONE, {phone},
+                        function (data) {
+                            if(!data.status){
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                                return;
+                            }
+                            self.showConfirmPhoneDialog(data.code, form);
+
+                        }, function () {
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                        },
+                        'json'
+                );*/
+            },
+            showConfirmPhoneDialog: function(code, form){
+                let self = this;
+                self.$app.dialog.prompt(LANGUAGE.PROMPT_MSG069, function (value) {
+                    if(code === value){
+                        //if code entered correct
+                        self.$setState({
+                            PhoneVerifyCode: code
+                        },()=>{
+                            console.log(form)
+                            $$(form).find('input[type="submit"]').click();
+                        });
+                    }else{
+                        //show confirm dialog again for second try
+                        self.$app.dialog.alert(LANGUAGE.PROMPT_MSG070, function () {
+                            self.showConfirmPhoneDialog(code, form);
+                        });
+                    }
+                }, function () {
+                    //cancel
+                },'123456');
+            },
+            preRegistration: function(data){
+                let self = this;
+
+                self.$app.progressbar.show('gray');
+                self.$app.request.promise.post(API_URL.PREREGISTRATION, data, 'json')
+                        .then(function (result) {
+                            if(result.data.majorCode === '000') {
+                                self.registration(data);
+                            }else if(result.data.majorCode === '001' && result.data.data && result.data.data.length){
+                                let errMsg = '';
+                                for (let i = 0; i < result.data.data.length; i++) {
+                                    if(result.data.data[i].messages.length){
+                                        if(result.data.data[i].key === 'PhoneNumber'){
+                                            self.$setState({
+                                                PhoneVerifyCode: ''
+                                            });
+                                            if(result.data.data[i].messages[0] === '0005'){
+                                                self.$app.methods.customDialog({ title: data.PhoneNumber, text: LANGUAGE.PROMPT_MSG073 });
+                                                return;
+                                            }
+                                        }
+                                        errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
+                                    }
+                                }
+                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071 ,text: errMsg });
+                            }else{
+                                self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG003 });
+                            }
+                        })
+                        .finally(function () {
+                            self.$app.progressbar.hide();
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            if (err && err.status === 404){
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                            }else{
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                            }
+                        });
+
+            },
+            registration: function(data){
+                let self = this;
+
+                self.$app.progressbar.show('gray');
+                self.$app.request.promise.post(API_URL.REGISTRATION, data, 'json')
+                        .then(function (result) {
+                            if(result.data.majorCode === '000') {
+                                console.log(result.data);
+                                $$("input[name='username']").val('');
+                                $$("input[name='password']").val('');
+                                localStorage.ACCOUNT = data.PhoneNumber.trim().toLowerCase();
+                                localStorage.PASSWORD = data.Password;
+                                self.$app.methods.customDialog(
+                                        {
+                                            text: LANGUAGE.PROMPT_MSG072,
+                                            buttons: [
+                                                {
+                                                    text: LANGUAGE.COM_MSG017,
+                                                    onClick: function () {
+                                                        window.app.methods.login();
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                );
+                                self.$app.view.main.router.back();
+                            }else if(result.data.majorCode === '001' && result.data.data && result.data.data.length){
+                                let errMsg = '';
+                                for (let i = 0; i < result.data.data.length; i++) {
+                                    if(result.data.data[i].key === 'PhoneNumber'){
+                                        self.$setState({
+                                            PhoneVerifyCode: ''
+                                        });
+                                        if(result.data.data[i].messages[0] === '0005'){
+                                            self.$app.methods.customDialog({ title: data.PhoneNumber, text: LANGUAGE.PROMPT_MSG073 });
+                                            return;
+                                        }
+                                    }
+                                    if(result.data.data[i].messages.length){
+                                        errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
+                                    }
+                                }
+                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: errMsg });
+                            }else{
+                                self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG003 });
+                            }
+                        })
+                        .finally(function () {
+                            self.$app.progressbar.hide();
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            if (err && err.status === 404){
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                            }else{
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                            }
+                        });
+            }
+
+        },
+       
+        on: {
+            pageBeforeIn: function(e, page){
+                this.$app.loginScreen.close();
+
+            },
+            pageInit: function (e, page) { 
+                let self = this;
+
+                let form = page.$el.find('form[name="form-registration"]');
+
+                self.initPickerBirthDate( page.$el.find('[name="BirthDate"]'));
+
+                form.on('submit', function(e){
+                    e.preventDefault();
+                    self.$app.methods.hideKeyboard();
+
+                    let phoneCodeEl = page.$el.find('[name = "CountryCode"]');
+                    let phoneVal = page.$el.find('[name = "Phone"]').val();
+                    let phone = phoneCodeEl[0].options[phoneCodeEl[0].selectedIndex].getAttribute("data-display-as") + phoneVal;
+                    phone = phone.replace('+', '').trim();
+
+                    let password = page.$el.find('[name = "Password"]').val();
+                    let passwordConfirm = page.$el.find('[name = "PasswordConfirm"]').val();
+
+                    if(password !== passwordConfirm){
+                        self.$app.methods.customDialog({title: LANGUAGE.REGISTRATION_MSG05, text: LANGUAGE.PASSWORD_FORGOT_MSG10});
+                        return;
+                    }
+
+                    if(!self.PhoneVerifyCode){
+                        self.verifyPhoneNumber(phone, form);
+                        return;
+                    }
+
+
+
+                    let birthDateVal = self.PickerBirthDate.getValue();
+
+                    let data = {
+                        PhoneNumber: phone,
+                        //IMEI:15584348655
+                        VerificationCode: '123456',
+                        FirstName: page.$el.find('[name = "FirstName"]').val(),
+                        SubName: page.$el.find('[name = "LastName"]').val(),
+                        Password: password,
+                        Gender: page.$el.find('[name = "Gender"]').val(),
+                        Birthday: birthDateVal[2]+'-'+birthDateVal[1]+'-'+birthDateVal[0],
+                        ProvinceID: page.$el.find('[name = "Province"]').val(),
+                        CityID: page.$el.find('[name = "City"]').val(),
+                        //RegionID: '',
+                        Street: page.$el.find('[name = "Street"]').val(),
+                        AddressDetail: page.$el.find('[name = "AddressDetails"]').val(),
+                        AddressLat: '0',
+                        AddressLng: '0',
+                    };
+
+                    console.log(data);
+
+                    self.preRegistration(data);
+
+
+                    return false;
+                });
+
+                
+            },
+            pageBeforeOut: function (e, page) {
+                this.$app.loginScreen.open('.login-screen');
+            },
+
+            pageBeforeRemove: function () {
+                if (this.PickerBirthDate) {
+                    this.PickerBirthDate.destroy();
+                }
+            },
+
+        }
+    };
+</script>

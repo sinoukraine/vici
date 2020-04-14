@@ -47,6 +47,12 @@ var routes = [
         name: 'qr.code',
     },
 
+    {
+        path: '/registration/',
+        componentUrl: './resources/pages/registration.html?v=2.1',
+        name: 'registration',
+    },
+
     // Default route (404 page). MUST BE THE LAST
     {
         path: '(.*)',

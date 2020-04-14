@@ -613,7 +613,39 @@
                         alert("Sharing failed with message: " + msg);
                     });
                 });
+            },
 
+            startTracking: function (data) {
+                let self = this;
+
+                if (!bgGeo) {
+                    self.$app.dialog.alert(LANGUAGE.PROMPT_MSG006);
+                    return;
+                }
+                bgGeo.setConfig({
+                    distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+                    locationUpdateInterval: data.Interval,  // Get a location every 5 seconds
+                    schedule: data.Schedule,
+                    url: API_URL.UPLOAD_LINK,
+                    params: {
+                        IMEI: data.IMEI,
+                    }
+                }, function (state) {
+                    if (data.ScheduleState){
+                        bgGeo.requestPermission().then((status) => {
+                            bgGeo.startSchedule(function() {
+                                //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                                self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG074});
+                               // mainView.router.back();
+                            });
+                        }).catch((status) => {
+                            self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
+                            console.log('[requestPermission] REJECTED', status);
+                           // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
+                        });
+
+                    }
+                });
             }
         },
 
@@ -635,14 +667,19 @@
                 AppEvents.on('signedIn', function (userInfo){
                     self.$setState({
                         LoginDone: true,
-                        Phone: userInfo.Mobile,
+                        Phone: userInfo.phoneNumber,
                     });
                     //self.getMyCurrentCovid19Status();
                     self.updateCovidStatus({
                         Covid19StatusType: 1,
                         Covid19Status: LANGUAGE.COM_MSG041,
                         StatusDaysCount: 0
-                    })
+                    });
+                    self.startTracking({
+                        Interval: 60*1000,
+                        IMEI: userInfo.phoneNumber,
+                        Schedule: ["1-7 00:00-23:59"],
+                    });
                 });
                 AppEvents.on('signedOut', function (){
                     self.$setState({
@@ -652,13 +689,14 @@
                         return;
                     }
                     bgGeo.stopSchedule(function() {
-                        let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                        bgGeo.stop();
+                        /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                         if( !self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.ScheduleState){
                             self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});
                             // You must explicitly stop tracking if currently enabled
                             bgGeo.stop();
                             self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
-                        }
+                        }*/
                     });
                 });
             },
