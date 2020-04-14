@@ -771,10 +771,10 @@
                 self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
 
-                /*if(self.LoginDone){
-                    //self.watchUserLocation();
-                    self.getCurrentPosition();
-                }*/
+                if(self.LoginDone){
+                    self.watchUserLocation();
+                    self.refreshMap();
+                }
 
 
                 AppEvents.on('covidStatusChanged', self.updateCovidStatus);
