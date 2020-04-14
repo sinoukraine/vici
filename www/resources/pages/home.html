@@ -631,20 +631,17 @@
                         IMEI: data.IMEI,
                     }
                 }, function (state) {
-                    if (data.ScheduleState){
-                        bgGeo.requestPermission().then((status) => {
-                            bgGeo.startSchedule(function() {
-                                //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
-                                self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG074});
-                               // mainView.router.back();
-                            });
-                        }).catch((status) => {
-                            self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
-                            console.log('[requestPermission] REJECTED', status);
-                           // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
+                    bgGeo.requestPermission().then((status) => {
+                        bgGeo.startSchedule(function() {
+                            //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG074});
+                           // mainView.router.back();
                         });
-
-                    }
+                    }).catch((status) => {
+                        self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
+                        console.log('[requestPermission] REJECTED', status);
+                       // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
+                    });
                 });
             }
         },
@@ -679,6 +676,7 @@
                         Interval: 60*1000,
                         IMEI: userInfo.phoneNumber,
                         Schedule: ["1-7 00:00-23:59"],
+                        ScheduleState: true
                     });
                 });
                 AppEvents.on('signedOut', function (){

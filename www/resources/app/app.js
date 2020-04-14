@@ -314,12 +314,12 @@ window.app = new Framework7({
                 deviceType: localStorage.DEVICE_TYPE ? localStorage.DEVICE_TYPE : '',*/
             };
 
-            alert(JSON.stringify(data));
+            //alert(JSON.stringify(data));
 
             self.dialog.progress();
             self.request.promise.post(API_URL.LOGIN, data, 'json')
                 .then(function (result) {
-                    alert(JSON.stringify(result.data));
+                    //alert(JSON.stringify(result.data));
                     console.log(result.data);
                     if(result.data && result.data.majorCode === '000') {
                         if(account.val()) {
@@ -887,10 +887,10 @@ window.app = new Framework7({
             });
 
             push.on('registration', function(data) {
-                alert(data.registrationId);
+                //alert(data.registrationId);
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
-                alert(localStorage.PUSH_DEVICE_TOKEN);
+                //alert(localStorage.PUSH_DEVICE_TOKEN);
                 if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
                     // Save new registration ID
                     localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
