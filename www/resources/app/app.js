@@ -540,6 +540,7 @@ let app = new Framework7({
                 on: {
                     open: function (popup) {
                         mapPopup = Helper.Methods.createMap({ target: 'mapPopup', latLng: [9.675228, -171.364896], zoom: 2 });
+                        let positionMarker = L.marker([0, 0], { icon: Helper.MarkerIcon[0] });
                         let searchControl = new GeoSearchControl({
                             provider: MapProvider,           // required
                             style: 'bar',                   // optional: bar|button  - default button
@@ -548,12 +549,28 @@ let app = new Framework7({
                             searchLabel: LANGUAGE.INFORM_ABOUT_MSG00,
                             marker: {
                                 icon: Helper.MarkerIcon[0],
-                                draggable: true, //false,
+                                draggable: false, //true, //false,
                             },
                             popupFormat: ({ query, result }) => result.label,   // optional: function    - default returns result label
                         });
                         mapPopup.addControl(searchControl);
+                        searchControl.searchElement.elements.input.addEventListener("click", function(){ this.focus(); });
 
+                        let onMapClick = function(e){
+                            if(!mapPopup.hasLayer(positionMarker)){
+                                mapPopup.addLayer(positionMarker);
+                            }
+                            positionMarker.setLatLng(e.latlng);
+
+                            self.progressbar.show('gray');
+                            Helper.Methods.getAddressByGeocoder(e.latlng,function(address, additionalData){
+                                self.progressbar.hide();
+                                console.log(address);
+                                console.log(additionalData)
+                            });
+                        };
+
+                        mapPopup.on('click', onMapClick);
 
                         popup.$el.find('.applyAddress').on('click', function () {
                             if(callback instanceof Function){
@@ -564,6 +581,10 @@ let app = new Framework7({
 
                     },
                     closed: function(popup){
+                        if(mapPopup){
+                            mapPopup.clearLayers();
+                            mapPopup.remove();
+                        }
                         //self.MapTrackReport.removeLayer(self.ReportMarker);
                         //self.MapTrackReport.remove();
                         popup.$el.remove();
@@ -1352,6 +1373,11 @@ $$('body').on('click', '.password-toggle', function(){
         password.prop("type", "text");
     }
     $$(this).toggleClass('text-color-gray');
+});
+$$('body').on('change keyup input click', '.only_numbers', function() {
+    if (this.value.match(/[^0-9]/g)) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    }
 });
 
 $$('body').on('click', '.panicButton', function(){

@@ -725,7 +725,7 @@
                 });
             },
 
-            startTracking: function (data) {
+            startTracking: function (userInfo) {
                 let self = this;
 
                 if (!bgGeo) {
@@ -735,11 +735,11 @@
                 //console.log('here');
                 bgGeo.setConfig({
                     distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
-                    locationUpdateInterval: data.Interval,  // Get a location every 5 seconds
+                    locationUpdateInterval: 60*1000,  // Get a location every 5 seconds
                     //schedule: data.Schedule,
                     //url: API_URL.UPLOAD_LINK,
                     params: {
-                        ID: data.ID,
+                        Token: userInfo.token,
                     }
                 }, function (state) {
                     //console.log('here1');
@@ -783,7 +783,7 @@
             },
             userSignedIn: function (userInfo) {
                 let self = this;
-                console.log('here1')
+                //console.log('here1')
                 self.$setState({
                     LoginDone: true,
                     Phone: userInfo.phoneNumber,
@@ -795,10 +795,7 @@
                     StatusDaysCount: 0
                 });
 
-                self.startTracking({
-                    Interval: 60*1000,
-                    ID: userInfo.id,
-                });
+                self.startTracking(userInfo);
             },
             userSignedOut: function () {
                 let self = this;

@@ -30,7 +30,7 @@
                             <div class="item-media text-color-lightgray"><i class="f7-icons icon-mobile-phone"></i></div>
                             <div class="row no-gap width-100">
                                 <div class="col-40">
-                                    <a class="item-link smart-select custom-smart-select smart-select-init no-chevron disabled" data-open-in="popup"
+                                    <a class="item-link smart-select custom-smart-select smart-select-init no-chevron" data-open-in="popup"
                                        data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
                                         <select name="CountryCode"  required validate>
                                         {{#Countrys}}
@@ -48,7 +48,7 @@
                                     <div class="item-inner">
                                         <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG01}}</div>
                                         <div class="item-input-wrap">
-                                            <input type="tel" name="Phone" value="" required validate>
+                                            <input type="tel" name="Phone" value="" class="only_numbers" placeholder="{{@global.LANGUAGE.COM_MSG036}}"  required validate>
                                         </div>
                                     </div>
                                 </div>
@@ -440,10 +440,10 @@
                     e.preventDefault();
                     self.$app.methods.hideKeyboard();
 
-                    let phoneCodeEl = page.$el.find('[name = "CountryCode"]');
+                    //let phoneCodeEl = page.$el.find('[name = "CountryCode"]');
                     let phoneVal = page.$el.find('[name = "Phone"]').val();
-                    let phone = phoneCodeEl[0].options[phoneCodeEl[0].selectedIndex].getAttribute("data-display-as") + phoneVal;
-                    phone = phone.replace('+', '').trim();
+                    //let phone = phoneCodeEl[0].options[phoneCodeEl[0].selectedIndex].getAttribute("data-display-as") + phoneVal;
+                    //phone = phoneVal.trim();
 
                     let password = page.$el.find('[name = "Password"]').val();
                     let passwordConfirm = page.$el.find('[name = "PasswordConfirm"]').val();
@@ -454,7 +454,7 @@
                     }
 
                     if(!self.PhoneVerifyCode){
-                        self.verifyPhoneNumber(phone, form);
+                        self.verifyPhoneNumber(phoneVal, form);
                         return;
                     }
 
@@ -463,7 +463,7 @@
                     let birthDateVal = self.PickerBirthDate.getValue();
 
                     let data = {
-                        PhoneNumber: phone,
+                        PhoneNumber: phoneVal,
                         //IMEI:15584348655
                         VerificationCode: '123456',
                         FirstName: page.$el.find('[name = "FirstName"]').val(),
@@ -471,6 +471,7 @@
                         Password: password,
                         Gender: page.$el.find('[name = "Gender"]').val(),
                         Birthday: birthDateVal[2]+'-'+birthDateVal[1]+'-'+birthDateVal[0],
+                        CountryCode: page.$el.find('[name = "CountryCode"]').val(),
                         ProvinceID: page.$el.find('[name = "Province"]').val(),
                         CityID: page.$el.find('[name = "City"]').val(),
                         //RegionID: '',

@@ -118,8 +118,8 @@ const Helper = {
                 },
             ]
         },
-        getAddressByGeocoder: function(latlng,replyFunc, additionalData){
-            let coords = LANGUAGE.COM_MSG037 + ': ' + latlng.lat + ', ' + LANGUAGE.COM_MSG038 + ': ' + latlng.lng;
+        getAddressByGeocoder: function(latlng,replyFunc, additionalData={}){
+            let replyText = LANGUAGE.COM_MSG037 + ': ' + latlng.lat + ', ' + LANGUAGE.COM_MSG038 + ': ' + latlng.lng;
             let data = {
                 format: 'json',
                 zoom: 18,
@@ -128,20 +128,22 @@ const Helper = {
                 lon: latlng.lng,
             };
             app.request.get(API_DOMIAN7+'reverse.php', data, function (result) {
+                additionalData.result = {};
                 if (result.display_name) {
-                    replyFunc(result.display_name, additionalData);
-                }else{
-                    replyFunc(coords, additionalData);
+                    replyText = result.display_name;
+                    additionalData.result = result;
                 }
+                replyFunc(replyText, additionalData);
             }, function () {
                 app.request.get(API_DOMIAN8+'reverse', data, function (result) {
+                    additionalData.result = {};
                     if (result.display_name) {
-                        replyFunc(result.display_name, additionalData);
-                    }else{
-                        replyFunc(coords, additionalData);
+                        additionalData.result = result;
+                        replyText = result.display_name;
                     }
+                    replyFunc(replyText, additionalData);
                 }, function () {
-                    replyFunc(coords, additionalData);
+                    replyFunc(replyText, additionalData);
                 }, 'json');
             }, 'json');
         },

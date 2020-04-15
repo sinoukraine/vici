@@ -39,7 +39,7 @@ window.LanguagePackages= {
 		"COM_MSG033": "Recovered",
 		"COM_MSG034": "Yes",
 		"COM_MSG035": "Cancel",
-		"COM_MSG036": "+27XXXXXXXXX",
+		"COM_MSG036": "XXXXXXXXX",
 		"COM_MSG037": "Latitude",
 		"COM_MSG038": "Longitude",
 		"COM_MSG039": "Infected",
@@ -64,6 +64,7 @@ window.LanguagePackages= {
 		"COM_MSG058": "Delete",
 		"COM_MSG059": "Open",
 		"COM_MSG060": "Search Address",
+		"COM_MSG061": "Phone: XXXXXXXXX",
 
 		"PROMPT_MSG000": "Nothing found",
 		"PROMPT_MSG001": "In this section, you can edit the timing for tracking the device.",
