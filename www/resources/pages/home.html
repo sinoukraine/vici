@@ -819,12 +819,14 @@
                 });
             },
             appPaused: function () {
+                let self = this;
                 if(!bgGeo){
                     return;
                 }
                 bgGeo.stopWatchPosition();
             },
             appResumed: function() {
+                let self = this;
                 if(self.LoginDone){
                     self.watchUserLocation();
                 }
