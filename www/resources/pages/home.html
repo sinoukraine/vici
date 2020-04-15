@@ -732,7 +732,7 @@
                     self.$app.dialog.alert(LANGUAGE.PROMPT_MSG006);
                     return;
                 }
-                console.log('here');
+                //console.log('here');
                 bgGeo.setConfig({
                     distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
                     locationUpdateInterval: data.Interval,  // Get a location every 5 seconds
@@ -742,12 +742,12 @@
                         ID: data.ID,
                     }
                 }, function (state) {
-                    console.log('here1');
-                    console.log(state);
+                    //console.log('here1');
+                    //console.log(state);
                     bgGeo.requestPermission().then((status) => {
                         console.log(status);
                         bgGeo.start(function() {
-                            console.log('here2');
+                            //console.log('here2');
                             //self.refreshMap();
                             self.watchUserLocation();
                         });
@@ -780,6 +780,57 @@
                        // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
                     });*/
                 });
+            },
+            userSignedIn: function (userInfo) {
+                let self = this;
+                console.log('here1')
+                self.$setState({
+                    LoginDone: true,
+                    Phone: userInfo.phoneNumber,
+                });
+
+                self.updateCovidStatus({
+                    Covid19StatusType: 1,
+                    Covid19Status: LANGUAGE.COM_MSG041,
+                    StatusDaysCount: 0
+                });
+
+                self.startTracking({
+                    Interval: 60*1000,
+                    ID: userInfo.id,
+                });
+            },
+            userSignedOut: function () {
+                let self = this;
+                self.$setState({
+                    LoginDone: false
+                });
+                if(!bgGeo){
+                    return;
+                }
+                bgGeo.stopWatchPosition();
+                bgGeo.stop();
+                bgGeo.stopSchedule(function() {
+                    //bgGeo.stop();
+                    /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+					if( !self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.ScheduleState){
+						self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});
+						// You must explicitly stop tracking if currently enabled
+						bgGeo.stop();
+						self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
+					}*/
+                });
+            },
+            appPaused: function () {
+                if(!bgGeo){
+                    return;
+                }
+                bgGeo.stopWatchPosition();
+            },
+            appResumed: function() {
+                if(self.LoginDone){
+                    self.watchUserLocation();
+                }
             }
         },
 
@@ -790,75 +841,26 @@
                 self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
 
-                /*if(self.LoginDone){
-                    self.watchUserLocation();
-                    self.refreshMap();
-                }*/
-
+                if(self.$app.data.Token){
+                    let userInfo = self.$app.methods.getFromStorage('userInfo');
+                    self.userSignedIn(userInfo);
+                }
 
                 AppEvents.on('covidStatusChanged', self.updateCovidStatus);
                 AppEvents.on('positionUpdateReceived', self.updateMarker);
-                AppEvents.on('signedIn', function (userInfo){
-                    self.$setState({
-                        LoginDone: true,
-                        Phone: userInfo.phoneNumber,
-                    });
-                    //self.getMyCurrentCovid19Status();
-                    self.updateCovidStatus({
-                        Covid19StatusType: 1,
-                        Covid19Status: LANGUAGE.COM_MSG041,
-                        StatusDaysCount: 0
-                    });
-                    console.log('here0');
-
-                    self.startTracking({
-                        Interval: 60*1000,
-                        ID: userInfo.id,
-                        //Schedule: ["1-7 00:00-23:59"],
-                        //ScheduleState: true
-                    });
-
-                });
-                AppEvents.on('appResume', function (){
-                    if(self.LoginDone){
-                        self.watchUserLocation();
-                    }
-                });
-                AppEvents.on('appPause', function (){
-                    if(!bgGeo){
-                        return;
-                    }
-                    bgGeo.stopWatchPosition();
-                });
-
-                AppEvents.on('signedOut', function (){
-                    self.$setState({
-                        LoginDone: false
-                    });
-                    if(!bgGeo){
-                        return;
-                    }
-                    bgGeo.stopWatchPosition();
-                    bgGeo.stop();
-                    bgGeo.stopSchedule(function() {
-                        //bgGeo.stop();
-                        /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
-                        if( !self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.ScheduleState){
-                            self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});
-                            // You must explicitly stop tracking if currently enabled
-                            bgGeo.stop();
-                            self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
-                        }*/
-                    });
-                });
+                AppEvents.on('signedIn', self.userSignedIn);
+                AppEvents.on('signedOut', self.userSignedOut);
+                AppEvents.on('appResume', self.appResumed);
+                AppEvents.on('appPause', self.appPaused);
             },
 
             pageBeforeRemove: function () {
-                AppEvents.off('appResume');
-                AppEvents.off('signedOut');
-                AppEvents.off('signedIn');
-                AppEvents.off('signedOut');
+                AppEvents.off('appPause', self.appPaused);
+                AppEvents.off('appResume', self.appResumed);
+                AppEvents.off('signedIn', self.userSignedIn);
+                AppEvents.off('signedOut', self.userSignedOut);
                 AppEvents.off('positionUpdateReceived', self.updateMarker);
+                AppEvents.off('covidStatusChanged', self.updateCovidStatus);
                 if(this.MarkersGroup){
                     this.MarkersGroup.clearLayers();
                 }

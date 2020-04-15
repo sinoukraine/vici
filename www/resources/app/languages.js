@@ -63,6 +63,7 @@ window.LanguagePackages= {
 		"COM_MSG057": "December",
 		"COM_MSG058": "Delete",
 		"COM_MSG059": "Open",
+		"COM_MSG060": "Search Address",
 
 		"PROMPT_MSG000": "Nothing found",
 		"PROMPT_MSG001": "In this section, you can edit the timing for tracking the device.",

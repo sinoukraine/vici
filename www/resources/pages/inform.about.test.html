@@ -72,16 +72,61 @@
                             </div>
                         </div>
                     </li>
+                    <li>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
+                            <select name="Province" required validate>
+                                {{#each ProvinceList}}
+                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-media text-color-lightgray">
+                                    <i class="f7-icons icon-tracking"></i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG09}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
+                            <select name="City" required validate>
+                                {{#each CityList}}
+                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-media text-color-lightgray">
+                                    <!-- <i class="f7-icons icon-timing"></i>-->
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG10}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
                     <li class="item-content item-input">
-                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-tracking"></i></div>
+                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
                         <div class="item-inner">
-                            <div class="item-title item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG02}}</div>
+                            <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG12}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="LabAddress" value="" required validate>
+                                <input type="text" name="Street" value="" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
                     </li>
+                    <!--<li >
+                        <a @click="showAddressMap" href="#" class="item-link item-content">
+                            <div class="item-media text-color-lightgray"><i class="f7-icons icon-tracking"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title">
+                                    <div class="item-header text-color-gray">{{@global.LANGUAGE.REGISTRATION_MSG16}}</div>
+                                    {{Address}}
+                                </div>
+                            </div>
+                        </a>
+                    </li>-->
 
                 </ul>
             </form>
@@ -99,16 +144,33 @@
     return {
         data: function () {
             let self = this;
+            let userInfo = self.$app.methods.getFromStorage('userInfo');
+            let provinceList = Helper.Methods.getProvinceList();
+            let cityList = Helper.Methods.getCityList();
+            provinceList.find( ({ Val }) => Val === userInfo.provinceID ).Selected = true;
+            cityList.find( ({ Val }) => Val === userInfo.cityID ).Selected = true;
 
             let ret = {
-
+                ProvinceList: provinceList,
+                CityList: cityList,
            };
 
             return ret;
         },
 
         methods: {
+            showAddressMap: function () {
+                let self = this;
+                let data = {};
+                self.$app.methods.showAddressMap(data, function (params) {
+                    if(params.displayAddress){
+                        self.$setState({
+                            Address: params.displayAddress
+                        });
 
+                    }
+                });
+            },
 
         },
 
@@ -135,11 +197,15 @@
                     e.preventDefault();
 
                     let data = {
-                        TestDate: moment.utc(self.CalendarTestDate.getValue()[0]).format(window.COM_TIMEFORMAT2),
-                        LabName: page.$el.find('[name = "LabName"]').val(),
-                        LabDocFirstName: page.$el.find('[name = "LabDocFirstName"]').val(),
-                        LabDocLastName: page.$el.find('[name = "LabDocLastName"]').val(),
-                        LabAddress: page.$el.find('[name = "LabAddress"]').val(),
+                        BeginTime: moment.utc(self.CalendarTestDate.getValue()[0]).format(window.COM_TIMEFORMAT2),
+                        OrganizeName: page.$el.find('[name = "LabName"]').val(),
+                        DoctorFirstName: page.$el.find('[name = "LabDocFirstName"]').val(),
+                        DoctorSubName: page.$el.find('[name = "LabDocLastName"]').val(),
+
+                        ProvinceID: page.$el.find('[name = "Province"]').val(),
+                        CityID: page.$el.find('[name = "City"]').val(),
+                        Street: page.$el.find('[name = "Street"]').val(),
+
                     };
                     console.log(data);
                     //console.log(moment().diff(self.CalendarTestDate.getValue()[0], 'days'));

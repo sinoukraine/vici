@@ -68,6 +68,10 @@ const AppEvents = new Framework7.Events();
 //const AppEvents = new Framework7.Events();
 //const AssetUpdateEvents = new Framework7.Events();
 
+let GeoSearchControl = window.GeoSearch.GeoSearchControl;
+let OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider;
+let MapProvider = new OpenStreetMapProvider();
+
 let bgGeo;
 let UpdateAssetsPosInfoTimer = false;
 let POSINFOASSETLIST = {};
@@ -330,7 +334,7 @@ let app = new Framework7({
                         }
                         password.val(null);
 
-                        self.data.Token = result.data.data.Token;
+                        self.data.Token = result.data.data.token;
 
                         self.methods.setInStorage({
                             name: 'userInfo',
@@ -498,6 +502,74 @@ let app = new Framework7({
                     }
                 },
 
+            }).open();
+        },
+        showAddressMap: function(params, callback){
+            let self = this;
+            let mapPopup = '';
+            self.popup.create({
+                backdrop: true,
+                closeByBackdropClick: false,
+                //animate: false,
+                content: `
+                        <div class="popup popup-map" >
+                            <div class="view">
+                                <div class="page">
+                                    <div class="navbar">
+                                        <div class="navbar-bg"></div>
+                                        <div class="navbar-inner">
+                                            <div class="left">
+                                                <a href="#" class="link popup-close" data-popup=".popup-map">
+                                                    <i class="f7-icons">close</i>
+                                                </a>
+                                            </div>
+                                            <div class="title">${ LANGUAGE.COM_MSG060 }</div>  
+                                            <div class="right">
+                                                <a href="#" class="link applyAddress" >
+                                                     <i class="f7-icons icon-apply"></i>
+                                                </a>
+                                            </div>                              
+                                        </div>
+                                    </div>                                    
+                                    <div class="page-content bg-color-lightgray" >
+                                        <div id="mapPopup" class="map"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`,
+                on: {
+                    open: function (popup) {
+                        mapPopup = Helper.Methods.createMap({ target: 'mapPopup', latLng: [9.675228, -171.364896], zoom: 2 });
+                        let searchControl = new GeoSearchControl({
+                            provider: MapProvider,           // required
+                            style: 'bar',                   // optional: bar|button  - default button
+                            autoClose: true,
+                            keepResult: true,
+                            searchLabel: LANGUAGE.INFORM_ABOUT_MSG00,
+                            marker: {
+                                icon: Helper.MarkerIcon[0],
+                                draggable: true, //false,
+                            },
+                            popupFormat: ({ query, result }) => result.label,   // optional: function    - default returns result label
+                        });
+                        mapPopup.addControl(searchControl);
+
+
+                        popup.$el.find('.applyAddress').on('click', function () {
+                            if(callback instanceof Function){
+                                callback({displayAddress: 'testing'});
+                                popup.close();
+                            }
+                        });
+
+                    },
+                    closed: function(popup){
+                        //self.MapTrackReport.removeLayer(self.ReportMarker);
+                        //self.MapTrackReport.remove();
+                        popup.$el.remove();
+                        popup.destroy();
+                    },
+                }
             }).open();
         },
         customDialog: function(params){
@@ -996,6 +1068,7 @@ let app = new Framework7({
             if(push){
                 push.unregister(
                     () => {
+                        localStorage.PUSH_DEVICE_TOKEN = '';
                         // alert('unregistered');
                         console.log('success');
                     },
