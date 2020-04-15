@@ -65,6 +65,7 @@ window.LanguagePackages= {
 		"COM_MSG059": "Open",
 		"COM_MSG060": "Search Address",
 		"COM_MSG061": "Phone: XXXXXXXXX",
+		"COM_MSG062": "now",
 
 		"PROMPT_MSG000": "Nothing found",
 		"PROMPT_MSG001": "In this section, you can edit the timing for tracking the device.",
@@ -133,6 +134,12 @@ window.LanguagePackages= {
 		"PROMPT_MSG077": "You have no Notifications",
 		"PROMPT_MSG078": "Are you sure want to delete this notification?",
 		"PROMPT_MSG079": "Delete notification.",
+		"PROMPT_MSG080": "Covid-19 Warning",
+		"PROMPT_MSG081": "Be careful, you are close to infected person",
+		"PROMPT_MSG082": "Warning",
+		"PROMPT_MSG083": "Be careful",
+		"PROMPT_MSG084": "Updated",
+
 
 
 

@@ -64,6 +64,7 @@
     // script must return component object
     return {
         data: function () {
+            let newNotificationCounter = this.$app.methods.getFromStorage('additionalData').newNotificationCounter;
             let ret = {
                 //Name: 'test',
                 Phone: '+1234567890',
@@ -74,6 +75,7 @@
 
                 Covid19Status: this.$app.data.CovidSatus,
                 Covid19StatusType: this.$app.data.CovidSatusType,
+                NotificationCount: newNotificationCounter ? newNotificationCounter : 0
 
             };
 
@@ -830,6 +832,12 @@
                 if(self.LoginDone){
                     self.watchUserLocation();
                 }
+            },
+            changeNotificationCounter: function (count) {
+                let self = this;
+                self.$setState({
+                    NotificationCount: count
+                })
             }
         },
 
@@ -851,6 +859,7 @@
                 AppEvents.on('signedOut', self.userSignedOut);
                 AppEvents.on('appResume', self.appResumed);
                 AppEvents.on('appPause', self.appPaused);
+                AppEvents.on('newNotificationCountChanged', self.changeNotificationCounter);
             },
 
             pageBeforeRemove: function () {
@@ -860,6 +869,7 @@
                 AppEvents.off('signedOut', self.userSignedOut);
                 AppEvents.off('positionUpdateReceived', self.updateMarker);
                 AppEvents.off('covidStatusChanged', self.updateCovidStatus);
+                AppEvents.off('newNotificationCountChanged', self.changeNotificationCounter);
                 if(this.MarkersGroup){
                     this.MarkersGroup.clearLayers();
                 }

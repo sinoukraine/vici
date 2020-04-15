@@ -18,7 +18,7 @@
 					</a>
 				</div>
 
-				<div class="subnavbar">
+				<!--<div class="subnavbar">
 					<form data-search-container=".notificationList" data-search-item="li" data-search-in=".item-content" class="searchbar searchbar-init">
 						<div class="searchbar-inner">
 							<div class="searchbar-input-wrap">
@@ -29,7 +29,7 @@
 							<span class="searchbar-disable-button">{{@global.LANGUAGE.COM_MSG001}}</span>
 						</div>
 					</form>
-				</div>
+				</div>-->
 
 
 			</div>
@@ -71,20 +71,20 @@
                 let self = this;
 
                 let list = page.$el.find('.notificationList');
-                let user = localStorage.ACCOUNT;
                 let notifications = self.$app.methods.getFromStorage('notifications');
                 let ptrContent = page.$el.find('.ptr-content-notifications');
                 let deleteAllEl = page.$el.find('.deleteAll');
 
                 let notificationsList = [];
-                if (notifications[user]) {
-                    notificationsList = notifications[user];
+                if (notifications[localStorage.ACCOUNT]) {
+                    notificationsList = notifications[localStorage.ACCOUNT];
                 }
+
 
                 self.VirtualList = self.$app.virtualList.create({
                     el: list,
                     // search item by item
-                    searchAll: function (query, items) {
+                    /*searchAll: function (query, items) {
                         let found = [];
                         for (let i = 0; i < items.length; i++) {
                             query = query.toLowerCase();
@@ -97,100 +97,84 @@
                             }
                         }
                         return found; //return array with mathced indexes
-                    },
+                    },*/
                     //List of array items
                     items: notificationsList,
-                    height: 70,
+                    height: self.$app.device.ios ? 64 : 73,
                     emptyTemplate: `<div class="block">${LANGUAGE.PROMPT_MSG077}</div>`,
                     // Display the each item using Template7 template parameter
                     renderItem: function (item, index) {
                         let ret = '';
                         //console.log(item);
                         if (typeof item == 'object') {
-                            if (!item.alarm && item.title && typeof(item.title) == "string") {
-                                item.alarm = self.$app.methods.capitalize(item.title);
-                            }else if (item.alarm && typeof(item.alarm) == "string"){
-                                item.alarm = self.$app.methods.capitalize(item.alarm);
-                            }else{
-                                item.alarm = 'Alarm';
-                            }
-                            let alertName = Protocol.Helper.getAlertNameByType(item.type);
-
-                            ret = `<li class="swipeout" data-id="${ item.UniqueId }" data-alarm="${ item.alarm }" data-lat="${ item.Lat }" data-lng="${ item.Lng }" data-touch-move-stop-propagation="false">` +
-                                '<div class="swipeout-content">' +
-                                '<a href="#" class="item-link item-content ">' +
-                                '<div class="item-inner">' +
-                                '<div class="item-title-row">' +
-                                `<div class="item-title text-color-red size-14">${ alertName ? alertName + ' - ' + item.alarm : item.alarm }</div>` +
-                                `<div class="item-after text-color-gray">${ item.CreateDateTime ? item.CreateDateTime : item.time }</div>` +
-                                '</div>' +
-                                `<div class="item-subtitle text-color-black size-16">${ item.AssetName ? item.AssetName : item.name }</div>` +
-                                '</div>' +
-                                '</a>' +
-                                '</div>' +
-                                '<div class="swipeout-actions-left">' +
-                                '<a href="#" class="swipeout-delete swipeout-overswipe link" data-confirm="'+LANGUAGE.PROMPT_MSG078+'" data-confirm-title="'+LANGUAGE.PROMPT_MSG079+'" data-close-on-cancel="true">'+LANGUAGE.COM_MSG058+'</a>' +
-                                //'<a href="/notification/'+item.UniqueId+'/" class="open-more-actions color-green link">'+LANGUAGE.COM_MSG059+'</a>' +
-                                '<a href="#" class="open-more-actions color-green link">'+LANGUAGE.COM_MSG059+'</a>' +
-                                '</div>' +
-                                '</li>';
+                            ret = `<li class="swipeout" data-id="${ item.customId }" data-alarm="${ item.alarm }" data-lat="${ item.Lat }" data-lng="${ item.Lng }" data-touch-move-stop-propagation="false">
+                                <div class="swipeout-content">
+									<a href="#" class="item-link item-content ">
+										<div class="item-inner">
+											<div class="item-title-row">
+												<div class="item-title text-color-red">${ item.templateID === 1 ? LANGUAGE.PROMPT_MSG080 : LANGUAGE.PROMPT_MSG082 }</div>
+												<div class="item-after text-color-gray">${ item.customTime }</div>
+											</div>
+											<div class="item-subtitle text-color-black">${ item.templateID === 1 ? LANGUAGE.PROMPT_MSG081 : LANGUAGE.PROMPT_MSG083 }</div>
+										</div>
+									</a>
+                                </div>
+                                <div class="swipeout-actions-left">
+                                	<a href="#" class="swipeout-delete swipeout-overswipe link" data-confirm="${LANGUAGE.PROMPT_MSG078}" data-confirm-title="${LANGUAGE.PROMPT_MSG079}" data-close-on-cancel="true">${LANGUAGE.COM_MSG058}</a>
+                                	<a href="#" class="open-more-actions color-green link">${LANGUAGE.COM_MSG059}</a>
+                                </div>
+                            </li>`;
                         }
 
                         return ret;
                     },
                 });
 
+                self.$app.methods.getNotifications({showLoader: true}, function (data) {
+					//console.log(data)
+                    self.VirtualList.prependItems(data);
+                });
+
                 /*list.on('click', 'li', function(e){
                     //console.log('clicked');
 
                     if ( !$$(this).hasClass('swipeout-opened') ) {
-                        let alarmType = $$(this).data('alarm');
-                        if (alarmType) {
-                            alarmType = alarmType.toLowerCase();
-                        }
-                        let id = $$(this).data('id');
-                        let lat = $$(this).data('lat');
-                        let lng = $$(this).data('lng');
-                        if (alarmType == 'status' || alarmType == 'config' || parseFloat(lat) && parseFloat(lng)) {
-                            mainView.router.navigate('/notification/?id='+id);
-                        }else{
-                            self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG098});
-                        }
+                    	let id = $$(this).data('id');
+						self.$app.view.main.router.navigate('/notification/?id='+id);
                     }
                 });*/
-/*
                 list.on('swipeout:deleted', '.swipeout', function () {
                     let id = $$(this).data('id');
                     self.$app.methods.deleteNotifications([id]);
-                });*/
+                });
 
-                /*deleteAllEl.on('click', function(){
+                deleteAllEl.on('click', function(){
                     let text = LANGUAGE.PROMPT_MSG075 +'.'+' '+LANGUAGE.PROMPT_MSG076;
                     self.$app.dialog.confirm(text,
                         function(){
                             self.$app.methods.deleteNotifications(false, true);
                         }
                     );
-                });*/
+                });
 
-                /*ptrContent.on('ptr:refresh', function(e){
-                    self.$app.methods.getNewNotifications({}, function () {
+                ptrContent.on('ptr:refresh', function(e){
+                    self.$app.methods.getNotifications({}, function (data) {
+                    	self.VirtualList.prependItems(data);
                         self.$app.ptr.get('.ptr-content-notifications').done();
-                        self.$app.methods.showToast(LANGUAGE.PROMPT_MSG041);
+                        self.$app.methods.showToast(LANGUAGE.PROMPT_MSG084);
                     });
-                });*/
+                });
 
-
-                /*NotificationEvents.on('updatePage', function () {
-                    let list = self.$app.methods.getFromStorage('notifications')[user];
+                AppEvents.on('updateNotificatioPage', function () {
+                    let list = self.$app.methods.getFromStorage('notifications')[localStorage.ACCOUNT];
                     self.VirtualList.replaceAllItems(list);
                 });
-                localStorage.NewNotificationsCounter = 0;
-                NotificationEvents.emit('newNotificationsCounterChanged', 0);*/
 
+                AppEvents.emit('newNotificationCountChanged', 0);
+                self.$app.methods.setInStorage({name:'additionalData', data:{ newNotificationCounter: 0}});
             },
             pageBeforeRemove: function (e, page) {
-                AppEvents.off('updatePage');
+                AppEvents.off('updateNotificatioPage');
             }
         }
     };

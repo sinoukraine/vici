@@ -25,11 +25,11 @@ const API_URL = {};
 
 API_URL.REGISTRATION = API_DOMIAN2 + 'Contact/Register';
 API_URL.PREREGISTRATION = API_DOMIAN2 + 'Contact/PreRegister';
-//API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
 API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
 API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Contact/Auth';
 //API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
 API_URL.UPLOAD_LINK = 'http://test.m2mdata.co:5000/' + 'Position/Upload';
+API_URL.GET_NOTIFICATIONS = API_DOMIAN2 + 'Contact/HistoryMessage';
 
 
 
@@ -244,6 +244,7 @@ let app = new Framework7({
             //let trackingConfig = self.methods.getFromStorage('trackingConfig');
             let panicConfig = self.methods.getFromStorage('panicConfig');
             let emList = self.methods.getFromStorage('emergencyList');
+            let additionalData = self.methods.getFromStorage('additionalData');
 
             localStorage.clear();
 
@@ -272,6 +273,12 @@ let app = new Framework7({
             }
             if (!self.methods.isObjEmpty(emList)){
                 self.methods.setInStorage({name:'emergencyList', data:emList});
+            }
+            if (!self.methods.isObjEmpty(notifications)){
+                self.methods.setInStorage({name:'notifications', data:notifications});
+            }
+            if (!self.methods.isObjEmpty(additionalData)){
+                self.methods.setInStorage({name:'additionalData', data:additionalData});
             }
 
 
@@ -343,6 +350,16 @@ let app = new Framework7({
 
                         AppEvents.emit('signedIn', result.data.data);
 
+                        self.methods.getNotifications({}, function (notificatios) {
+                            if(notificatios && notificatios.length){
+                                let counter = self.methods.getFromStorage('additionalData').newNotificationCounter;
+                                if (!counter) counter=0;
+                                counter = parseInt(counter,10) + notificatios.length;
+                                self.methods.setInStorage({name:'additionalData', data:{ newNotificationCounter: counter}});
+                                AppEvents.emit('newNotificationCountChanged', counter)
+                            }
+                        });
+
                         /*self.methods.setInStorage({
                             name: 'userInfo',
                             data:  result.data.Data.User
@@ -366,6 +383,7 @@ let app = new Framework7({
                         self.utils.nextFrame(()=>{
                             self.loginScreen.close();
                             self.dialog.close();
+                            window.loginDone = 1;
                             //self.dialog.alert(localStorage.PUSH_DEVICE_TOKEN);
                         });
 
@@ -389,8 +407,58 @@ let app = new Framework7({
                     window.loginDone = 1;
                 });
         },
-        afterLogin: function(data){
+        getNotifications: function(params = {}, callback){
+            let self = this;
+            let lastMgsTimestamp = self.methods.getFromStorage('additionalData').lastNotificationTime;
 
+            let data = {
+                Token: self.data.Token,
+                From: lastMgsTimestamp ? lastMgsTimestamp : '',
+            };
+
+            if(params.showLoader){
+                self.progressbar.show('gray');
+            }
+            self.request.promise.post(API_URL.GET_NOTIFICATIONS, data, 'json')
+                .then(function (result) {
+                    console.log(result.data);
+                    let list = [];
+                    if(result.data.majorCode && result.data.majorCode === '000'){
+                        if (Array.isArray(result.data.data) && result.data.data.length) {
+                            //adding 1 sec to las message time to not receive it again
+                            let lastMessageTime = moment(result.data.data[ result.data.data.length-1].time, window.COM_TIMEFORMAT2).add(1,'seconds').format(window.COM_TIMEFORMAT2);
+
+                            self.methods.setInStorage({name: 'additionalData', data: {lastNotificationTime: lastMessageTime}});
+                            result.data.data = self.methods.formatNotifications(result.data.data);
+                            for (let i = result.data.data.length - 1; i >= 0; i--) {
+                                result.data.data[i].customId = self.utils.id();
+                                list.push(result.data.data[i])
+                            }
+                            self.methods.setInStorage({name:'notifications', data: list});
+                        }
+                    }
+                    if(callback instanceof Function){
+                        callback(list);
+                    }
+                })
+                .finally(function () {
+                    self.utils.nextTick(()=>{
+                        self.progressbar.hide();
+                    }, 500);
+
+                })
+                .catch(function (err) {
+                    console.log(err);
+
+                    if(callback instanceof Function){
+                        callback([]);
+                    }
+                    if (err && err.status === 404){
+                        self.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                    }else{
+                        self.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                    }
+                });
         },
         getFromStorage: function(name){
             let ret = [];
@@ -433,6 +501,16 @@ let app = new Framework7({
                         str = localStorage.getItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS");
                         if(str) {
                             ret = JSON.parse(str);
+                        }else {
+                            ret = {};
+                        }
+                        break;
+                    case 'additionalData':
+                        str = localStorage.getItem("COM.QUIKTRAK.PHONETRACK.ADDIITIONALDATA");
+                        if(str) {
+                            ret = JSON.parse(str);
+                        }else{
+                            ret = {};
                         }
                         break;
 
@@ -472,7 +550,30 @@ let app = new Framework7({
                         localStorage.setItem("COM.QUIKTRAK.PHONETRACK.EMERGENCYLIST", JSON.stringify(params.data));
                         break;
                     case 'notifications':
-                        localStorage.setItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS", JSON.stringify(params.data));
+                        let notifications = self.methods.getFromStorage(params.name);
+                        if (!self.methods.isObjEmpty(notifications)) {
+                            if (self.methods.isObjEmpty(notifications[localStorage.ACCOUNT])) {
+                                notifications[localStorage.ACCOUNT] = [];
+                            }
+                        }else{
+                            notifications = {};
+                            notifications[localStorage.ACCOUNT] = [];
+                        }
+                        if (Array.isArray(params.data)) {
+                            /*for (let i = 0; i < params.data.length; i++) {
+                                notifications[localStorage.ACCOUNT].unshift(params.data[i]);
+                            }*/
+                            notifications[localStorage.ACCOUNT] = params.data.concat(notifications[localStorage.ACCOUNT]);
+                        }
+                        localStorage.setItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS", JSON.stringify(notifications));
+                        break;
+                    case 'additionalData':
+                        let flags = self.methods.getFromStorage(params.name);
+                        const keys = Object.keys(params.data);
+                        for (const key of keys) {
+                            flags[key] = params.data[key];
+                        }
+                        localStorage.setItem("COM.QUIKTRAK.PHONETRACK.ADDIITIONALDATA", JSON.stringify(flags));
                         break;
 
                     default:
@@ -483,27 +584,40 @@ let app = new Framework7({
                 console.log(params);
             }
         },
-        customNotification: function(params){
-            let self = this;
-            self.notification.create({
-                title: self.name,
-                //titleRightText: 'now',
-                subtitle: params.title ? params.title : '',
-                text: params.text ? params.text : '',
-                closeTimeout: params.hold ? params.hold : 3000,
-                closeOnClick: true,
-                //closeButton: true,
-                on: {
-                    close: function (notification) {
-                        //notification.$el.remove();
-                        if(params.callback instanceof Function){
-                            params.callback();
-                        }
-                    }
-                },
 
-            }).open();
+        formatNotifications: function(messageList){
+            let self = this;
+            if (Array.isArray(messageList)) {
+                for (let i = 0; i < messageList.length; i++) {
+                    messageList[i].customTime = moment(messageList[i].time, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT);
+                }
+            }
+            return messageList;
         },
+        deleteNotifications: function(deleteList,deleteAll){
+            let self = this;
+            let pushList = self.methods.getFromStorage('notifications');
+            let user = localStorage.ACCOUNT;
+            if (deleteList && deleteList.length) {
+                if (pushList && pushList[user] && pushList[user].length) {
+                    for (let i = 0; i < deleteList.length; i++) {
+                        let index = pushList[user].map(function(e) { return e.customId; }).indexOf(deleteList[i]);
+                        pushList[user].splice(index, 1);
+                    }
+                    localStorage.setItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS", JSON.stringify(pushList));
+                }
+            }else if(deleteAll){
+                if (pushList && pushList[user] && pushList[user].length) {
+                    pushList[user] = [];
+                    localStorage.setItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS", JSON.stringify(pushList));
+                    let virtualList = self.virtualList.get('.notificationList');
+                    if (virtualList) {
+                        virtualList.deleteAllItems();
+                    }
+                }
+            }
+        },
+
         showAddressMap: function(params, callback){
             let self = this;
             let mapPopup = '';
@@ -593,6 +707,27 @@ let app = new Framework7({
                 }
             }).open();
         },
+        customNotification: function(params){
+            let self = this;
+            self.notification.create({
+                title: self.name,
+                //titleRightText: 'now',
+                subtitle: params.title ? params.title : '',
+                text: params.text ? params.text : '',
+                closeTimeout: params.hold ? params.hold : 3000,
+                closeOnClick: true,
+                //closeButton: true,
+                on: {
+                    close: function (notification) {
+                        //notification.$el.remove();
+                        if(params.callback instanceof Function){
+                            params.callback();
+                        }
+                    }
+                },
+
+            }).open();
+        },
         customDialog: function(params){
             let self = this;
             let modalTex = '';
@@ -610,8 +745,16 @@ let app = new Framework7({
                 buttons: buttons
             }).open();
         },
+        showToast: function(text){
+            this.toast.create({
+                position: 'center',
+                text: text,
+                closeTimeout: 1000,
+                destroyOnClose: true,
+            }).open();
+        },
 
-        setAssetList: function(params={}){
+       /* setAssetList: function(params={}){
             let self = this;
             let ret = '';
 
@@ -718,8 +861,8 @@ let app = new Framework7({
 
             //console.log(ary);
             return ret;
-        },
-        getAssetListPosInfo: function(listObj, update= false, callback = false){
+        },*/
+        /*getAssetListPosInfo: function(listObj, update= false, callback = false){
             let self = this;
             //console.log(self)
             let codes = '';
@@ -775,10 +918,10 @@ let app = new Framework7({
                             AppEvents.emit('positionUpdateReceived');
                         }
                     }
-                    /*if (!update) {
+                    /!*if (!update) {
                         self.dialog.close();
                         AppEvents.emit('signedIn', assetList);
-                    }*/
+                    }*!/
                     if (callback instanceof Function) {
                         callback();
                     }
@@ -786,14 +929,37 @@ let app = new Framework7({
                 .catch(function (err) {
                     console.log(err);
                     window.loginDone = 1;
-                    /*if (err && err.status === 404){
+                    /!*if (err && err.status === 404){
                         self.dialog.alert(LANGUAGE.PROMPT_MSG002);
                     }else{
                         self.dialog.alert(LANGUAGE.PROMPT_MSG003);
-                    }*/
+                    }*!/
                 });
-        },
+        },*/
+        displayNewNotificationArrived: function(message){
+            let self = this;
 
+
+            self.notification.create({
+                title: self.name,
+                titleRightText: LANGUAGE.COM_MSG062, //now
+                subtitle: message.templateID === 1 ? LANGUAGE.PROMPT_MSG080 : LANGUAGE.PROMPT_MSG082,
+                text: message.templateID === 1 ? LANGUAGE.PROMPT_MSG081 : LANGUAGE.PROMPT_MSG083,
+                closeOnClick: true,
+                closeButton: true,
+                on: {
+                    click: function () {
+                        self.view.main.router.navigate('/notifications/');
+                        /*if(mainView.router.currentRoute.name && mainView.router.currentRoute.name === 'notification'){
+                            mainView.router.navigate('/notification/',{context: { AlertData: message }, reloadCurrent: true, ignoreCache: true, });
+                        }else {
+                            mainView.router.navigate('/notification/',{context: { AlertData: message } });
+                        }*/
+                    },
+                },
+            }).open();
+
+        },
         clickOnPanicButton: function () {
             let self = this;
 
@@ -1030,13 +1196,13 @@ let app = new Framework7({
             });
 
             push.on('notification', function(data) {
-                alert(JSON.stringify(data));
-                /*if (localStorage.ACCOUNT && localStorage.PASSWORD) {
+                //alert(JSON.stringify(data));
+                if (localStorage.ACCOUNT && localStorage.PASSWORD) {
                     //if user using app and push notification comes
                     if (data && data.additionalData && data.additionalData.foreground) {
                         // if application open, show popup
-                        let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
-                        self.methods.displayNewNotificationArrived(alertData);
+                        //let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
+                        self.methods.displayNewNotificationArrived(data.additionalData);
                     } else if (data && data.additionalData && data.additionalData.payload) {
                         //if user NOT using app and push notification comes
                         self.preloader.show();
@@ -1044,19 +1210,20 @@ let app = new Framework7({
                             if (window.loginDone) {
                                 clearInterval(window.loginTimer);
                                 setTimeout(function() {
-                                    let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
+                                    self.view.main.router.navigate('/notifications/');
+                                    /*let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
                                     if(mainView.router.currentRoute.name && mainView.router.currentRoute.name === 'notification'){
                                         mainView.router.navigate('/notification/',{context: { AlertData: alertData }, reloadCurrent: true, ignoreCache: true, });
                                     }else {
                                         mainView.router.navigate('/notification/',{context: { AlertData: alertData } });
-                                    }
+                                    }*/
 
                                     self.preloader.hide();
                                 }, 1000);
                             }
                         }, 1000);
                     }
-                }*/
+                }
 
                 if (self.device && self.device && self.device.ios) {
                     push.finish(
