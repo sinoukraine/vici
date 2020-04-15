@@ -938,8 +938,6 @@ let app = new Framework7({
         },*/
         displayNewNotificationArrived: function(message){
             let self = this;
-
-
             self.notification.create({
                 title: self.name,
                 titleRightText: LANGUAGE.COM_MSG062, //now
@@ -1202,13 +1200,15 @@ let app = new Framework7({
                     if (data && data.additionalData && data.additionalData.foreground) {
                         // if application open, show popup
                         //let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
-                        self.methods.displayNewNotificationArrived(data.additionalData);
+                        self.methods.displayNewNotificationArrived(data.additionalData.payload);
                     } else if (data && data.additionalData && data.additionalData.payload) {
                         //if user NOT using app and push notification comes
                         self.preloader.show();
+                        if(window.loginTimer) return;
                         window.loginTimer = setInterval(function() {
                             if (window.loginDone) {
                                 clearInterval(window.loginTimer);
+                                window.loginTimer = false;
                                 setTimeout(function() {
                                     self.view.main.router.navigate('/notifications/');
                                     /*let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
