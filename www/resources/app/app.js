@@ -594,7 +594,7 @@ let app = new Framework7({
             let self = this;
             if (Array.isArray(messageList)) {
                 for (let i = 0; i < messageList.length; i++) {
-                    messageList[i].customTime = moment(messageList[i].time, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT);
+                    messageList[i].customTime = moment(messageList[i].time, window.COM_TIMEFORMAT2).add(self.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT);
                     messageList[i].customContent = self.methods.isJsonString(messageList[i].content);
 
                     messageList[i].customTitle = LANGUAGE.PROMPT_MSG082;

@@ -43,12 +43,15 @@
         data: function () {
             let self = this;
 
-            let statusObj = Helper.Methods.covid19Enum(self.$app.data.Covid19StatusType);
+            //let statusObj = Helper.Methods.covid19Enum(self.$app.data.Covid19StatusType);
+
+            let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
+            let stateDescr = Helper.Methods.covid19Enum(diagnoseInfo? diagnoseInfo.state : '');
 
             let ret = {
-                Covid19Status: statusObj.text,
-                Covid19StatusType: statusObj.type,
-                Covid19StatusColor: statusObj.textColor
+                Covid19Status: stateDescr.text,
+                Covid19StatusType: stateDescr.type,
+                Covid19StatusColor: stateDescr.textColor
            };
 
             return ret;

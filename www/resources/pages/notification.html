@@ -82,20 +82,16 @@
                 if(self.TemplateID === 1){
                     self.Map = Helper.Methods.createMap({ target: self.MapId, latLng: [9.675228, -171.364896], zoom: 2 });
                     self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
-
-                    let stateDescr = Helper.Methods.covid19Enum(NotificationData.State);
-
-                    /*self.MarkerMe = L.marker([self.NotificationData.latitude, location.coords.longitude], { icon: Helper.MarkerIcon[0] });
+                    console.log(self.NotificationDataiLat)
+                    self.MarkerMe = L.marker([self.NotificationData.mLat, self.NotificationData.mLng], { icon: Helper.MarkerIcon[0] });
                     self.MarkerMe
                             .bindPopup(LANGUAGE.COM_MSG070, {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .addTo(self.MarkersGroup);
 
-                    self.MarkerInfected = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.MarkerIcon[3] });
+                    self.MarkerInfected = L.marker([self.NotificationData.iLat, self.NotificationData.iLng], { icon: Helper.MarkerIcon[3] });
                     self.MarkerInfected
                             .bindPopup(LANGUAGE.COM_MSG071, {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
-                            .addTo(self.MarkersGroup);*/
-
-
+                            .addTo(self.MarkersGroup);
 
                     self.MarkersGroup.addTo(self.Map);
                     if (self.MarkersGroup.getBounds().isValid()) {
