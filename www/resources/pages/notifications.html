@@ -105,12 +105,6 @@
                     // Display the each item using Template7 template parameter
                     renderItem: function (item, index) {
                         let ret = '';
-                        console.log(item);
-                        try {
-                            console.log(JSON.parse(item.content));
-                        } catch (e) {
-							console.log(e)
-                        }
 
                         if (typeof item == 'object') {
                             ret = `<li class="swipeout" data-id="${ item.customId }" data-alarm="${ item.alarm }" data-lat="${ item.Lat }" data-lng="${ item.Lng }" data-touch-move-stop-propagation="false">
@@ -146,7 +140,7 @@
 
                     if ( !$$(this).hasClass('swipeout-opened') ) {
                     	let id = $$(this).data('id');
-						//self.$app.view.main.router.navigate('/notification/?id='+id);
+						self.$app.view.main.router.navigate('/notification/?id='+id);
                     }
                 });
                 list.on('swipeout:deleted', '.swipeout', function () {

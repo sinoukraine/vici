@@ -72,6 +72,9 @@ window.LanguagePackages= {
 		"COM_MSG066": "Observed",
 		"COM_MSG067": "Infected Again",
 		"COM_MSG068": "Notification",
+		"COM_MSG069": "Test Samples was taken",
+		"COM_MSG070": "Me",
+		"COM_MSG071": "Infected Person",
 
 
 		"PROMPT_MSG000": "Nothing found",
@@ -146,6 +149,8 @@ window.LanguagePackages= {
 		"PROMPT_MSG082": "Warning",
 		"PROMPT_MSG083": "Be careful",
 		"PROMPT_MSG084": "Updated",
+		"PROMPT_MSG085": "Status Changed",
+		"PROMPT_MSG086": "Death Time",
 
 
 

@@ -18,7 +18,20 @@
 
 
         <div  class="page-content" >
+            {{#js_if "this.TemplateID == 1"}}
             <div id="{{MapId}}" class="map"></div>
+            {{else}}
+            <div class="block-title">
+                {{PageTitle}}
+                {{#js_if "this.NotificationData && this.NotificationData.customTime"}}
+                - {{NotificationData.customTime}}
+                {{/js_if}}
+            </div>
+            <div class="block">
+                {{PageSubtitle}}
+
+            </div>
+            {{/js_if}}
         </div>
 
     </div>
@@ -41,11 +54,14 @@
                 let account = localStorage.ACCOUNT;
                 let notifications = self.$app.methods.getFromStorage('notifications')[account];
                 if (notifications && notifications.length) {
-                    let notification = notifications.find(c => c.CustomId === self.$route.query.id);
+                    let notification = notifications.find(c => c.customId === self.$route.query.id);
 
                     if (notification) {
                         //ret.NotificationData = self.$app.methods.formatStatusMessage(notification);
                         ret.PageTitle = notification.customTitle;
+                        ret.PageSubtitle = notification.customSubtitle;
+                        ret.TemplateID = notification.templateID;
+                        ret.NotificationData = notification.customContent;
                     }
                 }
             }
@@ -63,8 +79,30 @@
             pageInit: function (e, page) {
                 let self = this;
 
-                self.Map = Helper.Methods.createMap({ target: self.MapId, latLng: [9.675228, -171.364896], zoom: 2 });
-                self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
+                if(self.TemplateID === 1){
+                    self.Map = Helper.Methods.createMap({ target: self.MapId, latLng: [9.675228, -171.364896], zoom: 2 });
+                    self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
+
+                    let stateDescr = Helper.Methods.covid19Enum(NotificationData.State);
+
+                    /*self.MarkerMe = L.marker([self.NotificationData.latitude, location.coords.longitude], { icon: Helper.MarkerIcon[0] });
+                    self.MarkerMe
+                            .bindPopup(LANGUAGE.COM_MSG070, {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .addTo(self.MarkersGroup);
+
+                    self.MarkerInfected = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.MarkerIcon[3] });
+                    self.MarkerInfected
+                            .bindPopup(LANGUAGE.COM_MSG071, {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .addTo(self.MarkersGroup);*/
+
+
+
+                    self.MarkersGroup.addTo(self.Map);
+                    if (self.MarkersGroup.getBounds().isValid()) {
+                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 13});
+                    }
+                }
+
 
             },
             pageBeforeRemove: function () {

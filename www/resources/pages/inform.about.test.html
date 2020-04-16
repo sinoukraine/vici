@@ -242,6 +242,8 @@
                                     }
                                 }
                                 self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: errMsg });
+                            }else if(result.data.data && typeof result.data.data == 'string' ){
+                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: result.data.data });
                             }else{
                                 self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG003 });
                             }

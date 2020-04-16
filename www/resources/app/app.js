@@ -114,6 +114,7 @@ let app = new Framework7({
     data: function () {
         return {
             logoDialog: 'resources/images/logo.jpg',
+            logoSquare: 'resources/images/logo-square.jpg',
             MaxMapPopupWidth: 280,
             UTCOFFSET: moment().utcOffset(),
             Covid19Status: LANGUAGE.COM_MSG041, //untested
@@ -173,7 +174,8 @@ let app = new Framework7({
             return s.charAt(0).toUpperCase() + s.slice(1)
         },
         isJsonString: function(str){
-            try{let ret=JSON.parse(str);}catch(e){return false;}return ret;
+            let ret= false;
+            try{ret=JSON.parse(str);}catch(e){return false;}return ret;
         },
         findObjectByKey: function(array, key, value) {
             for (let i = 0; i < array.length; i++) {
@@ -593,8 +595,27 @@ let app = new Framework7({
             if (Array.isArray(messageList)) {
                 for (let i = 0; i < messageList.length; i++) {
                     messageList[i].customTime = moment(messageList[i].time, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT);
-                    messageList[i].customTitle = messageList[i].templateID === 1 ? LANGUAGE.PROMPT_MSG080 : LANGUAGE.PROMPT_MSG082;
-                    messageList[i].customSubtitle = messageList[i].templateID === 1 ? LANGUAGE.PROMPT_MSG081 : LANGUAGE.PROMPT_MSG083;
+                    messageList[i].customContent = self.methods.isJsonString(messageList[i].content);
+
+                    messageList[i].customTitle = LANGUAGE.PROMPT_MSG082;
+                    messageList[i].customSubtitle = LANGUAGE.PROMPT_MSG083;
+                    switch (messageList[i].templateID) {
+                        case 1:
+                            messageList[i].customTitle = LANGUAGE.PROMPT_MSG080;
+                            messageList[i].customSubtitle = LANGUAGE.PROMPT_MSG081;
+                            break;
+                        case 2:
+                            messageList[i].customTitle = LANGUAGE.PROMPT_MSG085;
+                            messageList[i].customSubtitle = LANGUAGE.PROMPT_MSG085;
+                            if(messageList[i].customContent){
+                                let stateDescr = Helper.Methods.covid19Enum(messageList[i].customContent.State);
+                                messageList[i].customSubtitle = stateDescr.text;
+                                if(messageList[i].customContent.Time){
+                                    messageList[i].customContent.customTime = moment(messageList[i].customContent.Time).local().format(window.COM_TIMEFORMAT);
+                                }
+                            }
+                            break;
+                    }
                 }
             }
             return messageList;

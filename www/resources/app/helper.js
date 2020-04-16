@@ -47,7 +47,7 @@ const Helper = {
         covid19Enum: function(num){
             num = parseInt(num);
             let ret = {
-                type: num,
+                type: -1,
                 text: LANGUAGE.COM_MSG041,//not tested
                 textColor: 'text-color-gray',
                 bgColor: 'bg-color-gray',
@@ -56,54 +56,63 @@ const Helper = {
 
             switch (num) {
                 case 0:
-                    ret.text = LANGUAGE.COM_MSG063; //testing
+                    ret.type = num;
+                    ret.text = LANGUAGE.COM_MSG069; //test submitted
                     ret.textColor = 'text-color-orange';
                     ret.bgColor = 'bg-color-orange';
                     ret.markerIcon = Helper.MarkerIcon[2];
                     break;
                 case 1:
+                    ret.type = num;
                     ret.text = LANGUAGE.COM_MSG063; //testing
                     ret.textColor = 'text-color-orange';
                     ret.bgColor = 'bg-color-orange';
                     ret.markerIcon = Helper.MarkerIcon[2];
                     break;
                 case 2:
+                    ret.type = num;
                     ret.text = LANGUAGE.COM_MSG064; //suspected
                     ret.textColor = 'text-color-orange';
                     ret.bgColor = 'bg-color-orange';
                     ret.markerIcon = Helper.MarkerIcon[2];
                     break;
                 case 4:
+                    ret.type = num;
                     ret.text = LANGUAGE.COM_MSG039; //infected
                     ret.textColor = 'text-color-red';
                     ret.bgColor = 'bg-color-red';
                     ret.markerIcon = Helper.MarkerIcon[3];
                     break;
                 case 8:
+                    ret.type = num;
                     ret.text = LANGUAGE.COM_MSG067; //SevereCases infected again
                     ret.textColor = 'text-color-red';
                     ret.bgColor = 'bg-color-red';
                     ret.markerIcon = Helper.MarkerIcon[3];
                     break;
                 case 16:
+                    ret.type = num;
                     ret.text = LANGUAGE.COM_MSG043; //recovered
                     ret.textColor = 'text-color-blue';
                     ret.bgColor = 'bg-color-blue';
                     ret.markerIcon = Helper.MarkerIcon[5];
                     break;
                 case 32:
+                    ret.type = num;
                     ret.text = LANGUAGE.COM_MSG065; //dead
                     ret.textColor = 'text-color-black';
                     ret.bgColor = 'bg-color-black';
                     ret.markerIcon = Helper.MarkerIcon[6];
                     break;
                 case 64:
+                    ret.type = num;
                     ret.text = LANGUAGE.COM_MSG040; //not infected
                     ret.textColor = 'text-color-green';
                     ret.bgColor = 'bg-color-green';
                     ret.markerIcon = Helper.MarkerIcon[4];
                     break;
                 case 128:
+                    ret.type = num;
                     ret.text = LANGUAGE.COM_MSG066; //observed
                     ret.textColor = 'text-color-orange';
                     ret.bgColor = 'bg-color-orange';

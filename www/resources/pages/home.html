@@ -43,7 +43,7 @@
             </div>
 
             <div class="fab fab-right-bottom2 fab-custom ">
-                <a href="{{InformButtonLink}}" class="elevation-hover-10 flex-direction-column {{InformButtonBgClass}}">
+                <a href="{{InformButtonLink}}" class="elevation-hover-10 flex-direction-column {{InformButtonBgClass}} {{#unless InformButtonLink}}disabled{{/unless}}">
                     <i class="f7-icons icon-covid19"></i>
                     <div class="fab-text">{{@global.LANGUAGE.COM_MSG032}}</div>
                 </a>
@@ -83,41 +83,42 @@
         },
         methods: {
             updateCovidStatus: function(data={}){
-                let self = this;
-                if(!self.$app.methods.isObjEmpty(data) && data.Covid19StatusType){
-                    let statusObj = Helper.Methods.covid19Enum(data.Covid19StatusType);
 
-                    data.StatusShieldColor = statusObj.textColor;
-                    data.Covid19StatusType = parseInt(data.Covid19StatusType);
+                let self = this;
+                if(!self.$app.methods.isObjEmpty(data)){
+                    let stateDescr = Helper.Methods.covid19Enum(data.Covid19StatusType);
+
+                    data.StatusShieldColor = stateDescr.textColor;
+                    data.Covid19StatusType = stateDescr.type;
                     data.InformButtonLink = '/inform-about-test/';
-                    data.InformButtonBgClass = 'bg-color-custom';
+                    data.InformButtonBgClass = 'bg-color-red';
 
                     switch (data.Covid19StatusType) {
-                        case 2:
-                            data.InformButtonLink = '/inform-about-recovery/';
+                        case 0: case 1: case 2: case 128:
+                            data.InformButtonLink = '';
                             data.InformButtonBgClass = 'bg-color-orange';
-
                             break;
-                        case 3:
+
+                        case 4: case 8:
                             data.InformButtonLink = '/inform-about-recovery/';
                             data.InformButtonBgClass = 'bg-color-blue';
-
                             break;
-                        case 4:
-                           /* data.InformButtonLink = '/inform-about-test/';
-                            data.InformButtonBgClass = 'bg-color-custom';*/
 
+                        case 16: case 64:
+                            data.InformButtonLink = '/inform-about-test/';
+                            data.InformButtonBgClass = 'bg-color-red';
                             break;
-                        case 5:
-                            /*data.InformButtonLink = '/inform-about-test/';
-                            data.InformButtonBgClass = 'bg-color-custom';*/
+
+                        case 32:
+                            data.InformButtonLink = '';
+                            data.InformButtonBgClass = 'bg-color-black';
                             break;
                     }
                 }
 
                 self.$setState(data,()=>{
                     if(self.Marker){
-                        self.Marker.setIcon(Helper.Methods.getCovid19Marker(self.Covid19StatusType));
+                        self.Marker.setIcon(Helper.Methods.getCovid19Marker(stateDescr.markerIcon));
                         if(self.LastPosInfo){
                             self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
                         }
@@ -126,23 +127,29 @@
             },
             showShieldStatusPopover: function(e){
                 let self = this;
-
+                let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
+                let stateDescr = Helper.Methods.covid19Enum(diagnoseInfo.state);
                 let dateTitle = '';
-                switch (self.Covid19StatusType) {
-                    case 2: case 3: case 4:
+                switch (diagnoseInfo.state) {
+                    case 0: case 1: case 2: case 4: case 8: case 64: case 128:
                         dateTitle = LANGUAGE.PROMPT_MSG061;
                         break;
-                    case 5:
+                    case 16:
                         dateTitle = LANGUAGE.PROMPT_MSG063;
                         break;
+                    case 32:
+                        dateTitle = LANGUAGE.PROMPT_MSG086;
+                        break;
                 }
+
+
                 let content =   `<div class="popover menu-popover" >
                                         <div class="popover-inner">
                                             <div class="block-title">${ LANGUAGE.PROMPT_MSG060 }</div>
                                             <div class="block">
-                                                <p>${LANGUAGE.PROMPT_MSG062}: <span class="${self.StatusShieldColor}">${ self.$app.data.Covid19Status }</span></p>`;
-                if (self.Covid19StatusDate){
-                    content +=`                 <p>${ dateTitle }: ${ self.Covid19StatusDate }</p>`;
+                                                <p>${LANGUAGE.PROMPT_MSG062}: <span class="${stateDescr.textColor}">${ stateDescr.text }</span></p>`;
+                if (diagnoseInfo.beginTime){
+                    content +=`                 <p>${ dateTitle }: ${ moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).local().format(window.COM_TIMEFORMAT) }</p>`;
                 }
                 content +=`                    <a href="/qr-code/" class="margin-top color-blue button button-outline button-raised popover-close">${ LANGUAGE.PROMPT_MSG064 }</a>
                                             </div>
@@ -796,11 +803,11 @@
                 if(userInfo.diagnoseInfo){
 
                 }*/
-                let userCovidDetails =  Helper.Methods.covid19Enum(userInfo.diagnoseInfo ? userInfo.diagnoseInfo.status : '');
-
+                let userCovidDetails =  Helper.Methods.covid19Enum(userInfo.diagnoseInfo ? userInfo.diagnoseInfo.state : '');
+console.log(userCovidDetails)
                 self.updateCovidStatus({
-                    Covid19StatusType: 1,
-                    Covid19Status: LANGUAGE.COM_MSG041,
+                    Covid19StatusType: userCovidDetails.type,
+                    Covid19Status: userCovidDetails.text,
                     StatusDaysCount: 0
                 });
 
