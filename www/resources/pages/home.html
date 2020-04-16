@@ -209,6 +209,8 @@
                     self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
                 }
 
+                //self.getInfectedBonds();
+
                 if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                         self.$setState({
@@ -220,6 +222,65 @@
                         self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
                     });
                 }
+            },
+            getInfectedBonds: function(){
+                let self = this;
+                let mapCenter = self.Map.getCenter();
+                let boundsNorthEast = self.Map.getBounds().getNorthEast();
+                let data = {
+                    Lat1: mapCenter.lat,
+                    Lng1: mapCenter.lng,
+                    Lat2: boundsNorthEast.lat,
+                    Lng2: boundsNorthEast.lng,
+                };
+                self.$app.request.promise.post(API_URL.GET_INFECTED_BOUNDS, data, 'json')
+                        .then(function (result) {
+                            console.log(result.data);
+                            //self.InfectedMarkersGroup.clearLayers();
+                            if(result.data.majorCode === '000' && result.data.data && result.data.data.length) {
+                                let points = result.data.data;
+                                for (let i = 0; i < points.length; i++) {
+                                    if (points[i].type && points[i].type === "Point" && points[i].coordinates && points[i].coordinates.length){
+                                        let marker = L.marker(points[i].coordinates, {icon: Helper.MarkerIcon[3]});
+                                        marker.bindTooltip(LANGUAGE.COM_MSG071)
+                                              .addTo(self.InfectedMarkersGroup);
+                                        //asset.markerId = self.MarkersGroup.getLayerId(marker);
+                                    }
+                                }
+
+                                if (self.InfectedMarkersGroup.getBounds().isValid()) {
+                                    self.InfectedMarkersGroup.addTo(self.Map);
+                                }
+                            }
+
+                            /*if(result.data.majorCode === '000') {
+                                $$('input[name="username"]').val(self.Phone);
+                                mainView.router.back();
+                                self.$app.methods.customDialog({text: LANGUAGE.PASSWORD_FORGOT_MSG12});
+
+                            }else if(result.data.majorCode && result.data.data && result.data.data.length){
+                                let errMsg = '';
+                                for (let i = 0; i < result.data.data.length; i++) {
+                                    if(result.data.data[i].messages.length){
+                                        errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
+                                    }
+                                }
+                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: errMsg });
+                            }else{
+                                self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG003 });
+                            }*/
+                        })
+                        /*.finally(function () {
+                            self.$app.progressbar.hide();
+                        })*/
+                        .catch(function (err) {
+                            console.log(err);
+                            /*if (err && err.status === 404){
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                            }else{
+                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                            }*/
+                        });
             },
 
 
@@ -436,70 +497,36 @@
                     self.$app.dialog.alert(LANGUAGE.PROMPT_MSG006);
                     return;
                 }
-                //console.log('here');
+
                 bgGeo.setConfig({
                     distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
                     locationUpdateInterval: 60*1000,  // Get a location every 5 seconds
-                    //schedule: data.Schedule,
-                    //url: API_URL.UPLOAD_LINK,
+
                     params: {
                         Token: userInfo.contactInfo.token,
                     }
                 }, function (state) {
-                    //console.log('here1');
-                    //console.log(state);
                     bgGeo.requestPermission().then((status) => {
-                        console.log(status);
                         bgGeo.start(function() {
-                            //console.log('here2');
-                            //self.refreshMap();
                             self.watchUserLocation();
                         });
                     }).catch((status) => {
                         self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
                         console.log('[requestPermission] REJECTED', status);
-                        // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
                     });
-                    /*bgGeo.start().then(function() {
 
-                    });*/
-                    /*if (!state.enabled) {
-                        bgGeo.start().then(function() {
-                            console.log('here2');
-                            self.refreshMap();
-                            //alert('- BackgroundGeolocation tracking started')
-                            // console.log('- BackgroundGeolocation tracking started');
-                        });
-                    }*/
-
-                    /*bgGeo.requestPermission().then((status) => {
-                        bgGeo.startSchedule(function() {
-                            //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
-                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG074});
-                           // mainView.router.back();
-                        });
-                    }).catch((status) => {
-                        self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
-                        console.log('[requestPermission] REJECTED', status);
-                       // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
-                    });*/
                 });
             },
             userSignedIn: function (userInfo) {
                 let self = this;
-                //console.log('here1')
+
                 self.$setState({
                     LoginDone: true,
                     Phone: userInfo.contactInfo.phoneNumber,
                 });
 
-                /*let covid19Status = self.Covid19Status;
-                let covid19StatusType = self.Covid19StatusType;
-                if(userInfo.diagnoseInfo){
-
-                }*/
                 let userCovidDetails =  Helper.Methods.covid19Enum(userInfo.diagnoseInfo ? userInfo.diagnoseInfo.state : '');
-//console.log(userCovidDetails)
+
                 self.updateCovidStatus({
                     Covid19StatusType: userCovidDetails.type,
                     Covid19Status: userCovidDetails.text,
@@ -518,16 +545,7 @@
                 }
                 bgGeo.stopWatchPosition();
                 bgGeo.stop();
-                bgGeo.stopSchedule(function() {
-                    //bgGeo.stop();
-                    /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
-					if( !self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.ScheduleState){
-						self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});
-						// You must explicitly stop tracking if currently enabled
-						bgGeo.stop();
-						self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
-					}*/
-                });
+
             },
             appPaused: function () {
                 let self = this;
@@ -554,8 +572,12 @@
             pageInit: function (e, page) {
                 let self = this;
 
-                self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [9.675228, -171.364896], zoom: 2 });
+                self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [10.789648, 23.611363], zoom: 2 });
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
+                self.InfectedMarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
+
+                self.getInfectedBonds();
+
 
                 if(self.$app.data.Token){
                     let userInfo = self.$app.methods.getFromStorage('userInfo');
@@ -581,6 +603,9 @@
                 AppEvents.off('newNotificationCountChanged', self.changeNotificationCounter);
                 if(this.MarkersGroup){
                     this.MarkersGroup.clearLayers();
+                }
+                if(this.InfectedMarkersGroup){
+                    this.InfectedMarkersGroup.clearLayers();
                 }
                 if(this.Map){
                     this.Map.remove()

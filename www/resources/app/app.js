@@ -34,6 +34,8 @@ API_URL.PRE_FORGOT_PWD = API_DOMIAN2 + 'Contact/PreForgotPassword';
 API_URL.FORGOT_PWD = API_DOMIAN2 + 'Contact/ForgotPassword';
 API_URL.NOTIFY_TEST = API_DOMIAN2 + 'Contact/SubmitDiagnose';
 API_URL.CHANGE_PASSWORD = API_DOMIAN2 + 'Contact/ChangePassword';
+API_URL.GET_INFECTED_BOUNDS = API_DOMIAN2 + 'Position/QueryGeoInfectedBounds';
+
 
 
 
