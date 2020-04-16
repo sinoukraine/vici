@@ -105,17 +105,23 @@
                     // Display the each item using Template7 template parameter
                     renderItem: function (item, index) {
                         let ret = '';
-                        //console.log(item);
+                        console.log(item);
+                        try {
+                            console.log(JSON.parse(item.content));
+                        } catch (e) {
+							console.log(e)
+                        }
+
                         if (typeof item == 'object') {
                             ret = `<li class="swipeout" data-id="${ item.customId }" data-alarm="${ item.alarm }" data-lat="${ item.Lat }" data-lng="${ item.Lng }" data-touch-move-stop-propagation="false">
                                 <div class="swipeout-content">
 									<a href="#" class="item-link item-content ">
 										<div class="item-inner">
 											<div class="item-title-row">
-												<div class="item-title text-color-red">${ item.templateID === 1 ? LANGUAGE.PROMPT_MSG080 : LANGUAGE.PROMPT_MSG082 }</div>
+												<div class="item-title text-color-red">${ item.customTitle ? item.customTitle : LANGUAGE.PROMPT_MSG082 }</div>
 												<div class="item-after text-color-gray">${ item.customTime }</div>
 											</div>
-											<div class="item-subtitle text-color-black">${ item.templateID === 1 ? LANGUAGE.PROMPT_MSG081 : LANGUAGE.PROMPT_MSG083 }</div>
+											<div class="item-subtitle text-color-black">${ item.customSubtitle ? item.customSubtitle : LANGUAGE.PROMPT_MSG083 }</div>
 										</div>
 									</a>
                                 </div>
@@ -135,14 +141,14 @@
                     self.VirtualList.prependItems(data);
                 });
 
-                /*list.on('click', 'li', function(e){
+                list.on('click', 'li', function(e){
                     //console.log('clicked');
 
                     if ( !$$(this).hasClass('swipeout-opened') ) {
                     	let id = $$(this).data('id');
-						self.$app.view.main.router.navigate('/notification/?id='+id);
+						//self.$app.view.main.router.navigate('/notification/?id='+id);
                     }
-                });*/
+                });
                 list.on('swipeout:deleted', '.swipeout', function () {
                     let id = $$(this).data('id');
                     self.$app.methods.deleteNotifications([id]);

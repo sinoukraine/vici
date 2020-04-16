@@ -140,7 +140,6 @@
                 <div class="block-title">{{@global.LANGUAGE.REGISTRATION_MSG16}}</div>
                 <div  class="list no-hairline-bottom">
                     <ul>
-                        <!--<li class="item-divider">{{@global.LANGUAGE.REGISTRATION_MSG16}}</li>-->
                         <li>
                             <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
                                 <select name="Province" required validate>
@@ -301,12 +300,13 @@
             showConfirmPhoneDialog: function(code, form){
                 let self = this;
                 self.$app.dialog.prompt(LANGUAGE.PROMPT_MSG069, function (value) {
-                    if(code === value){
+                    let hash = md5(value);
+                    if(code === hash){
                         //if code entered correct
                         self.$setState({
-                            PhoneVerifyCode: code
+                            PhoneVerifyCode: value
                         },()=>{
-                            console.log(form)
+                            //console.log(form)
                             $$(form).find('input[type="submit"]').click();
                         });
                     }else{
@@ -319,27 +319,20 @@
                     //cancel
                 },'123456');
             },
-            preRegistration: function(data){
+            preRegistration: function(data, form){
                 let self = this;
 
                 self.$app.progressbar.show('gray');
                 self.$app.request.promise.post(API_URL.PREREGISTRATION, data, 'json')
                         .then(function (result) {
                             if(result.data.majorCode === '000') {
-                                self.registration(data);
+                                self.showConfirmPhoneDialog(result.data.data.verificationCode, form);
+                                //self.verifyPhoneNumber(phoneVal, form);
+                                //self.registration(data);
                             }else if(result.data.majorCode === '001' && result.data.data && result.data.data.length){
                                 let errMsg = '';
                                 for (let i = 0; i < result.data.data.length; i++) {
                                     if(result.data.data[i].messages.length){
-                                        if(result.data.data[i].key === 'PhoneNumber'){
-                                            self.$setState({
-                                                PhoneVerifyCode: ''
-                                            });
-                                            if(result.data.data[i].messages[0] === '0005'){
-                                                self.$app.methods.customDialog({ title: data.PhoneNumber, text: LANGUAGE.PROMPT_MSG073 });
-                                                return;
-                                            }
-                                        }
                                         errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
                                     }
                                 }
@@ -453,13 +446,6 @@
                         return;
                     }
 
-                    if(!self.PhoneVerifyCode){
-                        self.verifyPhoneNumber(phoneVal, form);
-                        return;
-                    }
-
-
-
                     let birthDateVal = self.PickerBirthDate.getValue();
 
                     let data = {
@@ -481,11 +467,13 @@
                         AddressLng: '0',
                     };
 
-                    console.log(data);
-
-                    self.preRegistration(data);
-
-
+                    if(!self.PhoneVerifyCode){
+                        //self.verifyPhoneNumber(phoneVal, form);
+                        self.preRegistration(data, form);
+                        return;
+                    }else{
+                        self.registration(data);
+                    }
                     return false;
                 });
 

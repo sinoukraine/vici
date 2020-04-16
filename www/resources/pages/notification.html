@@ -11,40 +11,14 @@
                         <i class="icon icon-back"></i>
                     </a>
                 </div>
-                <div class="title sliding">{{@global.LANGUAGE.INFORM_ABOUT_MSG06}}</div>
-                <div class="right">
-                    <label for="submit-test-send" class="link icon-only">
-                        <i class="f7-icons icon-apply"></i>
-                    </label>
-                </div>
+                <div class="title sliding">{{PageTitle}}</div>
+
             </div>
         </div>
 
 
         <div  class="page-content" >
-         <!--   <div class="block-title">{{@global.LANGUAGE.DEVICE_SHARE_MSG00}}</div>-->
-            <div class="block">
-                {{@global.LANGUAGE.PROMPT_MSG034}}
-            </div>
-            <form name="FormTestSend" class="list no-hairlines no-margin-bottom">
-                <input type="submit" id="submit-test-send" class="display-none" />
-                <ul>
-                    <li>
-                        <div class="item-content item-input">
-                            <div class="item-media text-color-lightgray">
-                                <i class="f7-icons icon-day-of-week"></i>
-                            </div>
-                            <div class="item-inner">
-                                <div class="item-title item-floating-label item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG07}}</div>
-                                <div class="item-input-wrap">
-                                    <input type="text" placeholder="Select date and time" readonly="readonly" name="RecoveredDate" />
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                </ul>
-            </form>
+            <div id="{{MapId}}" class="map"></div>
         </div>
 
     </div>
@@ -59,7 +33,10 @@
     return {
         data: function () {
             let self = this;
-            let ret = {};
+            let ret = {
+                PageTitle: LANGUAGE.COM_MSG068,
+                MapId: 'Map-' + self.$app.utils.id()
+            };
             if(self.$route.query.id){
                 let account = localStorage.ACCOUNT;
                 let notifications = self.$app.methods.getFromStorage('notifications')[account];
@@ -68,7 +45,7 @@
 
                     if (notification) {
                         //ret.NotificationData = self.$app.methods.formatStatusMessage(notification);
-                        ret.PageTitle = ret.NotificationData.alarm;
+                        ret.PageTitle = notification.customTitle;
                     }
                 }
             }
@@ -86,15 +63,13 @@
             pageInit: function (e, page) {
                 let self = this;
 
-
-
+                self.Map = Helper.Methods.createMap({ target: self.MapId, latLng: [9.675228, -171.364896], zoom: 2 });
+                self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
 
             },
             pageBeforeRemove: function () {
                 let self = this;
-                if (self.CalendarTestDate) {
-                    self.CalendarTestDate.destroy();
-                }
+
 
             }
 

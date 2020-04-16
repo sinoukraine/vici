@@ -741,7 +741,7 @@
                     //schedule: data.Schedule,
                     //url: API_URL.UPLOAD_LINK,
                     params: {
-                        Token: userInfo.token,
+                        Token: userInfo.contactInfo.token,
                     }
                 }, function (state) {
                     //console.log('here1');
@@ -788,8 +788,15 @@
                 //console.log('here1')
                 self.$setState({
                     LoginDone: true,
-                    Phone: userInfo.phoneNumber,
+                    //Phone: userInfo.phoneNumber,
                 });
+
+                /*let covid19Status = self.Covid19Status;
+                let covid19StatusType = self.Covid19StatusType;
+                if(userInfo.diagnoseInfo){
+
+                }*/
+                let userCovidDetails =  Helper.Methods.covid19Enum(userInfo.diagnoseInfo ? userInfo.diagnoseInfo.status : '');
 
                 self.updateCovidStatus({
                     Covid19StatusType: 1,

@@ -31,15 +31,25 @@
             <div class="tabs">
                 <form id="tab1" name="user-profile-form" class="tab page-content tab-active">
                     <input type="submit" id="submit-form-user" class="display-none" />
-                    <div class="block-title">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG06}}</div>
-                    <div class="list no-hairlines">
+                    <div class="block-title">{{@global.LANGUAGE.REGISTRATION_MSG15}}</div>
+                    <div class="list no-hairline-bottom">
                         <ul>
                             <li class="item-content bg-color-lightgray">
-                                <div class="item-media text-color-gray"><!--<i class="f7-icons icon-name"></i>--></div>
+                                <div class="item-media text-color-gray"><i class="f7-icons icon-name"></i></div>
                                 <div class="item-inner">
                                     <div class="item-title">
                                         <div class="item-header text-color-gray">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG13}}</div>
                                         {{certNumber}}
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-phone"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG05}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="tel" name="PhoneNumber" value="{{phoneNumber}}" required validate readonly>
+                                        <!-- <span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
                             </li>
@@ -53,7 +63,7 @@
                                 </div>
                             </li>-->
                             <li class="item-content item-input">
-                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-name"></i></div>
+                                <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG02}}</div>
                                     <div class="item-input-wrap">
@@ -82,13 +92,81 @@
                                     </div>
                                 </div>
                             </li>-->
+
+                        </ul>
+                    </div>
+
+                    <div class="block-title">{{@global.LANGUAGE.REGISTRATION_MSG16}}</div>
+                    <div class="list no-hairline-bottom">
+                        <ul>
+                            <li>
+                                <a class="item-link smart-select smart-select-init disabled" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
+                                    <select name="Province" required validate>
+                                        {{#each ProvinceList}}
+                                        <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                        {{/each}}
+                                    </select>
+                                    <div class="item-content">
+                                        <div class="item-media text-color-lightgray">
+                                            <i class="f7-icons icon-tracking"></i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG09}}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link smart-select smart-select-init disabled" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
+                                    <select name="City" required validate>
+                                        {{#each CityList}}
+                                        <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                        {{/each}}
+                                    </select>
+                                    <div class="item-content">
+                                        <div class="item-media text-color-lightgray">
+                                            <!-- <i class="f7-icons icon-timing"></i>-->
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG10}}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <!--<li>
+								<a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-form-color-theme="green">
+									<select name="Region" required validate>
+										{{#each RegionList}}
+										<option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+										{{/each}}
+									</select>
+									<div class="item-content">
+										<div class="item-media text-color-lightgray">
+											&lt;!&ndash; <i class="f7-icons icon-timing"></i>&ndash;&gt;
+										</div>
+										<div class="item-inner">
+											<div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG11}}</div>
+										</div>
+									</div>
+								</a>
+							</li>-->
                             <li class="item-content item-input">
-                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-phone"></i></div>
+                                <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
                                 <div class="item-inner">
-                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG05}}</div>
+                                    <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG12}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="tel" name="Mobile" value="{{phoneNumber}}" required validate readonly>
-                                       <!-- <span class="input-clear-button"></span>-->
+                                        <input type="text" name="Street" value="{{street}}" readonly required validate>
+                                        <!--<span class="input-clear-button"></span>-->
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item-content item-input">
+                                <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
+                                <div class="item-inner">
+                                    <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG13}}</div>
+                                    <div class="item-input-wrap">
+                                        <input type="text" name="AddressDetails" value="{{addressDetail}}" readonly required validate>
+                                        <!--<span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
                             </li>
@@ -96,7 +174,7 @@
                     </div>
 
                     <div class="block-title">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG07}}</div>
-                    <div class="list no-hairlines">
+                    <div class="list no-hairline-bottom">
                         <ul>
                             {{#EmergencyList}}
                             <span class="em-contact-wrapper" data-id="{{Id}}">
@@ -180,8 +258,14 @@
         data: function () {
             let self = this;
 
-            let userInfo = self.$app.methods.getFromStorage('userInfo');
+            let userInfo = self.$app.methods.getFromStorage('userInfo').contactInfo;
             let emListSaved = self.$app.methods.getFromStorage('emergencyList');
+
+            let provinceList = Helper.Methods.getProvinceList();
+            let cityList = Helper.Methods.getCityList();
+            provinceList.find( ({ Val }) => Val === userInfo.provinceID ).Selected = true;
+            cityList.find( ({ Val }) => Val === userInfo.cityID ).Selected = true;
+
             let emList = [
                 {
                     Id: '',
@@ -208,7 +292,8 @@
                 ...userInfo,
                 CurrentFormButtonSubmit: 'submit-form-user',
                 EmergencyList: emList,
-                //UserID: '123456789012345',
+                ProvinceList: provinceList,
+                CityList: cityList,
             };
 
             //console.log(ret)

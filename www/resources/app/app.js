@@ -30,6 +30,9 @@ API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Contact/Auth';
 //API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
 API_URL.UPLOAD_LINK = 'http://test.m2mdata.co:5000/' + 'Position/Upload';
 API_URL.GET_NOTIFICATIONS = API_DOMIAN2 + 'Contact/HistoryMessage';
+API_URL.PRE_FORGOT_PWD = API_DOMIAN2 + 'Contact/PreForgotPassword';
+API_URL.FORGOT_PWD = API_DOMIAN2 + 'Contact/ForgotPassword';
+API_URL.NOTIFY_TEST = API_DOMIAN2 + 'Contact/SubmitDiagnose';
 
 
 
@@ -318,7 +321,7 @@ let app = new Framework7({
 
             let data = {
                 //account: account.val() ? account.val() : localStorage.ACCOUNT,
-                PhoneNumber: account.val() ? account.val().replace('+', '').trim() : localStorage.ACCOUNT.replace('+', '').trim(),
+                PhoneNumber: account.val() ? account.val().trim() : localStorage.ACCOUNT,
                 Password: password.val() ? password.val() : localStorage.PASSWORD,
                 PushToken: localStorage.PUSH_DEVICE_TOKEN ? localStorage.PUSH_DEVICE_TOKEN : '',
                 /*appKey: localStorage.PUSH_APP_KEY ? localStorage.PUSH_APP_KEY : '',
@@ -341,7 +344,7 @@ let app = new Framework7({
                         }
                         password.val(null);
 
-                        self.data.Token = result.data.data.token;
+                        self.data.Token = result.data.data.contactInfo.token;
 
                         self.methods.setInStorage({
                             name: 'userInfo',
@@ -590,6 +593,8 @@ let app = new Framework7({
             if (Array.isArray(messageList)) {
                 for (let i = 0; i < messageList.length; i++) {
                     messageList[i].customTime = moment(messageList[i].time, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT);
+                    messageList[i].customTitle = messageList[i].templateID === 1 ? LANGUAGE.PROMPT_MSG080 : LANGUAGE.PROMPT_MSG082;
+                    messageList[i].customSubtitle = messageList[i].templateID === 1 ? LANGUAGE.PROMPT_MSG081 : LANGUAGE.PROMPT_MSG083;
                 }
             }
             return messageList;
@@ -1053,7 +1058,7 @@ let app = new Framework7({
             window.open('tel:'+phone, '_system');
         },
 
-        getNewData: function(noPosInfoUpdate = false, emitDataUpdated = false){
+        /*getNewData: function(noPosInfoUpdate = false, emitDataUpdated = false){
             let self = this;
             self.methods.getPlusInfo();
 
@@ -1082,7 +1087,7 @@ let app = new Framework7({
                     console.log(err);
 
                 });
-        },
+        },*/
         setGeolocationPlugin: function(){
             if(!window.BackgroundGeolocation){
                 return;
