@@ -118,7 +118,7 @@
 
                 self.$setState(data,()=>{
                     if(self.Marker){
-                        self.Marker.setIcon(Helper.Methods.getCovid19Marker(stateDescr.markerIcon));
+                        self.Marker.setIcon(stateDescr.markerIcon);
                         if(self.LastPosInfo){
                             self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
                         }

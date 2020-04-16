@@ -33,6 +33,8 @@ API_URL.GET_NOTIFICATIONS = API_DOMIAN2 + 'Contact/HistoryMessage';
 API_URL.PRE_FORGOT_PWD = API_DOMIAN2 + 'Contact/PreForgotPassword';
 API_URL.FORGOT_PWD = API_DOMIAN2 + 'Contact/ForgotPassword';
 API_URL.NOTIFY_TEST = API_DOMIAN2 + 'Contact/SubmitDiagnose';
+API_URL.CHANGE_PASSWORD = API_DOMIAN2 + 'Contact/ChangePassword';
+
 
 
 

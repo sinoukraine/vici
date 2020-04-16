@@ -73,7 +73,7 @@ window.LanguagePackages= {
 		"COM_MSG067": "Infected Again",
 		"COM_MSG068": "Notification",
 		"COM_MSG069": "Test Samples was taken",
-		"COM_MSG070": "Me",
+		"COM_MSG070": "My Location",
 		"COM_MSG071": "Infected Person",
 
 

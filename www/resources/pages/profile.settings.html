@@ -214,7 +214,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG09}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="password" name="OldPassword" value="" >
+                                        <input type="password" name="OldPassword" value="" required validate>
                                         <span class="input-clear-button"></span>
                                     </div>
                                 </div>
@@ -224,7 +224,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG10}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="password" name="NewPassword" value="" >
+                                        <input type="password" name="NewPassword" value="" pattern="^\\S+\\w{4,32}\\S{1,}" minlength="6" maxlength="32" required validate>
                                         <span class="input-clear-button"></span>
                                     </div>
                                 </div>
@@ -234,7 +234,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG11}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="password" name="NewPasswordConfirm" value="" >
+                                        <input type="password" name="NewPasswordConfirm" value="" minlength="6" required validate>
                                         <span class="input-clear-button"></span>
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                                 self.$app.utils.extend(userInfo, data);
                                 self.$app.methods.setInStorage({name: 'userInfo', data: userInfo});
                                 self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG014});
-                                mainView.router.back();
+                                self.$app.view.main.router.back();
                             } else {
                                 self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
                             }
@@ -332,20 +332,30 @@
             saveNewPassword: function (data) {
                 var self = this;
 
-                self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG036});
-
-                /*self.$app.preloader.show();
-                self.$app.request.promise.get(API_URL.NEW_PASSWORD, data, 'json')
+                self.$app.preloader.show();
+                self.$app.request.promise.post(API_URL.CHANGE_PASSWORD, data, 'json')
                     .then(function (result) {
-                        if(result.data.MajorCode === '000') {
+                        if(result.data.majorCode === '000') {
                             self.$app.dialog.alert(LANGUAGE.PROMPT_MSG055, function(){
                                 self.$app.methods.logout();
-                                mainView.router.back();
+                                self.$app.view.main.router.back();
                             });
-                        }else if(result.data.MajorCode === '100' && result.data.MinorCode === '1004'){
-                            self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG056});
+                        }else if(result.data.majorCode === '001'){
+                            let errMsg = '';
+                            for (let i = 0; i < result.data.data.length; i++) {
+                                if(result.data.data[i].key === 'currentpassword'){
+                                    if(result.data.data[i].messages[0] === '0007'){
+                                        self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG056 });
+                                        return;
+                                    }
+                                }
+                                if(result.data.data[i].messages.length){
+                                    errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
+                                }
+                            }
+                            self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: errMsg });
                         }else{
-                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                            self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG003 });
                         }
                     })
                     .finally(function () {
@@ -359,7 +369,6 @@
                             self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
                         }
                     });
-            */
 
             },
         },
@@ -404,7 +413,7 @@
                     }
 
                     self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
-                    mainView.router.back();
+                    self.$app.view.main.router.back();
 
                    /* let data = {
                         MajorToken: self.$root.MajorToken,
@@ -424,18 +433,18 @@
                     e.preventDefault();
 
                     let data = {
-                        MinorToken: self.$root.MinorToken,
-                        oldpwd: page.$el.find('input[name="OldPassword"]').val(),
-                        newpwd: page.$el.find('input[name="NewPassword"]').val(),
+                        Token: self.$app.data.Token,
+                        CurrentPassword: page.$el.find('input[name="OldPassword"]').val(),
+                        NewPassword: page.$el.find('input[name="NewPassword"]').val(),
                     };
 
                     let confirmpwd = page.$el.find('input[name="NewPasswordConfirm"]').val();
 
-                    if (data.newpwd.length < 6) {
+                    if (data.NewPassword.length < 6) {
                         self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG054});
                         return false;
                     }
-                    if (data.newpwd !== confirmpwd) {
+                    if (data.NewPassword !== confirmpwd) {
                         self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG053});
                         return false;
                     }
