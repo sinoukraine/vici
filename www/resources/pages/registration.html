@@ -332,6 +332,15 @@
                             }else if(result.data.majorCode === '001' && result.data.data && result.data.data.length){
                                 let errMsg = '';
                                 for (let i = 0; i < result.data.data.length; i++) {
+                                    if(result.data.data[i].key === 'PhoneNumber'){
+                                        self.$setState({
+                                            PhoneVerifyCode: ''
+                                        });
+                                        if(result.data.data[i].messages[0] === '0005'){
+                                            self.$app.methods.customDialog({ title: data.PhoneNumber, text: LANGUAGE.PROMPT_MSG073 });
+                                            return;
+                                        }
+                                    }
                                     if(result.data.data[i].messages.length){
                                         errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
                                     }

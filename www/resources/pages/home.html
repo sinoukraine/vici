@@ -225,6 +225,14 @@
             },
             getInfectedBonds: function(){
                 let self = this;
+
+                if(self.AddingInfectedDelayOn){
+                    return;
+                }
+                self.$app.utils.nextTick(()=>{
+                    self.AddingInfectedDelayOn = false;
+                },2000);
+
                 let mapCenter = self.Map.getCenter();
                 let boundsNorthEast = self.Map.getBounds().getNorthEast();
                 let data = {
@@ -233,18 +241,26 @@
                     Lat2: boundsNorthEast.lat,
                     Lng2: boundsNorthEast.lng,
                 };
+                self.AddingInfectedDelayOn = true;
                 self.$app.request.promise.post(API_URL.GET_INFECTED_BOUNDS, data, 'json')
                         .then(function (result) {
                             console.log(result.data);
+
                             //self.InfectedMarkersGroup.clearLayers();
                             if(result.data.majorCode === '000' && result.data.data && result.data.data.length) {
                                 let points = result.data.data;
+
+                                let infectedLayers = self.InfectedMarkersGroup.getLayers();
                                 for (let i = 0; i < points.length; i++) {
-                                    if (points[i].type && points[i].type === "Point" && points[i].coordinates && points[i].coordinates.length){
-                                        let marker = L.marker(points[i].coordinates, {icon: Helper.MarkerIcon[3]});
-                                        marker.bindTooltip(LANGUAGE.COM_MSG071)
-                                              .addTo(self.InfectedMarkersGroup);
-                                        //asset.markerId = self.MarkersGroup.getLayerId(marker);
+                                    if (points[i][0] && points[i][1] && points[i][2]){
+                                        let point = infectedLayers.find(c => c.options.customId === points[i][0]);
+                                        if(!point){
+                                            let marker = L.marker([points[i][1], points[i][2]], {icon: Helper.MarkerIcon[3], customId:points[i][0]});
+                                            marker.bindTooltip(LANGUAGE.COM_MSG071)
+                                                    .addTo(self.InfectedMarkersGroup);
+                                        }else{
+                                            point.setLatLng([points[i][1], points[i][2]]);
+                                        }
                                     }
                                 }
 
@@ -252,23 +268,6 @@
                                     self.InfectedMarkersGroup.addTo(self.Map);
                                 }
                             }
-
-                            /*if(result.data.majorCode === '000') {
-                                $$('input[name="username"]').val(self.Phone);
-                                mainView.router.back();
-                                self.$app.methods.customDialog({text: LANGUAGE.PASSWORD_FORGOT_MSG12});
-
-                            }else if(result.data.majorCode && result.data.data && result.data.data.length){
-                                let errMsg = '';
-                                for (let i = 0; i < result.data.data.length; i++) {
-                                    if(result.data.data[i].messages.length){
-                                        errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
-                                    }
-                                }
-                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: errMsg });
-                            }else{
-                                self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG003 });
-                            }*/
                         })
                         /*.finally(function () {
                             self.$app.progressbar.hide();
@@ -584,6 +583,8 @@
                     self.userSignedIn(userInfo);
                 }
 
+                self.Map.on('moveend', self.getInfectedBonds);
+
                 AppEvents.on('covidStatusChanged', self.updateCovidStatus);
                 AppEvents.on('positionUpdateReceived', self.updateMarker);
                 AppEvents.on('signedIn', self.userSignedIn);
@@ -594,13 +595,14 @@
             },
 
             pageBeforeRemove: function () {
-                AppEvents.off('appPause', self.appPaused);
-                AppEvents.off('appResume', self.appResumed);
-                AppEvents.off('signedIn', self.userSignedIn);
-                AppEvents.off('signedOut', self.userSignedOut);
-                AppEvents.off('positionUpdateReceived', self.updateMarker);
-                AppEvents.off('covidStatusChanged', self.updateCovidStatus);
-                AppEvents.off('newNotificationCountChanged', self.changeNotificationCounter);
+                this.Map.off('moveend', this.getInfectedBonds);
+                AppEvents.off('appPause', this.appPaused);
+                AppEvents.off('appResume', this.appResumed);
+                AppEvents.off('signedIn', this.userSignedIn);
+                AppEvents.off('signedOut', this.userSignedOut);
+                AppEvents.off('positionUpdateReceived', this.updateMarker);
+                AppEvents.off('covidStatusChanged', this.updateCovidStatus);
+                AppEvents.off('newNotificationCountChanged', this.changeNotificationCounter);
                 if(this.MarkersGroup){
                     this.MarkersGroup.clearLayers();
                 }
