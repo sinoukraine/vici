@@ -29,7 +29,7 @@ API_URL.PREREGISTRATION = API_DOMIAN2 + 'Contact/PreRegister';
 API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
 API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Contact/Auth';
 //API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
-API_URL.UPLOAD_LINK = 'http://test.m2mdata.co:5000/' + 'Position/Upload';
+API_URL.UPLOAD_LINK = 'https://test.m2mdata.co:5000/' + 'Position/Upload';
 API_URL.GET_NOTIFICATIONS = API_DOMIAN2 + 'Contact/HistoryMessage';
 API_URL.PRE_FORGOT_PWD = API_DOMIAN2 + 'Contact/PreForgotPassword';
 API_URL.FORGOT_PWD = API_DOMIAN2 + 'Contact/ForgotPassword';
@@ -1167,7 +1167,7 @@ let app = new Framework7({
                 }*/
             });
 
-            bgGeo.onHttp(response => {
+            bgGeo.onHttp(function(response){
                 console.log("[http] response: ", response.success, response.status, response.responseText);
             });
         },
