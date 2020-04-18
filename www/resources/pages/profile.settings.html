@@ -53,15 +53,6 @@
                                     </div>
                                 </div>
                             </li>
-                            <!--<li class="item-content item-input bg-color-lightgray disabled">
-                                <div class="item-media text-color-lightgray"></div>
-                                <div class="item-inner">
-                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG13}}</div>
-                                    <div class="item-input-wrap">
-                                        <input type="text" name="UserID" value="{{UserID}}" readonly required validate>
-                                    </div>
-                                </div>
-                            </li>-->
                             <li class="item-content item-input">
                                 <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
                                 <div class="item-inner">
@@ -82,16 +73,37 @@
                                     </div>
                                 </div>
                             </li>
-                            <!--<li class="item-content item-input">
-                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-email"></i></div>
-                                <div class="item-inner">
-                                    <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG04}}</div>
-                                    <div class="item-input-wrap">
-                                        <input type="email" name="EMail" value="{{EMail}}" required validate readonly>
-                                        <span class="input-clear-button"></span>
+                            <li >
+                                <a class="item-link smart-select smart-select-init smart-select-gender disabled" data-open-in="popover" data-close-on-select="true" data-form-color-theme="green">
+                                    <select name="Gender" >
+                                        {{#each GenderList}}
+                                        <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                        {{/each}}
+                                    </select>
+                                    <div class="item-content">
+                                        <div class="item-media text-color-lightgray">
+                                            <!-- <i class="material-icons">favorite_border</i>-->
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG07}}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="item-content item-input disabled">
+                                    <div class="item-media text-color-lightgray">
+                                        <!-- <i class="material-icons">favorite_border</i>-->
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title item-label color-gray">{{@global.LANGUAGE.REGISTRATION_MSG08}}</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" placeholder="Select Birth Date" readonly="readonly" name="BirthDate"/>
+                                        </div>
                                     </div>
                                 </div>
-                            </li>-->
+                            </li>
 
                         </ul>
                     </div>
@@ -263,8 +275,11 @@
 
             let provinceList = Helper.Methods.getProvinceList();
             let cityList = Helper.Methods.getCityList();
+            let genderList = Helper.Methods.getGenderList();
+
             provinceList.find( ({ Val }) => Val === userInfo.provinceID ).Selected = true;
             cityList.find( ({ Val }) => Val === userInfo.cityID ).Selected = true;
+            genderList.find( ({ Val }) => Val === userInfo.gender ).Selected = true;
 
             let emList = [
                 {
@@ -294,6 +309,7 @@
                 EmergencyList: emList,
                 ProvinceList: provinceList,
                 CityList: cityList,
+                GenderList: genderList,
             };
 
             //console.log(ret)
@@ -378,6 +394,41 @@
                 let profileForm = page.$pageEl.find('[name = "user-profile-form"]');
                 let passwordForm = page.$pageEl.find('[name = "user-password-form"]');
                 let tabs = page.$pageEl.find('.tab');
+                let birth = moment(self.birthday, window.COM_TIMEFORMAT2).format(window.COM_TIMEFORMAT5);
+                birth = birth.split('-');
+                //self.PickerBirthDate.setValue(birth);
+
+                self.PickerBirthDate = self.$app.picker.create({
+                    backdrop: true,
+                    inputEl: page.$el.find('[name="BirthDate"]'),
+                    value: birth,
+                    formatValue: function (values, displayValues) {
+                        //return displayValues[0] + ' ' + values[1] + ', ' + values[2] + ' ' + values[3] + ':' + values[4];
+                        return values[0] + '/' + values[1] + '/' + values[2];
+                    },
+                    cols: [
+                        // Days
+                        {
+                            values: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'],
+                            textAlign: 'left'
+                        },
+                        // Months
+                        {
+                            values: ['01','02','03','04','05','06','07','08','09','10','11','12'],
+                            displayValues: [LANGUAGE.COM_MSG046, LANGUAGE.COM_MSG047, LANGUAGE.COM_MSG048, LANGUAGE.COM_MSG049, LANGUAGE.COM_MSG050, LANGUAGE.COM_MSG051, LANGUAGE.COM_MSG052, LANGUAGE.COM_MSG053, LANGUAGE.COM_MSG054, LANGUAGE.COM_MSG055, LANGUAGE.COM_MSG056, LANGUAGE.COM_MSG057],
+                            textAlign: 'center'
+                        },
+                        // Years
+                        {
+                            values: (function () {
+                                var arr = [];
+                                for (var i = 1920; i <= 2020; i++) { arr.push(i); }
+                                return arr;
+                            })(),
+                            textAlign: 'right'
+                        },
+                    ]
+                });
 
                 tabs.on('tab:show', function(){
                     if (this.name === 'user-password-form') {

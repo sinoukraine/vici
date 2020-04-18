@@ -2,6 +2,7 @@ window.COM_TIMEFORMAT = 'YYYY-MM-DD HH:mm:ss';
 window.COM_TIMEFORMAT2 = 'YYYY-MM-DDTHH:mm:ss';
 window.COM_TIMEFORMAT3 = 'DD/MM/YYYY HH:mm:ss';
 window.COM_TIMEFORMAT4 = 'YYYY-MM-DD';
+window.COM_TIMEFORMAT5 = 'DD-MM-YYYY';
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
 const API_DOMIAN2 = "https://vici19.quiktrak.co/";

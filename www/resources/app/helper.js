@@ -287,8 +287,8 @@ const Helper = {
         },
         getGenderList: function(){
             return [
-                {Val: '1', Name: LANGUAGE.REGISTRATION_MSG17 },
-                {Val: '0', Name: LANGUAGE.REGISTRATION_MSG18 }
+                {Val: 1, Name: LANGUAGE.REGISTRATION_MSG17 },
+                {Val: 0, Name: LANGUAGE.REGISTRATION_MSG18 }
             ]
         },
        /* getBirthYearsList: function(){
