@@ -42,6 +42,21 @@
                             </div>
                         </div>
                     </li>
+                    <li >
+                        <a class="item-link smart-select smart-select-init smart-select-custom smart-select-test-type" data-open-in="popover" data-close-on-select="true" data-form-color-theme="green">
+                            <select name="DiagnoseType" multiple maxlength="1" required validate >
+                                {{#each TestTypeList}}
+                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content ">
+                                <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-labname"></i>--></div>
+                                <div class="item-inner">
+                                    <div class="item-title ">{{@global.LANGUAGE.UNIT_TEST_RESULT_MSG007}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
                     <li class="item-content item-input">
                         <div class="item-media text-color-lightgray"><i class="f7-icons icon-labname"></i></div>
                         <div class="item-inner">
@@ -149,10 +164,12 @@
             let cityList = Helper.Methods.getCityList();
             provinceList.find( ({ Val }) => Val === userInfo.contactInfo.provinceID ).Selected = true;
             cityList.find( ({ Val }) => Val === userInfo.contactInfo.cityID ).Selected = true;
+            let testTypeList = Helper.Methods.getTestTypeList();
 
             let ret = {
                 ProvinceList: provinceList,
                 CityList: cityList,
+                TestTypeList: testTypeList,
            };
 
             return ret;
@@ -194,6 +211,7 @@
                     let data = {
                         Token: self.$app.data.Token,
                         BeginTime: moment.utc(self.CalendarTestDate.getValue()[0]).format(window.COM_TIMEFORMAT2),
+                        DiagnoseType: page.$el.find('[name = "DiagnoseType"]').val().toString(),
                         OrganizeCode: '',
                         OrganizeName: page.$el.find('[name = "LabName"]').val(),
                         DoctorFirstName: page.$el.find('[name = "LabDocFirstName"]').val(),

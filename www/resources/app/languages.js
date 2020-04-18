@@ -75,6 +75,9 @@ window.LanguagePackages= {
 		"COM_MSG069": "Test Samples was taken",
 		"COM_MSG070": "My Location",
 		"COM_MSG071": "Infected Person",
+		"COM_MSG072": "NEGATIVE",
+		"COM_MSG073": "POSITIVE",
+
 
 
 		"PROMPT_MSG000": "Nothing found",
@@ -272,6 +275,15 @@ window.LanguagePackages= {
 		"REGISTRATION_MSG19": "minimum 6 characters",
 
 		"NOTIFICATIONS_MSG00": "Notifications",
+
+		"UNIT_TEST_RESULT_MSG006": "Test Number",
+		"UNIT_TEST_RESULT_MSG007": "Test Type",
+		"UNIT_TEST_RESULT_MSG008": "Test Result",
+		"UNIT_TEST_RESULT_MSG009": "Covid 19 Virus Test",
+		"UNIT_TEST_RESULT_MSG010": "Covid 19 Antibody",
+
+
+
 
 	},
 	"ua":{

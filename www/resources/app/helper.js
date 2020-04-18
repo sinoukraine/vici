@@ -55,6 +55,23 @@ const Helper = {
         NotInfected: 64,
         Observed: 128
     },
+    posInfoEnum:{
+        id: 0,
+        lat: 1,
+        lng: 2,
+        state: 3,
+        time: 4,
+    },
+    minorCodeEnum:{
+        "0000": 'All OK',
+        "0001": 'Field is mandatory',
+        "0002": 'Exceeded field length limit',
+        "0003": 'Not existing',
+        "0004": 'Incorrect format',
+        "0005": 'Already exist',
+        "0006": 'Disabled',
+        "0007": 'Input Error',
+    },
     Methods: {
         covid19Enum: function(num){
             num = parseInt(num);
@@ -284,6 +301,18 @@ const Helper = {
                 default: ret = LANGUAGE.COM_MSG027+'('+direction+'°)';
             }
             return ret;
+        },
+        getTestTypeList: function(){
+            return [
+                {Val: 2, Name: LANGUAGE.UNIT_TEST_RESULT_MSG009 },
+                {Val: 1, Name: LANGUAGE.UNIT_TEST_RESULT_MSG010 }
+            ]
+        },
+        getTypeResulList: function(){
+            return [
+                {Val: 2, Name: LANGUAGE.COM_MSG061 },
+                {Val: 1, Name: LANGUAGE.COM_MSG062 }
+            ]
         },
         getIntervalList: function(){
             return [
