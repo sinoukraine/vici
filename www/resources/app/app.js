@@ -1166,6 +1166,10 @@ let app = new Framework7({
                     });
                 }*/
             });
+
+            bgGeo.onHttp(response => {
+                console.log("[http] response: ", response.success, response.status, response.responseText);
+            });
         },
         setupPush: function() {
             let self = this;
