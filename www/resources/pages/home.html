@@ -201,7 +201,6 @@
                                 }
                             })
                             .addTo(self.MarkersGroup);
-                    self.MarkersGroup.addTo(self.Map);
                 }
                 self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
                 self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
@@ -244,7 +243,7 @@
                 self.AddingInfectedDelayOn = true;
                 self.$app.request.promise.post(API_URL.GET_INFECTED_BOUNDS, data, 'json')
                         .then(function (result) {
-                            console.log(result.data);
+                           // console.log(result.data);
 
                             //self.InfectedMarkersGroup.clearLayers();
                             if(result.data.majorCode === '000' && result.data.data && result.data.data.length) {
@@ -252,7 +251,8 @@
 
                                 let infectedLayers = self.InfectedMarkersGroup.getLayers();
                                 for (let i = 0; i < points.length; i++) {
-                                    if (points[i][0] && points[i][1] && points[i][2]){
+                                   /* if (points[i][0] && points[i][1] && points[i][2] && parseInt(points[i][0]) !== self.Id){*/
+                                    if (points[i][0] && points[i][1] && points[i][2] && parseInt(points[i][3]) === Helper.testEnum.Infected && parseInt(points[i][0]) !== self.Id){
                                         let point = infectedLayers.find(c => c.options.customId === points[i][0]);
                                         if(!point){
                                             let marker = L.marker([points[i][1], points[i][2]], {icon: Helper.MarkerIcon[3], customId:points[i][0]});
@@ -262,10 +262,6 @@
                                             point.setLatLng([points[i][1], points[i][2]]);
                                         }
                                     }
-                                }
-
-                                if (self.InfectedMarkersGroup.getBounds().isValid()) {
-                                    self.InfectedMarkersGroup.addTo(self.Map);
                                 }
                             }
                         })
@@ -354,6 +350,7 @@
 
                 self.getCurrentPosition(function (location) {
                     self.updateMarker(location);
+                    self.getInfectedBonds();
                 });
             },
 
@@ -531,6 +528,7 @@
                 self.$setState({
                     LoginDone: true,
                     Phone: userInfo.contactInfo.phoneNumber,
+                    Id: parseInt(userInfo.contactInfo.id),
                 });
 
                 let userCovidDetails =  Helper.Methods.covid19Enum(userInfo.diagnoseInfo ? userInfo.diagnoseInfo.state : '');
@@ -583,6 +581,8 @@
                 self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [10.789648, 23.611363], zoom: 2 });
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
                 self.InfectedMarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
+                self.MarkersGroup.addTo(self.Map);
+                self.InfectedMarkersGroup.addTo(self.Map);
 
                 self.getInfectedBonds();
 
