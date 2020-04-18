@@ -505,7 +505,13 @@
                         Token: userInfo.contactInfo.token,
                     }
                 }, function (state) {
-                    bgGeo.requestPermission().then((status) => {
+                    bgGeo.startSchedule(function() {
+                        self.watchUserLocation();
+                        //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                        //self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
+                        //mainView.router.back();
+                    });
+                    /*bgGeo.requestPermission().then((status) => {
                         bgGeo.start(function() {
                             self.$app.utils.nextTick(()=>{
                                 bgGeo.startSchedule();
@@ -515,7 +521,7 @@
                     }).catch((status) => {
                         self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
                         console.log('[requestPermission] REJECTED', status);
-                    });
+                    });*/
 
                 });
             },
