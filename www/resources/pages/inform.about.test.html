@@ -55,7 +55,7 @@
                         <a class="item-link smart-select smart-select-init smart-select-custom smart-select-test-type" data-open-in="popover" data-close-on-select="true" data-form-color-theme="green">
                             <select name="diagnoseType" multiple maxlength="1" required validate >
                                 {{#each TestTypeList}}
-                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                <option value="{{Val}}" {{#if Selected}}selected{{/if}} >{{Name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content ">
@@ -171,7 +171,9 @@
             let userInfo = self.$app.methods.getFromStorage('userInfo');
             let provinceList = Helper.Methods.getProvinceList();
             let cityList = Helper.Methods.getCityList();
-            let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === 0;
+            let testTypeList = Helper.Methods.getTestTypeList();
+            let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === Helper.testEnum.Submitted;
+
             if(awaitingState){
                 if(userInfo.organizeInfo && userInfo.organizeInfo.proviceID){
                     provinceList.find( ({ Val }) => Val === userInfo.organizeInfo.proviceID ).Selected = true;
@@ -179,12 +181,18 @@
                 if(userInfo.organizeInfo && userInfo.organizeInfo.cityID){
                     cityList.find( ({ Val }) => Val === userInfo.organizeInfo.cityID ).Selected = true;
                 }
+                if(userInfo.diagnoseInfo && userInfo.diagnoseInfo.type){
+                    console.log(userInfo.diagnoseInfo.type)
+                    testTypeList.find( ({ Val }) => Val === userInfo.diagnoseInfo.type ).Selected = true;
+                    console.log(testTypeList)
+                }
             }else{
                 provinceList.find( ({ Val }) => Val === userInfo.contactInfo.provinceID ).Selected = true;
                 cityList.find( ({ Val }) => Val === userInfo.contactInfo.cityID ).Selected = true;
             }
 
-            let testTypeList = Helper.Methods.getTestTypeList();
+
+
 
             let ret = {
                 DiagnoseStateAwaitingReview: awaitingState,
@@ -223,7 +231,7 @@
                 let testDateEl = page.$el.find('[name="beginTime"]');
 
                 let testDate = moment().format(window.COM_TIMEFORMAT6);
-                if(self.DiagnoseInfo && self.DiagnoseInfo.state >= 0 && self.DiagnoseInfo.beginTime){
+                if(self.DiagnoseInfo && self.DiagnoseInfo.state >= Helper.testEnum.Submitted && self.DiagnoseInfo.beginTime){
                     testDate = moment(self.DiagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(self.$app.data.UTCOFFSET).format(window.COM_TIMEFORMAT6);
                 }
                 console.log(self.DiagnoseInfo)

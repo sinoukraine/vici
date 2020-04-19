@@ -98,26 +98,26 @@
                 data.InformButtonBgClass = 'bg-color-red';
 
                 switch (diagnoseInfoDescr.type) {
-                    case 0:
+                    case Helper.testEnum.Submitted:
                         //data.InformButtonLink = '';
                         data.InformButtonBgClass = 'bg-color-yellow';
                         break;
-                    case 1: case 2: case 128:
+                    case Helper.testEnum.Testing: case Helper.testEnum.Suspected: case Helper.testEnum.Observed:
                         data.InformButtonLink = '';
                         data.InformButtonBgClass = 'bg-color-orange';
                         break;
 
-                    case 4: case 8:
+                    case Helper.testEnum.Infected: case Helper.testEnum.SeveralCases:
                         data.InformButtonLink = '/inform-about-recovery/';
                         data.InformButtonBgClass = 'bg-color-blue';
                         break;
 
-                    case 16: case 64:
+                    case Helper.testEnum.Recovered: case Helper.testEnum.NotInfected:
                         data.InformButtonLink = '/inform-about-test/';
                         data.InformButtonBgClass = 'bg-color-red';
                         break;
 
-                    case 32:
+                    case Helper.testEnum.Dead:
                         data.InformButtonLink = '';
                         data.InformButtonBgClass = 'bg-color-black';
                         break;
@@ -143,7 +143,7 @@
                                             <div class="block-title">${ LANGUAGE.PROMPT_MSG060 }</div>
                                             <div class="block">
                                                 <p>${LANGUAGE.PROMPT_MSG062}: <span class="${diagnoseInfoDescr.textColor}">${ diagnoseInfoDescr.text }</span></p>`;
-                if (diagnoseInfoDescr.type >= 0 && diagnoseInfoDescr.beginTime && diagnoseInfoDescr.beginTimeTitle){
+                if (diagnoseInfoDescr.type >= Helper.testEnum.Submitted && diagnoseInfoDescr.beginTime && diagnoseInfoDescr.beginTimeTitle){
                     content +=`                 <p>${ diagnoseInfoDescr.beginTimeTitle }: ${ diagnoseInfoDescr.beginTime }</p>`;
                 }
                 content +=`                    <a href="/qr-code/" class="margin-top color-blue button button-outline button-raised popover-close">${ LANGUAGE.PROMPT_MSG064 }</a>

@@ -1,7 +1,7 @@
 var routes = [
     {
         path: '/',
-        componentUrl: './resources/pages/home.html?v=2.2',
+        componentUrl: './resources/pages/home.html?v=2.3',
         name: 'home',
     },
     {
@@ -18,48 +18,48 @@ var routes = [
     },
     {
         path: '/profile-settings/',
-        componentUrl: './resources/pages/profile.settings.html?v=2.2',
+        componentUrl: './resources/pages/profile.settings.html?v=2.3',
         name: 'profile.settings',
     },
     {
         path: '/timing-settings/',
-        componentUrl: './resources/pages/timing.settings.html?v=2.2',
+        componentUrl: './resources/pages/timing.settings.html?v=2.3',
         name: 'timing.settings',
     },
     {
         path: '/share/',
-        componentUrl: './resources/pages/share.html?v=2.2',
+        componentUrl: './resources/pages/share.html?v=2.3',
         name: 'share',
     },
     {
         path: '/inform-about-test/',
-        componentUrl: './resources/pages/inform.about.test.html?v=2.2',
+        componentUrl: './resources/pages/inform.about.test.html?v=2.3',
         name: 'inform.about.test',
     },
     {
         path: '/inform-about-recovery/',
-        componentUrl: './resources/pages/inform.about.recovery.html?v=2.2',
+        componentUrl: './resources/pages/inform.about.recovery.html?v=2.3',
         name: 'inform.about.recovery',
     },
     {
         path: '/qr-code/',
-        componentUrl: './resources/pages/qr.code.html?v=2.2',
+        componentUrl: './resources/pages/qr.code.html?v=2.3',
         name: 'qr.code',
     },
 
     {
         path: '/registration/',
-        componentUrl: './resources/pages/registration.html?v=2.2',
+        componentUrl: './resources/pages/registration.html?v=2.3',
         name: 'registration',
     },
     {
         path: '/notifications/',
-        componentUrl: './resources/pages/notifications.html?v=2.2',
+        componentUrl: './resources/pages/notifications.html?v=2.3',
         name: 'notifications',
     },
     {
         path: '/notification/',
-        componentUrl: './resources/pages/notification.html?v=2.2',
+        componentUrl: './resources/pages/notification.html?v=2.3',
         name: 'notification',
     },
 

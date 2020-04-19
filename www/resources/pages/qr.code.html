@@ -33,7 +33,7 @@
                 <div key="skeleton-qr-block" class="skeleton-text skeleton-effect-blink"><div class="skeleton-block margin-auto" style="width: 264px; height: 264px;"></div></div>
                 {{/unless}}
             </div>
-            {{#js_if "this.Covid19StatusType >= 0"}}
+            {{#js_if "this.Covid19StatusType >= 1"}}
             <div class="list">
                 <ul>
                     <li class="item-content ">
@@ -101,10 +101,7 @@
             let userInfo = self.$app.methods.getFromStorage('userInfo');
 
             let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
-            let diagnoseTypeList = Helper.Methods.getTestTypeList();
-            if(userInfo.diagnoseInfo && userInfo.diagnoseInfo.state !== -1){
 
-            }
 
             let ret = {
                 Covid19Status: diagnoseInfoDescr.text,
