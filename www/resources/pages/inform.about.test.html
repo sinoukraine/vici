@@ -13,9 +13,11 @@
                 </div>
                 <div class="title sliding">{{@global.LANGUAGE.INFORM_ABOUT_MSG00}}</div>
                 <div class="right">
+                    {{#unless DiagnoseStateAwaitingReview}}
                     <label for="submit-test-send" class="link icon-only">
                         <i class="f7-icons icon-apply"></i>
                     </label>
+                    {{/unless}}
                 </div>
             </div>
         </div>
@@ -23,10 +25,17 @@
 
         <div  class="page-content" >
          <!--   <div class="block-title">{{@global.LANGUAGE.DEVICE_SHARE_MSG00}}</div>-->
+            {{#unless DiagnoseStateAwaitingReview}}
             <div class="block">
                 {{@global.LANGUAGE.PROMPT_MSG033}}
             </div>
-            <form name="FormTestSend" class="list no-hairlines no-margin-bottom">
+            {{else}}
+            <div class="block text-color-red">
+                {{@global.LANGUAGE.PROMPT_MSG037}}
+            </div>
+            {{/unless}}
+
+            <form name="FormTestSend" class="list no-hairlines no-margin-bottom {{#if DiagnoseStateAwaitingReview}}disabled{{/if}}">
                 <input type="submit" id="submit-test-send" class="display-none" />
                 <ul>
                     <li>
@@ -37,14 +46,14 @@
                             <div class="item-inner">
                                 <div class="item-title item-floating-label item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG03}}</div>
                                 <div class="item-input-wrap">
-                                    <input type="text" placeholder="Select date and time" readonly="readonly" name="TestDate" />
+                                    <input type="text" placeholder="Select date and time" readonly="readonly" name="beginTime" />
                                 </div>
                             </div>
                         </div>
                     </li>
                     <li >
                         <a class="item-link smart-select smart-select-init smart-select-custom smart-select-test-type" data-open-in="popover" data-close-on-select="true" data-form-color-theme="green">
-                            <select name="DiagnoseType" multiple maxlength="1" required validate >
+                            <select name="diagnoseType" multiple maxlength="1" required validate >
                                 {{#each TestTypeList}}
                                 <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
                                 {{/each}}
@@ -62,7 +71,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG01}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="LabName" value="" required validate>
+                                <input type="text" name="organizeName" value="{{OrganizeInfo.name}}" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -72,7 +81,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG04}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="LabDocFirstName" value="" required validate>
+                                <input type="text" name="doctorFirstName" value="{{DoctorInfo.firstName}}" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -82,14 +91,14 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG05}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="LabDocLastName" value="" required validate>
+                                <input type="text" name="doctorSubName" value="{{DoctorInfo.subName}}" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
                     </li>
                     <li>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
-                            <select name="Province" required validate>
+                            <select name="provinceID" required validate>
                                 {{#each ProvinceList}}
                                 <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
                                 {{/each}}
@@ -106,7 +115,7 @@
                     </li>
                     <li>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
-                            <select name="City" required validate>
+                            <select name="cityID" required validate>
                                 {{#each CityList}}
                                 <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
                                 {{/each}}
@@ -126,7 +135,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG12}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="Street" value="" required validate>
+                                <input type="text" name="organizeStreet" value="{{OrganizeInfo.street}}" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -162,14 +171,29 @@
             let userInfo = self.$app.methods.getFromStorage('userInfo');
             let provinceList = Helper.Methods.getProvinceList();
             let cityList = Helper.Methods.getCityList();
-            provinceList.find( ({ Val }) => Val === userInfo.contactInfo.provinceID ).Selected = true;
-            cityList.find( ({ Val }) => Val === userInfo.contactInfo.cityID ).Selected = true;
+            let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === 0;
+            if(awaitingState){
+                if(userInfo.organizeInfo && userInfo.organizeInfo.proviceID){
+                    provinceList.find( ({ Val }) => Val === userInfo.organizeInfo.proviceID ).Selected = true;
+                }
+                if(userInfo.organizeInfo && userInfo.organizeInfo.cityID){
+                    cityList.find( ({ Val }) => Val === userInfo.organizeInfo.cityID ).Selected = true;
+                }
+            }else{
+                provinceList.find( ({ Val }) => Val === userInfo.contactInfo.provinceID ).Selected = true;
+                cityList.find( ({ Val }) => Val === userInfo.contactInfo.cityID ).Selected = true;
+            }
+
             let testTypeList = Helper.Methods.getTestTypeList();
 
             let ret = {
+                DiagnoseStateAwaitingReview: awaitingState,
                 ProvinceList: provinceList,
                 CityList: cityList,
                 TestTypeList: testTypeList,
+                DiagnoseInfo: userInfo.diagnoseInfo ? userInfo.diagnoseInfo : {},
+                DoctorInfo: userInfo.doctorInfo ? userInfo.doctorInfo : {},
+                OrganizeInfo: userInfo.organizeInfo ? userInfo.organizeInfo : {},
            };
 
             return ret;
@@ -196,19 +220,25 @@
                 let self = this;
 
                 let form = page.$el.find('[name = "FormTestSend"]');
-                let testDateEl = page.$el.find('[name="TestDate"]');
+                let testDateEl = page.$el.find('[name="beginTime"]');
+
+                let testDate = moment().format(window.COM_TIMEFORMAT6);
+                if(self.DiagnoseInfo && self.DiagnoseInfo.state >= 0 && self.DiagnoseInfo.beginTime){
+                    testDate = moment(self.DiagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(self.$app.data.UTCOFFSET).format(window.COM_TIMEFORMAT6);
+                }
+                console.log(self.DiagnoseInfo)
                 self.CalendarTestDate = self.$app.calendar.create({
                     inputEl: testDateEl,
                     timePicker: true,
-                    dateFormat: 'MM dd yyyy, HH::mm',
-                    value: [moment().format('MMMM DD YYYY, HH:mm')],
+                    dateFormat: window.COM_TIMEFORMAT7,
+                    value: [testDate],
                     maxDate: new Date(),
                 });
 
                 form.on('submit', function(e){
                     e.preventDefault();
 
-                    let data = {
+                    /*let data = {
                         Token: self.$app.data.Token,
                         BeginTime: moment.utc(self.CalendarTestDate.getValue()[0]).format(window.COM_TIMEFORMAT2),
                         DiagnoseType: page.$el.find('[name = "DiagnoseType"]').val().toString(),
@@ -220,8 +250,17 @@
                         ProvinceID: page.$el.find('[name = "Province"]').val(),
                         CityID: page.$el.find('[name = "City"]').val(),
                         Street: page.$el.find('[name = "Street"]').val(),
+                    };*/
+                    let data = self.$app.form.convertToData(form);
+                    data.Token = self.$app.data.Token;
 
-                    };
+                    if(data.beginTime){
+                        data.beginTime = moment(data.beginTime,window.COM_TIMEFORMAT6).utc().format(window.COM_TIMEFORMAT2);
+                    }
+                    if(data.diagnoseType){
+                        data.diagnoseType = data.diagnoseType.toString();
+                    }
+                    data.Street = data.organizeStreet;
 
 
                     self.$app.progressbar.show();
@@ -234,16 +273,14 @@
                                 self.$app.methods.setInStorage({name:'userInfo', data:userInfo});
                                 self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG032});
 
-                                let stateDescr = Helper.Methods.covid19Enum(result.data.data.state);
-
-                                self.$app.data.Covid19StatusType = result.data.data.state;
-                                self.$app.data.Covid19Status = stateDescr.text;
+                                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(result.data.data);
+                                self.$app.data.Covid19StatusType = diagnoseInfoDescr.type;
+                                self.$app.data.Covid19Status = diagnoseInfoDescr.text;
 
                                 AppEvents.emit('covidStatusChanged', {
-                                    Covid19StatusType: result.data.data.state,
-                                    Covid19Status: stateDescr.text,
-                                    Covid19StatusDate: moment(result.data.data.beginTime,window.COM_TIMEFORMAT2).add(self.$app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT4),
-                                   // StatusDaysCount: moment().diff(self.CalendarTestDate.getValue()[0], 'days')
+                                    Covid19StatusType: diagnoseInfoDescr.type,
+                                    Covid19Status: diagnoseInfoDescr.text,
+                                    StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
                                 });
                                 self.$app.view.main.router.back();
 

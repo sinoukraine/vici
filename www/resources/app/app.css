@@ -189,6 +189,9 @@
     overflow: auto;
     max-height: 90%;
 }
+.margin-auto{
+    margin: auto;
+}
 
 .position-relative{
     position: relative;
@@ -668,5 +671,5 @@ input.dialog-input[type] {
 
 .block-qr{
     text-align: center;
-    min-height: 420px;
+    min-height: 270px;
 }

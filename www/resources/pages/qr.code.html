@@ -24,10 +24,66 @@
             <div class="block">
                 <p>{{@global.LANGUAGE.PROMPT_MSG065}}</p>
                 <p>{{@global.LANGUAGE.PROMPT_MSG066}}: <span class="{{Covid19StatusColor}}">{{Covid19Status}}</span></p>
+                <!--{{#if Covid19StatusDate}}
+                <p>{{@global.LANGUAGE.INFORM_ABOUT_MSG03}}: {{Covid19StatusDate}}{{#if Covid19StatusDateCount}}({{Covid19StatusDateCount}}){{/if}}</p>
+                {{/if}}-->
             </div>
             <div class="block block-qr" id="qr-wrapper">
-
+                {{#unless DataLoaded}}
+                <div key="skeleton-qr-block" class="skeleton-text skeleton-effect-blink"><div class="skeleton-block margin-auto" style="width: 264px; height: 264px;"></div></div>
+                {{/unless}}
             </div>
+            {{#js_if "this.Covid19StatusType >= 0"}}
+            <div class="list">
+                <ul>
+                    <li class="item-content ">
+                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-day-of-week"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="item-header text-color-gray">{{@global.LANGUAGE.INFORM_ABOUT_MSG03}}</div>
+                                {{Covid19StatusDate}}{{#if Covid19StatusDateCount}}({{Covid19StatusDateCount}}){{/if}}
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content ">
+                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-labname"></i>--></div>
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="item-header text-color-gray">{{@global.LANGUAGE.UNIT_TEST_RESULT_MSG007}}</div>
+                                {{Covid19TestType}}
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content ">
+                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-labname"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="item-header text-color-gray">{{@global.LANGUAGE.INFORM_ABOUT_MSG01}}</div>
+                                {{OrganizeInfo.name}}
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content ">
+                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-name"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="item-header text-color-gray">{{@global.LANGUAGE.INFORM_ABOUT_MSG04}}</div>
+                                {{DoctorInfo.firstName}}
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content ">
+                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="item-header text-color-gray">{{@global.LANGUAGE.INFORM_ABOUT_MSG05}}</div>
+                                {{DoctorInfo.subName}}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            {{/js_if}}
         </div>
 
     </div>
@@ -42,16 +98,23 @@
     return {
         data: function () {
             let self = this;
+            let userInfo = self.$app.methods.getFromStorage('userInfo');
 
-            //let statusObj = Helper.Methods.covid19Enum(self.$app.data.Covid19StatusType);
+            let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
+            let diagnoseTypeList = Helper.Methods.getTestTypeList();
+            if(userInfo.diagnoseInfo && userInfo.diagnoseInfo.state !== -1){
 
-            let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
-            let stateDescr = Helper.Methods.covid19Enum(diagnoseInfo? diagnoseInfo.state : '');
+            }
 
             let ret = {
-                Covid19Status: stateDescr.text,
-                Covid19StatusType: stateDescr.type,
-                Covid19StatusColor: stateDescr.textColor
+                Covid19Status: diagnoseInfoDescr.text,
+                Covid19StatusType: diagnoseInfoDescr.type,
+                Covid19StatusColor: diagnoseInfoDescr.textColor,
+                Covid19StatusDate: diagnoseInfoDescr.beginTime,
+                Covid19StatusDateCount: diagnoseInfoDescr.beginTimeDaysCount,
+                Covid19TestType: diagnoseInfoDescr.diagnoseTypeText,
+                DoctorInfo: userInfo.doctorInfo ? userInfo.doctorInfo : {},
+                OrganizeInfo: userInfo.organizeInfo ? userInfo.organizeInfo : {},
            };
 
             return ret;
@@ -67,17 +130,21 @@
                 let self = this;
                 self.$app.progressbar.show('gray');
                 setTimeout(function () {
-                    self.QRCode = new QRCode(document.getElementById("qr-wrapper"), {
-                        text: "https://vici.quiktrak.co/",
-                        /*logo: self.$app.data.logoSquare,
-                        logoWidth: 90,
-                        logoHeight: undefined,
-                        logoBackgroundColor: '#ffffff',
-                        logoBackgroundTransparent: false*/
+                    self.$setState({
+                        DataLoaded: true,
+                    },()=>{
+                        self.QRCode = new QRCode(document.getElementById("qr-wrapper"), {
+                            text: "https://vici.quiktrak.co/",
+                            /*logo: self.$app.data.logoSquare,
+							logoWidth: 90,
+							logoHeight: undefined,
+							logoBackgroundColor: '#ffffff',
+							logoBackgroundTransparent: false*/
 
+                        });
                     });
                     self.$app.progressbar.hide();
-                }, 1000);
+                }, 2000);
 
 
             },

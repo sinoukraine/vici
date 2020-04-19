@@ -42,6 +42,12 @@ const Helper = {
             iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         }),
+        L.icon({
+            iconUrl: 'resources/images/pins/pin-yellow.svg',
+            iconSize:     [60, 60], // size of the icon
+            iconAnchor:   [17, 55], // point of the icon which will correspond to marker's location
+            popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
+        }),
     ],
     testEnum: {
         Untested: -1,
@@ -73,7 +79,14 @@ const Helper = {
         "0007": 'Input Error',
     },
     Methods: {
-        covid19Enum: function(num){
+        getDiagnoseInfoDescr: function(diagnoseInfo={}){
+            let num = diagnoseInfo !== null ? diagnoseInfo.state : '';
+            /*if(diagnoseInfo && diagnoseInfo.type){
+                num = diagnoseInfo.type;
+            }else if(diagnoseInfo && diagnoseInfo.state){
+                num = diagnoseInfo.state
+            }*/
+
             num = parseInt(num);
             let ret = {
                 type: -1,
@@ -86,10 +99,15 @@ const Helper = {
             switch (num) {
                 case 0:
                     ret.type = num;
-                    ret.text = LANGUAGE.COM_MSG069; //test submitted
-                    ret.textColor = 'text-color-orange';
-                    ret.bgColor = 'bg-color-orange';
-                    ret.markerIcon = Helper.MarkerIcon[2];
+                    ret.text = LANGUAGE.PROMPT_MSG087; //test submitted
+                    ret.textColor = 'text-color-yellow';
+                    ret.bgColor = 'bg-color-yellow';
+                    ret.markerIcon = Helper.MarkerIcon[7];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
                 case 1:
                     ret.type = num;
@@ -97,6 +115,11 @@ const Helper = {
                     ret.textColor = 'text-color-orange';
                     ret.bgColor = 'bg-color-orange';
                     ret.markerIcon = Helper.MarkerIcon[2];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
                 case 2:
                     ret.type = num;
@@ -104,6 +127,11 @@ const Helper = {
                     ret.textColor = 'text-color-orange';
                     ret.bgColor = 'bg-color-orange';
                     ret.markerIcon = Helper.MarkerIcon[2];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
                 case 4:
                     ret.type = num;
@@ -111,6 +139,11 @@ const Helper = {
                     ret.textColor = 'text-color-red';
                     ret.bgColor = 'bg-color-red';
                     ret.markerIcon = Helper.MarkerIcon[3];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
                 case 8:
                     ret.type = num;
@@ -118,6 +151,11 @@ const Helper = {
                     ret.textColor = 'text-color-red';
                     ret.bgColor = 'bg-color-red';
                     ret.markerIcon = Helper.MarkerIcon[3];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
                 case 16:
                     ret.type = num;
@@ -125,6 +163,11 @@ const Helper = {
                     ret.textColor = 'text-color-blue';
                     ret.bgColor = 'bg-color-blue';
                     ret.markerIcon = Helper.MarkerIcon[5];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG063;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
                 case 32:
                     ret.type = num;
@@ -132,13 +175,24 @@ const Helper = {
                     ret.textColor = 'text-color-black';
                     ret.bgColor = 'bg-color-black';
                     ret.markerIcon = Helper.MarkerIcon[6];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG086;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
+
                 case 64:
                     ret.type = num;
                     ret.text = LANGUAGE.COM_MSG040; //not infected
                     ret.textColor = 'text-color-green';
                     ret.bgColor = 'bg-color-green';
                     ret.markerIcon = Helper.MarkerIcon[4];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
                 case 128:
                     ret.type = num;
@@ -146,37 +200,14 @@ const Helper = {
                     ret.textColor = 'text-color-orange';
                     ret.bgColor = 'bg-color-orange';
                     ret.markerIcon = Helper.MarkerIcon[2];
+                    ret.beginTime = diagnoseInfo && diagnoseInfo.beginTime ? moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.beginTimeDaysCount = diagnoseInfo && diagnoseInfo.beginTime ? moment().diff(moment(ret.beginTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
+                    ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
+                    ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
                     break;
-               /* case 2:
-                    ret.text = LANGUAGE.COM_MSG042; //pending
-                    ret.textColor = 'text-color-orange';
-                    ret.bgColor = 'bg-color-orange';
-                    break;
-                case 3:
-                    ret.text = LANGUAGE.COM_MSG039; //infected
-                    ret.textColor = 'text-color-red';
-                    ret.bgColor = 'bg-color-red';
-                    break;
-                case 4:
-                    ret.text = LANGUAGE.COM_MSG040; //not infected
-                    ret.textColor = 'text-color-green';
-                    ret.bgColor = 'bg-color-green';
-                    break;
-                case 5:
-                    ret.text = LANGUAGE.COM_MSG043; //recovered
-                    ret.textColor = 'text-color-blue';
-                    ret.bgColor = 'bg-color-blue';
-                    break;*/
             }
 
-            return ret;
-        },
-        getCovid19Marker: function(num){
-            let ret = Helper.MarkerIcon[0];
-            num = parseInt(num);
-            if(num && Helper.MarkerIcon[num]){
-                ret = Helper.MarkerIcon[num];
-            }
             return ret;
         },
         getWeekDaysArr: function(){

@@ -83,75 +83,68 @@
         },
         methods: {
             updateCovidStatus: function(data={}){
-
                 let self = this;
-                if(!self.$app.methods.isObjEmpty(data)){
-                    let stateDescr = Helper.Methods.covid19Enum(data.Covid19StatusType);
 
-                    data.StatusShieldColor = stateDescr.textColor;
-                    data.Covid19StatusType = stateDescr.type;
-                    data.InformButtonLink = '/inform-about-test/';
-                    data.InformButtonBgClass = 'bg-color-red';
-
-                    switch (data.Covid19StatusType) {
-                        case 0: case 1: case 2: case 128:
-                            data.InformButtonLink = '';
-                            data.InformButtonBgClass = 'bg-color-orange';
-                            break;
-
-                        case 4: case 8:
-                            data.InformButtonLink = '/inform-about-recovery/';
-                            data.InformButtonBgClass = 'bg-color-blue';
-                            break;
-
-                        case 16: case 64:
-                            data.InformButtonLink = '/inform-about-test/';
-                            data.InformButtonBgClass = 'bg-color-red';
-                            break;
-
-                        case 32:
-                            data.InformButtonLink = '';
-                            data.InformButtonBgClass = 'bg-color-black';
-                            break;
-                    }
+                if(self.$app.methods.isObjEmpty(data)){
+                    console.log('obj data is empty');
+                    return;
                 }
+                let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
+                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(diagnoseInfo);
 
+                data.StatusShieldColor = diagnoseInfoDescr.textColor;
+                data.Covid19StatusType = diagnoseInfoDescr.type;
+                data.InformButtonLink = '/inform-about-test/';
+                data.InformButtonBgClass = 'bg-color-red';
+
+                switch (diagnoseInfoDescr.type) {
+                    case 0:
+                        //data.InformButtonLink = '';
+                        data.InformButtonBgClass = 'bg-color-yellow';
+                        break;
+                    case 1: case 2: case 128:
+                        data.InformButtonLink = '';
+                        data.InformButtonBgClass = 'bg-color-orange';
+                        break;
+
+                    case 4: case 8:
+                        data.InformButtonLink = '/inform-about-recovery/';
+                        data.InformButtonBgClass = 'bg-color-blue';
+                        break;
+
+                    case 16: case 64:
+                        data.InformButtonLink = '/inform-about-test/';
+                        data.InformButtonBgClass = 'bg-color-red';
+                        break;
+
+                    case 32:
+                        data.InformButtonLink = '';
+                        data.InformButtonBgClass = 'bg-color-black';
+                        break;
+                }
                 self.$setState(data,()=>{
                     if(self.Marker){
-                        self.Marker.setIcon(stateDescr.markerIcon);
+                        self.Marker.setIcon(diagnoseInfoDescr.markerIcon);
                         if(self.LastPosInfo){
                             self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
                         }
                     }
                 });
+
             },
             showShieldStatusPopover: function(e){
                 let self = this;
                 let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
-                let stateDescr = Helper.Methods.covid19Enum(diagnoseInfo ? diagnoseInfo.state : '');
-                let dateTitle = '';
 
-                if (diagnoseInfo){
-                    switch (diagnoseInfo.state) {
-                        case 0: case 1: case 2: case 4: case 8: case 64: case 128:
-                            dateTitle = LANGUAGE.PROMPT_MSG061;
-                            break;
-                        case 16:
-                            dateTitle = LANGUAGE.PROMPT_MSG063;
-                            break;
-                        case 32:
-                            dateTitle = LANGUAGE.PROMPT_MSG086;
-                            break;
-                    }
-                }
+                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(diagnoseInfo);
 
                 let content =   `<div class="popover menu-popover" >
                                         <div class="popover-inner">
                                             <div class="block-title">${ LANGUAGE.PROMPT_MSG060 }</div>
                                             <div class="block">
-                                                <p>${LANGUAGE.PROMPT_MSG062}: <span class="${stateDescr.textColor}">${ stateDescr.text }</span></p>`;
-                if (diagnoseInfo && diagnoseInfo.beginTime){
-                    content +=`                 <p>${ dateTitle }: ${ moment(diagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(self.$app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) }</p>`;
+                                                <p>${LANGUAGE.PROMPT_MSG062}: <span class="${diagnoseInfoDescr.textColor}">${ diagnoseInfoDescr.text }</span></p>`;
+                if (diagnoseInfoDescr.type >= 0 && diagnoseInfoDescr.beginTime && diagnoseInfoDescr.beginTimeTitle){
+                    content +=`                 <p>${ diagnoseInfoDescr.beginTimeTitle }: ${ diagnoseInfoDescr.beginTime }</p>`;
                 }
                 content +=`                    <a href="/qr-code/" class="margin-top color-blue button button-outline button-raised popover-close">${ LANGUAGE.PROMPT_MSG064 }</a>
                                             </div>
@@ -177,13 +170,13 @@
             updateMarker: function (location) {
                 let self = this;
                 let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
-                let stateDescr = Helper.Methods.covid19Enum(diagnoseInfo? diagnoseInfo.state : '');
+                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(diagnoseInfo);
                 self.$setState({
                     LastPosInfo: location,
                     LastPosInfoLocal: true
                 });
                 if(!self.Marker){
-                    self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: stateDescr.markerIcon });
+                    self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: diagnoseInfoDescr.markerIcon });
                     self.Marker
                             .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .on('popupopen', function (e) {
@@ -360,104 +353,62 @@
                 let markerData = '';
                 let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
 
-                if (localPosition){
-                    let speed = '0m/s';
-                    if (objData.coords && parseInt(objData.coords.speed) > 0){
-                        speed = parseFloat(objData.coords.speed).toFixed(2) + 'm/s';
-                    }
-                    let heading ='';
-                    if (objData.coords && objData.coords.heading){
-                        heading = Helper.Methods.getDirectionCardinal(parseInt(objData.coords.heading));
-                    }
-                    let dateTime = '';
-                    if(objData.timestamp){
-                        self.LasetTimestamp = objData.timestamp;
-                        dateTime = moment(objData.timestamp).format(window.COM_TIMEFORMAT);
-                    }
-                    let battery = '';
-                    if (objData.battery && objData.battery.level){
-                        battery =  parseInt(objData.battery.level * 100) + '%';
-                    }
-                    markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
-                    markerData +=   '<tr>';
-                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
-                    markerData +=       '<td class="marker-data-value">'+self.Phone+'</td>';
-                    markerData +=   '</tr>';
-                    if(dateTime){
-                        markerData +=   '<tr>';
-                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG08+'</td>';
-                        markerData +=       `<td class="marker-data-value">${dateTime}</td>`;
-                        markerData +=   '</tr>';
-                    }
-                    if(speed) {
-                        markerData += '<tr>';
-                        markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG07 + '</td>';
-                        markerData += `<td class="marker-data-value">${speed}</td>`;
-                        markerData += '</tr>';
-                    }
-                    if(heading) {
-                        markerData += '<tr>';
-                        markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG05 + '</td>';
-                        markerData += '<td class="marker-data-value">' + heading + '</td>';
-                        markerData += '</tr>';
-                    }
-                    if(battery) {
-                        markerData += '<tr>';
-                        markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG04 + '</td>';
-                        markerData += '<td class="marker-data-value">' + battery + '</td>';
-                        markerData += '</tr>';
-                    }
-                    markerData +=   '<tr>';
-                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
-                    markerData +=       `<td class="marker-data-value">${ self.Covid19Status } ${self.StatusDaysCount ? self.StatusDaysCount+' '+COM_MSG045 : '' }</td>`;
-                    markerData +=   '</tr>';
-                    markerData +=   '<tr>';
-                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
-                    markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
-                    markerData +=   '</tr>';
-                    markerData += '</table>';
-                }else{
-                    let assetFeaturesStatus = Protocol.Helper.getAssetStateInfo(objData);
-                    if (assetFeaturesStatus && assetFeaturesStatus.stats) {
-                        let speed = 0;
-                        let deirectionCardinal = Helper.Methods.getDirectionCardinal(objData.posInfo.direct);
-                        if (typeof objData.Unit !== "undefined" && typeof objData.posInfo.speed !== "undefined") {
-                            speed = Protocol.Helper.getSpeedValue(objData.Unit, objData.posInfo.speed) + ' ' + Protocol.Helper.getSpeedUnit(objData.Unit);
-                        }
-                        markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
-                        markerData +=   '<tr>';
-                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
-                        markerData +=       '<td class="marker-data-value">'+phone+'</td>';
-                        markerData +=   '</tr>';
-                        markerData +=   '<tr>';
-                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG08+'</td>';
-                        markerData +=       '<td class="marker-data-value">'+objData.posInfo.positionTime.format(window.COM_TIMEFORMAT)+'</td>';
-                        markerData +=   '</tr>';
-                        markerData +=   '<tr>';
-                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG07+'</td>';
-                        markerData +=       '<td class="marker-data-value">'+speed+'</td>';
-                        markerData +=   '</tr>';
-                        if (assetFeaturesStatus.battery) {
-                            markerData +=   '<tr>';
-                            markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG04+'</td>';
-                            markerData +=       '<td class="marker-data-value">'+assetFeaturesStatus.battery.value+'</td>';
-                            markerData +=   '</tr>';
-                        }
-                        markerData +=   '<tr>';
-                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG05+'</td>';
-                        markerData +=       '<td class="marker-data-value">'+deirectionCardinal+'</td>';
-                        markerData +=   '</tr>';
-                        markerData +=   '<tr>';
-                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
-                        markerData +=       `<td class="marker-data-value">${ self.Covid19Status } ${self.StatusDaysCount ? self.StatusDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
-                        markerData +=   '</tr>';
-                        markerData +=   '<tr>';
-                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
-                        markerData +=       '<td class="marker-data-value">'+customAddress+'</td>';
-                        markerData +=   '</tr>';
-                        markerData += '</table>';
-                    }
+                let speed = '0m/s';
+                if (objData.coords && parseInt(objData.coords.speed) > 0){
+                    speed = parseFloat(objData.coords.speed).toFixed(2) + 'm/s';
                 }
+                let heading ='';
+                if (objData.coords && objData.coords.heading){
+                    heading = Helper.Methods.getDirectionCardinal(parseInt(objData.coords.heading));
+                }
+                let dateTime = '';
+                if(objData.timestamp){
+                    self.LasetTimestamp = objData.timestamp;
+                    dateTime = moment(objData.timestamp).format(window.COM_TIMEFORMAT);
+                }
+                let battery = '';
+                if (objData.battery && objData.battery.level){
+                    battery =  parseInt(objData.battery.level * 100) + '%';
+                }
+                markerData += '<table cellpadding="0" cellspacing="0" border="0" class="marker-data-table">';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG02+'</td>';
+                markerData +=       '<td class="marker-data-value">'+self.Phone+'</td>';
+                markerData +=   '</tr>';
+                if(dateTime){
+                    markerData +=   '<tr>';
+                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG08+'</td>';
+                    markerData +=       `<td class="marker-data-value">${dateTime}</td>`;
+                    markerData +=   '</tr>';
+                }
+                if(speed) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG07 + '</td>';
+                    markerData += `<td class="marker-data-value">${speed}</td>`;
+                    markerData += '</tr>';
+                }
+                if(heading) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG05 + '</td>';
+                    markerData += '<td class="marker-data-value">' + heading + '</td>';
+                    markerData += '</tr>';
+                }
+                if(battery) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.HOME_MSG04 + '</td>';
+                    markerData += '<td class="marker-data-value">' + battery + '</td>';
+                    markerData += '</tr>';
+                }
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
+                markerData +=       `<td class="marker-data-value">${ self.Covid19Status } ${self.StatusDaysCount ? self.StatusDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
+                markerData +=   '</tr>';
+                markerData +=   '<tr>';
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
+                markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
+                markerData +=   '</tr>';
+                markerData += '</table>';
+
                 return markerData;
             },
             sharePosition: function () {
@@ -531,12 +482,13 @@
                     Id: parseInt(userInfo.contactInfo.id),
                 });
 
-                let userCovidDetails =  Helper.Methods.covid19Enum(userInfo.diagnoseInfo ? userInfo.diagnoseInfo.state : '');
-
+                //let userCovidDetails =  Helper.Methods.covid19Enum(userInfo.diagnoseInfo ? userInfo.diagnoseInfo.state : '');
+                //let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
+                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
                 self.updateCovidStatus({
-                    Covid19StatusType: userCovidDetails.type,
-                    Covid19Status: userCovidDetails.text,
-                    StatusDaysCount: 0
+                    Covid19StatusType: diagnoseInfoDescr.type,
+                    Covid19Status: diagnoseInfoDescr.text,
+                    StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
                 });
 
                 self.startTracking(userInfo);

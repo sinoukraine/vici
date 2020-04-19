@@ -3,6 +3,9 @@ window.COM_TIMEFORMAT2 = 'YYYY-MM-DDTHH:mm:ss';
 window.COM_TIMEFORMAT3 = 'DD/MM/YYYY HH:mm:ss';
 window.COM_TIMEFORMAT4 = 'YYYY-MM-DD';
 window.COM_TIMEFORMAT5 = 'DD-MM-YYYY';
+window.COM_TIMEFORMAT6 = 'MMMM DD YYYY, HH:mm'; //calendar set value
+window.COM_TIMEFORMAT7 = 'MM dd yyyy, HH::mm'; //calendar display value
+
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
 const API_DOMIAN2 = "https://vici19.quiktrak.co/";
@@ -613,8 +616,8 @@ let app = new Framework7({
                             messageList[i].customTitle = LANGUAGE.PROMPT_MSG085;
                             messageList[i].customSubtitle = LANGUAGE.PROMPT_MSG085;
                             if(messageList[i].customContent){
-                                let stateDescr = Helper.Methods.covid19Enum(messageList[i].customContent.State);
-                                messageList[i].customSubtitle = stateDescr.text;
+                                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr({state: messageList[i].customContent.State });
+                                messageList[i].customSubtitle = diagnoseInfoDescr.text;
                                 if(messageList[i].customContent.Time){
                                     messageList[i].customContent.customTime = moment(messageList[i].customContent.Time).local().format(window.COM_TIMEFORMAT);
                                 }
@@ -785,188 +788,7 @@ let app = new Framework7({
             }).open();
         },
 
-       /* setAssetList: function(params={}){
-            let self = this;
-            let ret = '';
 
-            if (params.list && params.list.length) {
-                let ary = {};
-                for(let i = 0; i < params.list.length; i++) {
-                    let index = 0;
-                    ary[params.list[i][1]] = {
-                        Id: params.list[i][index++],
-                        IMEI: params.list[i][index++],
-                        Name: params.list[i][index++],
-                        TagName: params.list[i][index++],
-                        Icon: params.list[i][index++],
-                        Unit: params.list[i][index++],
-                        InitMileage: params.list[i][index++],
-                        InitAcconHours: params.list[i][index++],
-                        State: params.list[i][index++],
-                        ActivateDate: params.list[i][index++],
-                        PRDTName: params.list[i][index++],
-                        PRDTFeatures: params.list[i][index++],
-                        PRDTAlerts: params.list[i][index++],
-                        Describe1: params.list[i][index++],
-                        Describe2: params.list[i][index++],
-                        Describe3: params.list[i][index++],
-                        Describe4: params.list[i][index++],
-                        Describe5: params.list[i][index++],
-                        _FIELD_FLOAT1: params.list[i][index++],
-                        _FIELD_FLOAT2: params.list[i][index++],
-                        _FIELD_FLOAT7: params.list[i][index++],
-                        Describe7: params.list[i][index++],
-                        AlarmOptions: params.list[i][index++],
-                        _FIELD_FLOAT8: params.list[i][index++],
-                        StatusNew: params.list[i][index++],
-                        _FIELD_INT2: params.list[i][index++],
-                        GroupCode: params.list[i][index++],
-                        Registration: params.list[i][index++],
-                        StockNumber: params.list[i][index++],
-                        MaxSpeed: params.list[i][index++],
-                        MaxSpeedAlertMode: params.list[i][index++],
-                    };
-                    if (POSINFOASSETLIST && POSINFOASSETLIST[params.list[i][1]]) {
-                        POSINFOASSETLIST[params.list[i][1]].StatusNew =  ary[params.list[i][1]].StatusNew;
-                    }
-                }
-                ret = ary;
-                localStorage.setItem("COM.QUIKTRAK.PHONETRACK.ASSETLIST", JSON.stringify(ary));
-            }else if(params.device){
-                let list = self.methods.getFromStorage('assetList');
-
-                if (POSINFOASSETLIST[params.device.IMEI]) {
-                    POSINFOASSETLIST[params.device.IMEI].Name = list[params.device.IMEI].Name = params.device.name;
-                    POSINFOASSETLIST[params.device.IMEI].TagName = list[params.device.IMEI].TagName = params.device.tag;
-                    POSINFOASSETLIST[params.device.IMEI].Registration = list[params.device.IMEI].Registration = params.device.registration;
-                    POSINFOASSETLIST[params.device.IMEI].Unit = list[params.device.IMEI].Unit = params.device.speedUnit;
-                    POSINFOASSETLIST[params.device.IMEI].InitMileage = list[params.device.IMEI].InitMileage = params.device.initMileage;
-                    POSINFOASSETLIST[params.device.IMEI].InitAcconHours = list[params.device.IMEI].InitAcconHours = params.device.initAccHours;
-                    POSINFOASSETLIST[params.device.IMEI].Describe1 = list[params.device.IMEI].Describe1 = params.device.attr1;
-                    POSINFOASSETLIST[params.device.IMEI].Describe2 = list[params.device.IMEI].Describe2 = params.device.attr2;
-                    POSINFOASSETLIST[params.device.IMEI].Describe3 = list[params.device.IMEI].Describe3 = params.device.attr3;
-                    POSINFOASSETLIST[params.device.IMEI].Describe4 = list[params.device.IMEI].Describe4 = params.device.attr4;
-                    POSINFOASSETLIST[params.device.IMEI].GroupCode = list[params.device.IMEI].GroupCode = params.device.groupCode;
-
-                    if (params.device.stockNumber) {
-                        POSINFOASSETLIST[params.device.IMEI].StockNumber = list[params.device.IMEI].StockNumber = params.device.stockNumber;
-                    }
-                    if (params.device.icon) {
-                        POSINFOASSETLIST[params.device.IMEI].Icon = list[params.device.IMEI].Icon = params.device.icon;
-                    }
-                    if (params.device.MaxSpeed) {
-                        POSINFOASSETLIST[params.device.IMEI].MaxSpeed = list[params.device.IMEI].MaxSpeed = params.device.MaxSpeed;
-                    }
-
-
-                    ret = list[params.device.IMEI];
-                }else{
-                    list[params.device.IMEI].Name = params.device.name;
-                    list[params.device.IMEI].TagName = params.device.tag;
-                    list[params.device.IMEI].Registration = params.device.registration;
-                    list[params.device.IMEI].Unit = params.device.speedUnit;
-                    list[params.device.IMEI].InitMileage = params.device.initMileage;
-                    list[params.device.IMEI].InitAcconHours = params.device.initAccHours;
-                    list[params.device.IMEI].Describe1 = params.device.attr1;
-                    list[params.device.IMEI].Describe2 = params.device.attr2;
-                    list[params.device.IMEI].Describe3 = params.device.attr3;
-                    list[params.device.IMEI].Describe4 = params.device.attr4;
-                    list[params.device.IMEI].GroupCode = params.device.groupCode;
-
-                    if (params.device.stockNumber) {
-                        list[params.device.IMEI].StockNumber = params.device.stockNumber;
-                    }
-                    if (params.device.icon) {
-                        list[params.device.IMEI].Icon = params.device.icon;
-                    }
-                    if (params.device.MaxSpeed) {
-                        list[params.device.IMEI].MaxSpeed = params.device.MaxSpeed;
-                    }
-                }
-
-                localStorage.setItem("COM.QUIKTRAK.PHONETRACK.ASSETLIST", JSON.stringify(list));
-
-            }else if(params.objects){
-                localStorage.setItem("COM.QUIKTRAK.PHONETRACK.ASSETLIST", JSON.stringify(params.objects));
-            }
-
-            //console.log(ary);
-            return ret;
-        },*/
-        /*getAssetListPosInfo: function(listObj, update= false, callback = false){
-            let self = this;
-            //console.log(self)
-            let codes = '';
-            let keys = Object.keys(listObj);
-            let assetList = [];
-            for (const key of keys) {
-                codes += listObj[key].Id+',';
-                assetList.push(listObj[key]);
-            }
-            if (codes) {
-                codes = codes.slice(0, -1);
-            }
-
-
-            let url = self.utils.serializeObject({MinorToken: self.data.MinorToken, MajorToken: self.data.MajorToken});
-
-            url = API_URL.GET_ALL_POSITIONS + '?' + url;
-
-            let data = {
-                codes: codes,
-            };
-            self.request.promise.post(url, data, 'json')
-                .then(function (result) {
-                    if(result.data.MajorCode === '000') {
-                        if (!self.methods.isObjEmpty(result.data.Data)) {
-                            let posData = '';
-                            let imei = '';
-                            let protocolClass = '';
-                            let deviceInfo = '';
-
-                            if (!update) {
-                                for (let i = result.data.Data.length - 1; i >= 0; i--) {
-                                    posData = result.data.Data[i];
-                                    imei = posData[1];
-                                    protocolClass = posData[2];
-                                    deviceInfo = listObj[imei];
-
-                                    if (!self.methods.isObjEmpty(deviceInfo) && deviceInfo.IMEI === imei){
-                                        POSINFOASSETLIST[imei] = Protocol.ClassManager.get(protocolClass, deviceInfo);
-                                        POSINFOASSETLIST[imei].initPosInfo(posData);
-                                    }
-                                }
-                            }else{
-                                for (let i = result.data.Data.length - 1; i >= 0; i--) {
-                                    posData = result.data.Data[i];
-                                    imei = posData[1];
-
-                                    if (!self.methods.isObjEmpty(POSINFOASSETLIST[imei]) && !POSINFOASSETLIST[imei].posInfo.positionTime || !self.methods.isObjEmpty(POSINFOASSETLIST[imei]) && posData[5] >= POSINFOASSETLIST[imei].posInfo.positionTime._i ) {
-                                        POSINFOASSETLIST[imei].initPosInfo(posData);
-                                    }
-                                }
-                            }
-                            AppEvents.emit('positionUpdateReceived');
-                        }
-                    }
-                    /!*if (!update) {
-                        self.dialog.close();
-                        AppEvents.emit('signedIn', assetList);
-                    }*!/
-                    if (callback instanceof Function) {
-                        callback();
-                    }
-                })
-                .catch(function (err) {
-                    console.log(err);
-                    window.loginDone = 1;
-                    /!*if (err && err.status === 404){
-                        self.dialog.alert(LANGUAGE.PROMPT_MSG002);
-                    }else{
-                        self.dialog.alert(LANGUAGE.PROMPT_MSG003);
-                    }*!/
-                });
-        },*/
         displayNewNotificationArrived: function(message){
             let self = this;
             self.notification.create({

@@ -66,9 +66,9 @@ window.LanguagePackages= {
 		"COM_MSG060": "Search Address",
 		"COM_MSG061": "Phone: XXXXXXXXX",
 		"COM_MSG062": "now",
-		"COM_MSG063": "Testing",
+		"COM_MSG063": "Awaiting Test Result",
 		"COM_MSG064": "Suspected",
-		"COM_MSG065": "Dead",
+		"COM_MSG065": "Deceased",
 		"COM_MSG066": "Observed",
 		"COM_MSG067": "Infected Again",
 		"COM_MSG068": "Notification",
@@ -117,6 +117,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG034": "Please fill in below form when you got recovered from virus COVID-19",
 		"PROMPT_MSG035": "Thank you, your status will be changed to Recovered",
 		"PROMPT_MSG036": "Under development",
+		"PROMPT_MSG037": "Your COVID-19 Test submission is in review, please wait while it will be received and reviewed. Your status will be changed once it done and you will get push notification on app",
 
 		"PROMPT_MSG052": "Here you can set new password - min 6, max 32 characters and contains no spaces",
 		"PROMPT_MSG053": "Passwords do not match",
@@ -153,7 +154,8 @@ window.LanguagePackages= {
 		"PROMPT_MSG083": "Be careful",
 		"PROMPT_MSG084": "Updated",
 		"PROMPT_MSG085": "Status Changed",
-		"PROMPT_MSG086": "Death Time",
+		"PROMPT_MSG086": "Deceased Time",
+		"PROMPT_MSG087": "Awaiting Test reception approval",
 
 
 
@@ -243,9 +245,9 @@ window.LanguagePackages= {
 		"DEVICE_SHARE_MSG01": "Email / Login Name",
 
 		"INFORM_ABOUT_MSG00": "Covid-19 Test",
-		"INFORM_ABOUT_MSG01": "Lab name",
-		"INFORM_ABOUT_MSG02": "Lab address",
-		"INFORM_ABOUT_MSG03": "Test date",
+		"INFORM_ABOUT_MSG01": "Lab Name",
+		"INFORM_ABOUT_MSG02": "Lab Address",
+		"INFORM_ABOUT_MSG03": "Test Date",
 		"INFORM_ABOUT_MSG04": "Lab Doctor First Name",
 		"INFORM_ABOUT_MSG05": "Lab Doctor Last Name",
 		"INFORM_ABOUT_MSG06": "Covid-19 Recovery",
