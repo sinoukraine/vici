@@ -792,8 +792,10 @@ let app = new Framework7({
         displayNewNotificationArrived: function(message){
             let self = this;
             let formattedMsgList = self.methods.formatNotifications([message]);
-            self.dialog.alert(message);
-            self.dialog.alert(formattedMsgList);
+            console.log(message);
+            console.log(formattedMsgList);
+            self.dialog.alert(JSON.stringify(message));
+            self.dialog.alert(JSON.stringify(formattedMsgList));
             self.notification.create({
                 title: self.name,
                 titleRightText: LANGUAGE.COM_MSG062, //now
