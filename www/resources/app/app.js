@@ -791,11 +791,13 @@ let app = new Framework7({
 
         displayNewNotificationArrived: function(message){
             let self = this;
+            let formattedMsgList = self.methods.formatNotifications([message]);
+
             self.notification.create({
                 title: self.name,
                 titleRightText: LANGUAGE.COM_MSG062, //now
-                subtitle: message.templateID === 1 ? LANGUAGE.PROMPT_MSG080 : LANGUAGE.PROMPT_MSG082,
-                text: message.templateID === 1 ? LANGUAGE.PROMPT_MSG081 : LANGUAGE.PROMPT_MSG083,
+                subtitle: formattedMsgList[0].customTitle ? formattedMsgList[0].customTitle : (message.templateID === 1) ? LANGUAGE.PROMPT_MSG080 : LANGUAGE.PROMPT_MSG082,
+                text: formattedMsgList[0].customSubtitle ? formattedMsgList[0].customSubtitle : (message.templateID === 1) ? LANGUAGE.PROMPT_MSG081 : LANGUAGE.PROMPT_MSG083,
                 closeOnClick: true,
                 closeButton: true,
                 on: {
@@ -1095,10 +1097,11 @@ let app = new Framework7({
             push.on('notification', function(data) {
                 //alert(JSON.stringify(data));
                 if (localStorage.ACCOUNT && localStorage.PASSWORD) {
+                    self.methods.getNewData();
                     //if user using app and push notification comes
                     if (data && data.additionalData && data.additionalData.foreground) {
                         // if application open, show popup
-                        //let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
+
                         self.methods.displayNewNotificationArrived(data.additionalData.payload);
                     } else if (data && data.additionalData && data.additionalData.payload) {
                         //if user NOT using app and push notification comes
@@ -1110,13 +1113,6 @@ let app = new Framework7({
                                 window.loginTimer = false;
                                 setTimeout(function() {
                                     self.view.main.router.navigate('/notifications/');
-                                    /*let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
-                                    if(mainView.router.currentRoute.name && mainView.router.currentRoute.name === 'notification'){
-                                        mainView.router.navigate('/notification/',{context: { AlertData: alertData }, reloadCurrent: true, ignoreCache: true, });
-                                    }else {
-                                        mainView.router.navigate('/notification/',{context: { AlertData: alertData } });
-                                    }*/
-
                                     self.preloader.hide();
                                 }, 1000);
                             }
