@@ -792,10 +792,10 @@ let app = new Framework7({
         displayNewNotificationArrived: function(message){
             let self = this;
             let formattedMsgList = self.methods.formatNotifications([message]);
-            console.log(message);
+          /*  console.log(message);
             console.log(formattedMsgList);
             self.dialog.alert(JSON.stringify(message));
-            self.dialog.alert(JSON.stringify(formattedMsgList));
+            self.dialog.alert(JSON.stringify(formattedMsgList));*/
             self.notification.create({
                 title: self.name,
                 titleRightText: LANGUAGE.COM_MSG062, //now
@@ -1100,6 +1100,8 @@ let app = new Framework7({
             push.on('notification', function(data) {
                 //alert(JSON.stringify(data));
                 if (localStorage.ACCOUNT && localStorage.PASSWORD) {
+
+                    console.log(data)
                     self.methods.getNewData();
                     //if user using app and push notification comes
                     if (data && data.additionalData && data.additionalData.foreground) {
