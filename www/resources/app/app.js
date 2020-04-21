@@ -445,7 +445,7 @@ let app = new Framework7({
                             result.data.data = self.methods.formatNotifications(result.data.data);
                             let needUpdate = false;
                             for (let i = result.data.data.length - 1; i >= 0; i--) {
-                                if(result.data.data[i].templateID === 2) needUpdate=false;
+                                if(parseInt(result.data.data[i].templateID) === 2) needUpdate=true;
                                 result.data.data[i].customId = self.utils.id();
                                 list.push(result.data.data[i]);
                             }
