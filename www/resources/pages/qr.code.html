@@ -55,6 +55,26 @@
                         </div>
                     </li>
                     <li class="item-content ">
+                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-labname"></i>--></div>
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="item-header text-color-gray">{{@global.LANGUAGE.UNIT_TEST_RESULT_MSG008}}</div>
+                                {{Covid19StatusTypeResult}}
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content ">
+                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-labname"></i>--></div>
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="item-header text-color-gray">{{@global.LANGUAGE.UNIT_TEST_RESULT_MSG011}}</div>
+                                {{Covid19StatusTypeResultTime}}
+                            </div>
+                        </div>
+                    </li>
+
+
+                    <li class="item-content ">
                         <div class="item-media text-color-lightgray"><i class="f7-icons icon-labname"></i></div>
                         <div class="item-inner">
                             <div class="item-title">
@@ -99,13 +119,14 @@
         data: function () {
             let self = this;
             let userInfo = self.$app.methods.getFromStorage('userInfo');
-
             let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
-
+            let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);
 
             let ret = {
                 Covid19Status: diagnoseInfoDescr.text,
                 Covid19StatusType: diagnoseInfoDescr.type,
+                Covid19StatusTypeResult: diagnoseResult.val !== -1 ? diagnoseResult.text : '' ,
+                Covid19StatusTypeResultTime: diagnoseInfoDescr.endTime ? diagnoseInfoDescr.endTime : '' ,
                 Covid19StatusColor: diagnoseInfoDescr.textColor,
                 Covid19StatusDate: diagnoseInfoDescr.beginTime,
                 Covid19StatusDateCount: diagnoseInfoDescr.beginTimeDaysCount,

@@ -283,6 +283,7 @@ window.LanguagePackages= {
 		"UNIT_TEST_RESULT_MSG008": "Test Result",
 		"UNIT_TEST_RESULT_MSG009": "Covid 19 Virus Test",
 		"UNIT_TEST_RESULT_MSG010": "Covid 19 Antibody",
+		"UNIT_TEST_RESULT_MSG011": "Test Result Complete",
 
 
 

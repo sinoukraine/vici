@@ -905,6 +905,48 @@ let app = new Framework7({
         callToPhone: function(phone){
             window.open('tel:'+phone, '_system');
         },
+        getNewData: function(){
+            let self = this;
+
+            self.methods.getPlusInfo();
+            let data = {
+                PhoneNumber: localStorage.ACCOUNT,
+                Password: localStorage.PASSWORD,
+                PushToken: localStorage.PUSH_DEVICE_TOKEN ? localStorage.PUSH_DEVICE_TOKEN : '',
+            };
+
+            self.request.promise.post(API_URL.LOGIN, data, 'json')
+                .then(function (result) {
+                    //alert(JSON.stringify(result.data));
+                    console.log(result.data);
+                    if(result.data && result.data.majorCode === '000') {
+                        self.data.Token = result.data.data.contactInfo.token;
+                        self.methods.setInStorage({
+                            name: 'userInfo',
+                            data:  result.data.data
+                        });
+                        let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(result.data.data.diagnoseInfo);
+                        AppEvents.emit('covidStatusChanged', {
+                            Covid19StatusType: diagnoseInfoDescr.type,
+                            Covid19Status: diagnoseInfoDescr.text,
+                            StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
+                        });
+
+                        /*self.methods.getNotifications({}, function (notificatios) {
+                            if(notificatios && notificatios.length){
+                                let counter = self.methods.getFromStorage('additionalData').newNotificationCounter;
+                                if (!counter) counter=0;
+                                counter = parseInt(counter,10) + notificatios.length;
+                                self.methods.setInStorage({name:'additionalData', data:{ newNotificationCounter: counter}});
+                                AppEvents.emit('newNotificationCountChanged', counter)
+                            }
+                        });*/
+                    }
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+        },
 
         /*getNewData: function(noPosInfoUpdate = false, emitDataUpdated = false){
             let self = this;

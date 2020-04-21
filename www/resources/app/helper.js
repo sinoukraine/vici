@@ -133,6 +133,10 @@ const Helper = {
                     ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
                     ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
                     ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
+                    ret.endTime = diagnoseInfo && diagnoseInfo.endTime ? moment(diagnoseInfo.endTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.endTimeDaysCount = diagnoseInfo && diagnoseInfo.endTime ? moment().diff(moment(ret.endTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.endTimeTitle = LANGUAGE.UNIT_TEST_RESULT_MSG011;
+
                     break;
                 case 8:
                     ret.type = num;
@@ -145,6 +149,9 @@ const Helper = {
                     ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
                     ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
                     ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
+                    ret.endTime = diagnoseInfo && diagnoseInfo.endTime ? moment(diagnoseInfo.endTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.endTimeDaysCount = diagnoseInfo && diagnoseInfo.endTime ? moment().diff(moment(ret.endTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.endTimeTitle = LANGUAGE.UNIT_TEST_RESULT_MSG011;
                     break;
                 case 16:
                     ret.type = num;
@@ -157,6 +164,9 @@ const Helper = {
                     ret.beginTimeTitle = LANGUAGE.PROMPT_MSG063;
                     ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
                     ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
+                    ret.endTime = diagnoseInfo && diagnoseInfo.endTime ? moment(diagnoseInfo.endTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.endTimeDaysCount = diagnoseInfo && diagnoseInfo.endTime ? moment().diff(moment(ret.endTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.endTimeTitle = LANGUAGE.UNIT_TEST_RESULT_MSG011;
                     break;
                 case 32:
                     ret.type = num;
@@ -182,6 +192,9 @@ const Helper = {
                     ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
                     ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
                     ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
+                    ret.endTime = diagnoseInfo && diagnoseInfo.endTime ? moment(diagnoseInfo.endTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.endTimeDaysCount = diagnoseInfo && diagnoseInfo.endTime ? moment().diff(moment(ret.endTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.endTimeTitle = LANGUAGE.UNIT_TEST_RESULT_MSG011;
                     break;
                 case 128:
                     ret.type = num;
@@ -194,6 +207,9 @@ const Helper = {
                     ret.beginTimeTitle = LANGUAGE.PROMPT_MSG061;
                     ret.diagnoseType = diagnoseInfo && diagnoseInfo.type ? diagnoseInfo.type : 0;
                     ret.diagnoseTypeText = diagnoseInfo && diagnoseInfo.type ? Helper.Methods.getTestTypeList().find( ({ Val }) => Val === diagnoseInfo.type ).Name : 0;
+                    ret.endTime = diagnoseInfo && diagnoseInfo.endTime ? moment(diagnoseInfo.endTime, window.COM_TIMEFORMAT2).add(app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) : '';
+                    ret.endTimeDaysCount = diagnoseInfo && diagnoseInfo.endTime ? moment().diff(moment(ret.endTime, window.COM_TIMEFORMAT), 'days') : 0;
+                    ret.endTimeTitle = LANGUAGE.UNIT_TEST_RESULT_MSG011;
                     break;
                 case 256:
                     ret.type = num;
@@ -334,6 +350,31 @@ const Helper = {
             }
             return ret;
         },
+
+        getDiagnoseResultRevers: function(diagnoseType, diagnoseState){
+            let ret = {
+                text: LANGUAGE.COM_MSG081,
+                val: -1,
+            };
+            diagnoseType = parseInt(diagnoseType);
+            diagnoseState = parseInt(diagnoseState);
+            if(!diagnoseType || !diagnoseType) return ret;
+            if(diagnoseType === 2 && diagnoseState === Helper.testEnum.Infected){
+                ret.text = LANGUAGE.COM_MSG073;
+                ret.val = 1;
+            }else if(diagnoseType === 2 && diagnoseState === Helper.testEnum.NotInfected){
+                ret.text = LANGUAGE.COM_MSG072;
+                ret.val = 0;
+            }else if(diagnoseType === 1 && diagnoseState === Helper.testEnum.Infected){
+                ret.text = LANGUAGE.COM_MSG072;
+                ret.val = 0;
+            }else if(diagnoseType === 1 && diagnoseState === Helper.testEnum.NotInfected){
+                ret.text = LANGUAGE.COM_MSG073;
+                ret.val = 1;
+            }
+            return ret;
+        },
+
         getTestTypeList: function(){
             return [
                 { Val: 2, Name: LANGUAGE.UNIT_TEST_RESULT_MSG009 },
@@ -342,8 +383,8 @@ const Helper = {
         },
         getTypeResulList: function(){
             return [
-                {Val: 2, Name: LANGUAGE.COM_MSG061 },
-                {Val: 1, Name: LANGUAGE.COM_MSG062 }
+                {Val: 2, Name: LANGUAGE.COM_MSG072 },
+                {Val: 1, Name: LANGUAGE.COM_MSG073 }
             ]
         },
         getIntervalList: function(){

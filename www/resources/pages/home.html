@@ -126,7 +126,7 @@
                     if(self.Marker){
                         self.Marker.setIcon(diagnoseInfoDescr.markerIcon);
                         if(self.LastPosInfo){
-                            self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
+                            self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo));
                         }
                     }
                 });
@@ -178,7 +178,7 @@
                 if(!self.Marker){
                     self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: diagnoseInfoDescr.markerIcon });
                     self.Marker
-                            .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .bindPopup(self.getMarkerDataTable(location), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .on('popupopen', function (e) {
                                 if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
                                     Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
@@ -188,7 +188,7 @@
                                             LastPosInfo: location,
                                             LastPosInfoLocal: true
                                         });
-                                        e.target.setPopupContent(self.getMarkerDataTable(location, true));
+                                        e.target.setPopupContent(self.getMarkerDataTable(location));
                                         e.popup.update();
                                     });
                                 }
@@ -196,7 +196,7 @@
                             .addTo(self.MarkersGroup);
                 }
                 self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
-                self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                self.Marker.setPopupContent(self.getMarkerDataTable(location));
                 if (self.MarkersGroup.getBounds().isValid()) {
                     self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
                 }
@@ -211,7 +211,7 @@
                             LastPosInfo: location,
                             LastPosInfoLocal: true
                         });
-                        self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                        self.Marker.setPopupContent(self.getMarkerDataTable(location));
                     });
                 }
             },
@@ -347,11 +347,15 @@
                 });
             },
 
-            getMarkerDataTable: function(objData={}, localPosition=false){
+            getMarkerDataTable: function(objData={}){
                 let self = this;
 
                 let markerData = '';
                 let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
+
+                let userInfo = self.$app.methods.getFromStorage('userInfo');
+                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
+                let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);
 
                 let speed = '0m/s';
                 if (objData.coords && parseInt(objData.coords.speed) > 0){
@@ -401,8 +405,31 @@
                 }
                 markerData +=   '<tr>';
                 markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
-                markerData +=       `<td class="marker-data-value">${ self.Covid19Status } ${self.StatusDaysCount ? self.StatusDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
+                markerData +=       `<td class="marker-data-value">${ diagnoseInfoDescr.text }</td>`;
                 markerData +=   '</tr>';
+                if(diagnoseInfoDescr.type !== Helper.testEnum.Untested) {
+                    markerData += '<tr>';
+                    markerData += '<td class="marker-data-caption">' + LANGUAGE.UNIT_TEST_RESULT_MSG007 + '</td>';
+                    markerData += '<td class="marker-data-value">' + diagnoseInfoDescr.diagnoseTypeText + '</td>';
+                    markerData += '</tr>';
+                    if(diagnoseInfoDescr.endTime){
+                        markerData += '<tr>';
+                        markerData += '<td class="marker-data-caption">' + diagnoseInfoDescr.endTimeTitle + '</td>';
+                        markerData += `<td class="marker-data-value">${ diagnoseInfoDescr.endTime } ${diagnoseInfoDescr.endTimeDaysCount ? self.endTimeDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
+                        markerData += '</tr>';
+                    }else{
+                        markerData += '<tr>';
+                        markerData += '<td class="marker-data-caption">' + diagnoseInfoDescr.beginTimeTitle + '</td>';
+                        markerData += `<td class="marker-data-value">${ diagnoseInfoDescr.beginTime } ${diagnoseInfoDescr.beginTimeDaysCount ? self.beginTimeDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
+                        markerData += '</tr>';
+                    }
+                    if(diagnoseResult.val !== -1){
+                        markerData += '<tr>';
+                        markerData += '<td class="marker-data-caption">' + LANGUAGE.UNIT_TEST_RESULT_MSG008 + '</td>';
+                        markerData += `<td class="marker-data-value">${ diagnoseResult.text }</td>`;
+                        markerData += '</tr>';
+                    }
+                }
                 markerData +=   '<tr>';
                 markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
                 markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';

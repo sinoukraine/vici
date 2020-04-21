@@ -159,12 +159,10 @@
     </div>
 
 
-
 </template>
 
-
 <script>
-    // script must return component object
+
     return {
         data: function () {
             let self = this;
@@ -182,9 +180,7 @@
                     cityList.find( ({ Val }) => Val === userInfo.organizeInfo.cityID ).Selected = true;
                 }
                 if(userInfo.diagnoseInfo && userInfo.diagnoseInfo.type){
-                    console.log(userInfo.diagnoseInfo.type)
                     testTypeList.find( ({ Val }) => Val === userInfo.diagnoseInfo.type ).Selected = true;
-                    console.log(testTypeList)
                 }
             }else{
                 provinceList.find( ({ Val }) => Val === userInfo.contactInfo.provinceID ).Selected = true;
