@@ -443,11 +443,14 @@ let app = new Framework7({
 
                             self.methods.setInStorage({name: 'additionalData', data: {lastNotificationTime: lastMessageTime}});
                             result.data.data = self.methods.formatNotifications(result.data.data);
+                            let needUpdate = false;
                             for (let i = result.data.data.length - 1; i >= 0; i--) {
+                                if(result.data.data[i].templateID === 2) needUpdate=false;
                                 result.data.data[i].customId = self.utils.id();
-                                list.push(result.data.data[i])
+                                list.push(result.data.data[i]);
                             }
                             self.methods.setInStorage({name:'notifications', data: list});
+                            if(needUpdate) self.methods.getNewData();
                         }
                     }
                     if(callback instanceof Function){
@@ -1101,7 +1104,7 @@ let app = new Framework7({
                 //alert(JSON.stringify(data));
                 if (localStorage.ACCOUNT && localStorage.PASSWORD) {
 
-                    console.log(data)
+                    //console.log(data)
                     self.methods.getNewData();
                     //if user using app and push notification comes
                     if (data && data.additionalData && data.additionalData.foreground) {
