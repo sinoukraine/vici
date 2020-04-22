@@ -534,6 +534,9 @@
                 if(self.InfectedMarkersGroup){
                     self.InfectedMarkersGroup.clearLayers();
                 }
+                if(self.Marker){
+                    self.Marker = false;
+                }
                 if(!bgGeo){
                     return;
                 }
