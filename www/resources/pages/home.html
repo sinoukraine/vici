@@ -365,7 +365,7 @@
                     }else{
                         speed = speedInKm +' '+LANGUAGE.COM_MSG074;
                     }
-                }else if( !self.$app.method.isObjEmpty(self.LastPosInfo) && self.LastPosInfo.coords && parseInt(self.LastPosInfo.coords.speed) > 0){
+                }else if( !self.$app.methods.isObjEmpty(self.LastPosInfo) && self.LastPosInfo.coords && parseInt(self.LastPosInfo.coords.speed) > 0){
                     let speedInKm = Helper.Methods.getSpeedValueInKM('MPS',self.LastPosInfo.coords.speed);
                     if(speedInKm < 2){
                         speed = parseFloat(self.LastPosInfo.coords.speed).toFixed(2) + 'm/s';
