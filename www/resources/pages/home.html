@@ -217,7 +217,7 @@
             },
             getInfectedBonds: function(){
                 let self = this;
-                console.log('called')
+                //console.log('called')
 
                 if(self.AddingInfectedDelayOn){
                     return;
@@ -245,7 +245,7 @@
 
                                 let infectedLayers = self.InfectedMarkersGroup.getLayers();
                                 for (let i = 0; i < points.length; i++) {
-                                    if (points[i][Helper.posInfoEnum.id] && points[i][Helper.posInfoEnum.lat] && points[i][Helper.posInfoEnum.lng] && parseInt(points[i][Helper.posInfoEnum.state]) === Helper.testEnum.Infected && parseInt(points[i][Helper.posInfoEnum.id]) !== parseInt(self.Id)){
+                                    if (self.Id && points[i][Helper.posInfoEnum.id] && points[i][Helper.posInfoEnum.lat] && points[i][Helper.posInfoEnum.lng] && parseInt(points[i][Helper.posInfoEnum.state]) === Helper.testEnum.Infected && parseInt(points[i][Helper.posInfoEnum.id]) !== parseInt(self.Id)){
                                         let point = infectedLayers.find(c => c.options.customId === points[i][Helper.posInfoEnum.id]);
                                         if(!point){
                                             let marker = L.marker([points[i][Helper.posInfoEnum.lat], points[i][Helper.posInfoEnum.lng]], {icon: Helper.MarkerIcon[3], customId:points[i][Helper.posInfoEnum.id]});
