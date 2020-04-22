@@ -358,6 +358,7 @@
                 let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);
 
                 let speed = 0 + ' ' + LANGUAGE.COM_MSG075;
+                console.log(objData)
                 if (objData.coords && parseInt(objData.coords.speed) > 0){
                     let speedInKm = Helper.Methods.getSpeedValueInKM('MPS',objData.coords.speed);
                     if(speedInKm < 2){
