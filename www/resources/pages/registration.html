@@ -322,7 +322,13 @@
                                         }
                                     }
                                     if(result.data.data[i].messages.length){
-                                        errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
+                                        for (let j = 0; j < result.data.data[i].messages.length; j++) {
+                                            if(result.data.data[i].key){
+                                                result.data.data[i].key.toLowerCase();
+                                                Helper.fieldsEnum[result.data.data[i].key] ? errMsg += Helper.fieldsEnum[result.data.data[i].key] : errMsg += result.data.data[i].key;
+                                                errMsg += ': ' + Helper.minorCodeEnum[result.data.data[i].messages[j]] + '('+result.data.data[i].messages[j]+')<br>';
+                                            }
+                                        }
                                     }
                                 }
                                 self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071 ,text: errMsg });
@@ -383,7 +389,13 @@
                                         }
                                     }
                                     if(result.data.data[i].messages.length){
-                                        errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
+                                        for (let j = 0; j < result.data.data[i].messages.length; j++) {
+                                            if(result.data.data[i].key){
+                                                result.data.data[i].key.toLowerCase();
+                                                Helper.fieldsEnum[result.data.data[i].key] ? errMsg += Helper.fieldsEnum[result.data.data[i].key] : errMsg += result.data.data[i].key;
+                                                errMsg += ': ' + Helper.minorCodeEnum[result.data.data[i].messages[j]] + '('+result.data.data[i].messages[j]+')<br>';
+                                            }
+                                        }
                                     }
                                 }
                                 self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: errMsg });
@@ -437,6 +449,7 @@
 
                     let birthDateVal = self.PickerBirthDate.getValue();
 
+
                     let data = {
                         PhoneNumber: phoneVal,
                         //IMEI:15584348655
@@ -451,7 +464,8 @@
                         CityID: page.$el.find('[name = "City"]').val(),
                         //RegionID: '',
                         Street: page.$el.find('[name = "Street"]').val(),
-                        AddressDetail: page.$el.find('[name = "AddressDetails"]').val(),
+                        Address: page.$el.find('[name = "AddressDetails"]').val(),
+                        AddressCode: '',
                         AddressLat: '0',
                         AddressLng: '0',
                     };

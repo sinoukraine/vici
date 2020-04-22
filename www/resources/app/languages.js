@@ -77,6 +77,8 @@ window.LanguagePackages= {
 		"COM_MSG071": "Infected Person",
 		"COM_MSG072": "NEGATIVE",
 		"COM_MSG073": "POSITIVE",
+		"COM_MSG074": "km/h",
+		"COM_MSG075": "m/s",
 
 
 
@@ -275,6 +277,9 @@ window.LanguagePackages= {
 		"REGISTRATION_MSG17": "Male",
 		"REGISTRATION_MSG18": "Female",
 		"REGISTRATION_MSG19": "minimum 6 characters",
+		"REGISTRATION_MSG20": "Zip code",
+		"REGISTRATION_MSG21": "Address Lat",
+		"REGISTRATION_MSG22": "Address Lng",
 
 		"NOTIFICATIONS_MSG00": "Notifications",
 

@@ -357,9 +357,21 @@
                 let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
                 let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);
 
-                let speed = '0m/s';
+                let speed = 0 + ' ' + LANGUAGE.COM_MSG075;
                 if (objData.coords && parseInt(objData.coords.speed) > 0){
-                    speed = parseFloat(objData.coords.speed).toFixed(2) + 'm/s';
+                    let speedInKm = Helper.Methods.getSpeedValueInKM('MPS',objData.coords.speed);
+                    if(speedInKm < 2){
+                        speed = parseFloat(objData.coords.speed).toFixed(2) + 'm/s';
+                    }else{
+                        speed = speedInKm +' '+LANGUAGE.COM_MSG074;
+                    }
+                }else if( !self.$app.method.isObjEmpty(self.LastPosInfo) && self.LastPosInfo.coords && parseInt(self.LastPosInfo.coords.speed) > 0){
+                    let speedInKm = Helper.Methods.getSpeedValueInKM('MPS',self.LastPosInfo.coords.speed);
+                    if(speedInKm < 2){
+                        speed = parseFloat(self.LastPosInfo.coords.speed).toFixed(2) + 'm/s';
+                    }else{
+                        speed = speedInKm +' '+LANGUAGE.COM_MSG074;
+                    }
                 }
                 let heading ='';
                 if (objData.coords && objData.coords.heading){
@@ -415,7 +427,7 @@
                     if(diagnoseInfoDescr.endTime){
                         markerData += '<tr>';
                         markerData += '<td class="marker-data-caption">' + diagnoseInfoDescr.endTimeTitle + '</td>';
-                        markerData += `<td class="marker-data-value">${ diagnoseInfoDescr.endTime } ${diagnoseInfoDescr.endTimeDaysCount ? self.endTimeDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
+                        markerData += `<td class="marker-data-value">${ diagnoseInfoDescr.endTime } ${diagnoseInfoDescr.endTimeDaysCount ? diagnoseInfoDescr.endTimeDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
                         markerData += '</tr>';
                     }else{
                         markerData += '<tr>';
@@ -474,7 +486,7 @@
 
                 bgGeo.setConfig({
                     distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
-                    locationUpdateInterval: 60*1000,  // Get a location every 5 seconds
+                    locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
                     schedule: ["1-7 00:00-23:59"],
                     params: {
                         Token: userInfo.contactInfo.token,

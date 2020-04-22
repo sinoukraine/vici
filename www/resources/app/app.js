@@ -9,6 +9,8 @@ window.COM_TIMEFORMAT7 = 'MM dd yyyy, HH::mm'; //calendar display value
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
 const API_DOMIAN2 = "https://vici19.quiktrak.co/";
+const API_DOMIAN5 = "http://194.247.12.103:9038/";
+
 
 const API_DOMAIN3 = "https://app.phonetrack.co/";
 const API_DOMAIN4 = "https://maps.google.com/";
@@ -27,8 +29,12 @@ const API_DOMIAN9 = "https://upload.quiktrak.co/";*/
 
 const API_URL = {};
 
-API_URL.REGISTRATION = API_DOMIAN2 + 'Contact/Register';
-API_URL.PREREGISTRATION = API_DOMIAN2 + 'Contact/PreRegister';
+API_URL.REGISTRATION = API_DOMIAN5 + 'Person/Register';
+API_URL.PREREGISTRATION = API_DOMIAN5 + 'Person/PreRegister';
+
+
+
+
 API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
 API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Contact/Auth';
 API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';

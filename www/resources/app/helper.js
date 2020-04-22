@@ -68,6 +68,50 @@ const Helper = {
         state: 3,
         time: 4,
     },
+    fieldsEnum:{
+        /*test from*/
+        organizename: LANGUAGE.UNIT_TEST_RESULT_MSG001,
+        organizestreet: LANGUAGE.UNIT_TEST_RESULT_MSG002,
+        doctorfirstname: LANGUAGE.UNIT_TEST_RESULT_MSG004,
+        doctorsubname: LANGUAGE.UNIT_TEST_RESULT_MSG005,
+        diagnosenumber: LANGUAGE.UNIT_TEST_RESULT_MSG006,
+        begintime: LANGUAGE.UNIT_TEST_RESULT_MSG003,
+        endtime: LANGUAGE.UNIT_TEST_RESULT_MSG012,
+        diagnosetype: LANGUAGE.UNIT_TEST_RESULT_MSG007,
+        diagnosestate: LANGUAGE.UNIT_TEST_RESULT_MSG008,
+        diagnoseremark: LANGUAGE.UNIT_TEST_RESULT_MSG011,
+        /*user form*/
+        certnumber: LANGUAGE.UNIT_INFO_MSG000,
+        //phonenumber: LANGUAGE.UNIT_INFO_MSG001,
+        //firstname: LANGUAGE.UNIT_INFO_MSG003,
+        //subname: LANGUAGE.UNIT_INFO_MSG004,
+        //gender: LANGUAGE.UNIT_INFO_MSG007,
+        //birthday: LANGUAGE.UNIT_INFO_MSG008,
+        /*user address*/
+        //countrycode: LANGUAGE.UNIT_INFO_MSG020,
+        //provinceid: LANGUAGE.UNIT_INFO_MSG009,
+        //cityid: LANGUAGE.UNIT_INFO_MSG010,
+        //street: LANGUAGE.UNIT_INFO_MSG012,
+        addressdetail: LANGUAGE.UNIT_INFO_MSG013,
+
+        /*REGISTER FORM*/
+        phonenumber: LANGUAGE.COM,
+        verificationcode: LANGUAGE.REGISTRATION_MSG01,
+        firstname: LANGUAGE.REGISTRATION_MSG03,
+        subname: LANGUAGE.REGISTRATION_MSG04,
+        password: LANGUAGE.REGISTRATION_MSG05,
+        gender: LANGUAGE.REGISTRATION_MSG07,
+        birthday: LANGUAGE.REGISTRATION_MSG08,
+        countrycode: LANGUAGE.REGISTRATION_MSG02,
+        provinceid: LANGUAGE.REGISTRATION_MSG09,
+        cityid: LANGUAGE.REGISTRATION_MSG10,
+        street: LANGUAGE.REGISTRATION_MSG12,
+        address: LANGUAGE.REGISTRATION_MSG13,
+        addresscode: LANGUAGE.REGISTRATION_MSG20,
+        addresslat: LANGUAGE.REGISTRATION_MSG21,
+        addresslng: LANGUAGE.REGISTRATION_MSG22,
+    },
+
     minorCodeEnum:{
         "0000": 'All OK',
         "0001": 'Field is mandatory',
@@ -362,7 +406,24 @@ const Helper = {
             }
             return ret;
         },
-
+        getSpeedValueInKM: function (speedUnit, speed) {
+            let ret = 0;
+            switch (speedUnit) {
+                case "KT":
+                    ret = parseFloat(speed  / 0.53995680345572);
+                    break;
+                case "KPH":
+                    ret = parseFloat(speed);
+                    break;
+                case "MPS":
+                    ret = parseFloat(speed / 0.277777778);
+                    break;
+                case "MPH":
+                    ret = parseFloat(speed / 0.621371192);
+                    break;
+            }
+            return Math.round(ret);
+        },
         getDiagnoseResultRevers: function(diagnoseType, diagnoseState){
             let ret = {
                 text: LANGUAGE.COM_MSG081,
