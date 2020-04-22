@@ -89,42 +89,25 @@
                     console.log('obj data is empty');
                     return;
                 }
-                let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
-                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(diagnoseInfo);
-
-                data.StatusShieldColor = diagnoseInfoDescr.textColor;
-                data.Covid19StatusType = diagnoseInfoDescr.type;
+                data.StatusShieldColor = data.userState === Helper.enumPersonStatus.Invalid ||  data.userState === Helper.enumPersonStatus.Unknown ? data.testStateTextColor : data.userStateTextColor;
                 data.InformButtonLink = '/inform-about-test/';
                 data.InformButtonBgClass = 'bg-color-red';
 
-                switch (diagnoseInfoDescr.type) {
-                    case Helper.testEnum.Submitted:
-                        //data.InformButtonLink = '';
-                        data.InformButtonBgClass = 'bg-color-yellow';
-                        break;
-                    case Helper.testEnum.Testing: case Helper.testEnum.Suspected: case Helper.testEnum.Observed:
-                        data.InformButtonLink = '';
-                        data.InformButtonBgClass = 'bg-color-orange';
-                        break;
-
-                    case Helper.testEnum.Infected: case Helper.testEnum.SeveralCases:
-                        data.InformButtonLink = '';
-                        data.InformButtonBgClass = 'bg-color-red';
-                        break;
-
-                    case Helper.testEnum.Recovered: case Helper.testEnum.NotInfected:
-                        data.InformButtonLink = '/inform-about-test/';
-                        data.InformButtonBgClass = 'bg-color-red';
-                        break;
-
-                    case Helper.testEnum.Dead:
-                        data.InformButtonLink = '';
-                        data.InformButtonBgClass = 'bg-color-black';
-                        break;
+                if(data.testState === Helper.enumTestStatus.Submited){
+                    data.InformButtonLink = '';
+                    data.InformButtonBgClass = 'bg-color-yellow';
+                }else if(data.testState === Helper.enumTestStatus.Testing){
+                    data.InformButtonLink = '';
+                    data.InformButtonBgClass = 'bg-color-orange';
+                }else if(data.userState === Helper.enumPersonStatus.Suspected || data.userState ===Helper.enumPersonStatus.Observed || data.userState === Helper.enumPersonStatus.Death){
+                    data.InformButtonLink = '';
+                    data.InformButtonBgClass = 'bg-color-orange';
+                    if(data.userState === Helper.enumPersonStatus.Death) data.InformButtonBgClass = 'bg-color-black';
                 }
+
                 self.$setState(data,()=>{
                     if(self.Marker){
-                        self.Marker.setIcon(diagnoseInfoDescr.markerIcon);
+                        self.Marker.setIcon(Helper.Methods.getMarkerIcon(data.userState, data.testState));
                         if(self.LastPosInfo){
                             self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo));
                         }
@@ -134,17 +117,18 @@
             },
             showShieldStatusPopover: function(e){
                 let self = this;
-                let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
+                let userInfo = self.$app.methods.getFromStorage('userInfo');
 
-                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(diagnoseInfo);
+                let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
+                let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
 
                 let content =   `<div class="popover menu-popover" >
                                         <div class="popover-inner">
                                             <div class="block-title">${ LANGUAGE.PROMPT_MSG060 }</div>
                                             <div class="block">
-                                                <p>${LANGUAGE.PROMPT_MSG062}: <span class="${diagnoseInfoDescr.textColor}">${ diagnoseInfoDescr.text }</span></p>`;
-                if (diagnoseInfoDescr.type >= Helper.testEnum.Submitted && diagnoseInfoDescr.beginTime && diagnoseInfoDescr.beginTimeTitle){
-                    content +=`                 <p>${ diagnoseInfoDescr.beginTimeTitle }: ${ diagnoseInfoDescr.beginTime }</p>`;
+                                                <p>${LANGUAGE.PROMPT_MSG062}: <span class="${userStatusDescr.textColor}">${ userStatusDescr.text }</span></p>`;
+                if (userInfo.testState > 0){
+                    content +=`                 <p>${ LANGUAGE.PROMPT_MSG090 }: <span class="${testStateDescr.textColor}">${ testStateDescr.text }</span></p>`;
                 }
                 content +=`                    <a href="/qr-code/" class="margin-top color-blue button button-outline button-raised popover-close">${ LANGUAGE.PROMPT_MSG064 }</a>
                                             </div>
@@ -354,11 +338,13 @@
                 let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
 
                 let userInfo = self.$app.methods.getFromStorage('userInfo');
-                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
-                let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);
+                let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
+                let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
+                let testType = Helper.Methods.getTestTypeName(userInfo.testType);
+                /*let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
+                let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);*/
 
                 let speed = 0 + ' ' + LANGUAGE.COM_MSG075;
-                console.log(objData)
                 if (objData.coords && parseInt(objData.coords.speed) > 0){
                     let speedInKm = Helper.Methods.getSpeedValueInKM('MPS',objData.coords.speed);
                     if(speedInKm < 2){
@@ -417,30 +403,23 @@
                     markerData += '</tr>';
                 }
                 markerData +=   '<tr>';
-                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
-                markerData +=       `<td class="marker-data-value">${ diagnoseInfoDescr.text }</td>`;
+                markerData +=       '<td class="marker-data-caption">'+LANGUAGE.PROMPT_MSG062+'</td>';
+                markerData +=       `<td class="marker-data-value ${userStatusDescr.textColor}">${ userStatusDescr.text }</td>`;
                 markerData +=   '</tr>';
-                if(diagnoseInfoDescr.type !== Helper.testEnum.Untested) {
-                    markerData += '<tr>';
-                    markerData += '<td class="marker-data-caption">' + LANGUAGE.UNIT_TEST_RESULT_MSG007 + '</td>';
-                    markerData += '<td class="marker-data-value">' + diagnoseInfoDescr.diagnoseTypeText + '</td>';
-                    markerData += '</tr>';
-                    if(diagnoseInfoDescr.endTime){
-                        markerData += '<tr>';
-                        markerData += '<td class="marker-data-caption">' + diagnoseInfoDescr.endTimeTitle + '</td>';
-                        markerData += `<td class="marker-data-value">${ diagnoseInfoDescr.endTime } ${diagnoseInfoDescr.endTimeDaysCount ? diagnoseInfoDescr.endTimeDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
-                        markerData += '</tr>';
-                    }else{
-                        markerData += '<tr>';
-                        markerData += '<td class="marker-data-caption">' + diagnoseInfoDescr.beginTimeTitle + '</td>';
-                        markerData += `<td class="marker-data-value">${ diagnoseInfoDescr.beginTime } ${diagnoseInfoDescr.beginTimeDaysCount ? self.beginTimeDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
-                        markerData += '</tr>';
-                    }
-                    if(diagnoseResult.val !== -1){
-                        markerData += '<tr>';
-                        markerData += '<td class="marker-data-caption">' + LANGUAGE.UNIT_TEST_RESULT_MSG008 + '</td>';
-                        markerData += `<td class="marker-data-value">${ diagnoseResult.text }</td>`;
-                        markerData += '</tr>';
+                if(userInfo.testState !== Helper.enumTestStatus.Invalid || userInfo.testState !== Helper.enumTestStatus.Unknown) {
+                    markerData +=   '<tr>';
+                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.UNIT_TEST_RESULT_MSG007+'</td>';
+                    markerData +=       `<td class="marker-data-value">${ testType }</td>`;
+                    markerData +=   '</tr>';
+                    markerData +=   '<tr>';
+                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.PROMPT_MSG090+'</td>';
+                    markerData +=       `<td class="marker-data-value ${testStateDescr.textColor}">${ testStateDescr.text }</td>`;
+                    markerData +=   '</tr>';
+                    if(userInfo.testStateTime){
+                        markerData +=   '<tr>';
+                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.INFORM_ABOUT_MSG03+'</td>';
+                        markerData +=       `<td class="marker-data-value">${  moment(userInfo.testStateTime, window.COM_TIMEFORMAT2).add(self.$app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT) }</td>`;
+                        markerData +=   '</tr>';
                     }
                 }
                 markerData +=   '<tr>';
@@ -486,11 +465,11 @@
                 }
 
                 bgGeo.setConfig({
-                    distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
-                    locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
+                    distanceFilter: 10,            // Must be 0 or locationUpdateInterval is ignored!
+                    //locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
                     schedule: ["1-7 00:00-23:59"],
                     params: {
-                        Token: userInfo.contactInfo.token,
+                        Token: userInfo.token,
                     }
                 }, function (state) {
                     bgGeo.startSchedule(function() {
@@ -518,16 +497,36 @@
 
                 self.$setState({
                     LoginDone: true,
-                    Phone: userInfo.contactInfo.phoneNumber,
-                    Id: parseInt(userInfo.contactInfo.id),
+                    Phone: userInfo.phoneNumber,
+                    Id: parseInt(userInfo.id),
                 },function () {
                     self.getInfectedBonds();
-                    let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
+                    //let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
+                    let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
+                    let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
                     self.updateCovidStatus({
-                        Covid19StatusType: diagnoseInfoDescr.type,
-                        Covid19Status: diagnoseInfoDescr.text,
-                        StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
+                        //Covid19StatusType: diagnoseInfoDescr.type,
+                        //Covid19Status: diagnoseInfoDescr.text,
+                        //StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0,
+
+
+                        userState: userInfo.state,
+                        userStateText: userStatusDescr.text,
+                        userStateTextColor: userStatusDescr.text,
+                        testNumber: userInfo.testNumber,
+                        testState: userInfo.testState,
+                        testStateText: testStateDescr.text,
+                        testStateTextColor: testStateDescr.textColor,
+                        testStateTime: userInfo.testStateTime,
+                        testType: userInfo.testType,
+                        testTypeText: Helper.Methods.getTestTypeName(userInfo.type),
                     });
+/*
+                    state: 0
+                    testNumber: null
+                    testState: 0
+                    testStateTime: null
+                    testType: 0*/
 
                     self.startTracking(userInfo);
                 });

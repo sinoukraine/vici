@@ -177,7 +177,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG13}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="text" name="AddressDetails" value="{{addressDetail}}"  required validate>
+                                        <input type="text" name="AddressDetails" value="{{address}}"  required validate>
                                         <!--<span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@
         data: function () {
             let self = this;
 
-            let userInfo = self.$app.methods.getFromStorage('userInfo').contactInfo;
+            let userInfo = self.$app.methods.getFromStorage('userInfo');
             let emListSaved = self.$app.methods.getFromStorage('emergencyList');
 
             let provinceList = Helper.Methods.getProvinceList();

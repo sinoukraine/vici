@@ -29,21 +29,25 @@ const API_DOMIAN9 = "https://upload.quiktrak.co/";*/
 
 const API_URL = {};
 
-API_URL.REGISTRATION = API_DOMIAN5 + 'Person/Register';
 API_URL.PREREGISTRATION = API_DOMIAN5 + 'Person/PreRegister';
+API_URL.REGISTRATION = API_DOMIAN5 + 'Person/Register';
+API_URL.PRE_FORGOT_PWD = API_DOMIAN5 + 'Person/PreForgotPassword';
+API_URL.FORGOT_PWD = API_DOMIAN5 + 'Person/ForgotPassword';
+API_URL.LOGIN = API_DOMIAN5 + 'Person/Login';
+API_URL.REFRESH_TOKEN = API_DOMIAN5 + 'Person/Auth';
+API_URL.CHANGE_PASSWORD = API_DOMIAN5 + 'Person/ChangePassword';
+API_URL.GET_NOTIFICATIONS = API_DOMIAN5 + 'Person/QueryMessage';
+API_URL.GET_NOTIFICATION_CONTENT = API_DOMIAN5 + 'Person/QueryMessageContent';
+API_URL.TEST_SUBMIT = API_DOMIAN5 + 'Test/Submit';
+API_URL.GET_TEST_INFO = API_DOMIAN5 + 'Person/QueryState';
 
 
-
-
-API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
-API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Contact/Auth';
 API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
 //API_URL.UPLOAD_LINK = 'https://test.m2mdata.co:5000/Position/Upload';
-API_URL.GET_NOTIFICATIONS = API_DOMIAN2 + 'Contact/HistoryMessage';
-API_URL.PRE_FORGOT_PWD = API_DOMIAN2 + 'Contact/PreForgotPassword';
-API_URL.FORGOT_PWD = API_DOMIAN2 + 'Contact/ForgotPassword';
-API_URL.NOTIFY_TEST = API_DOMIAN2 + 'Contact/SubmitDiagnose';
-API_URL.CHANGE_PASSWORD = API_DOMIAN2 + 'Contact/ChangePassword';
+
+
+//API_URL.NOTIFY_TEST = API_DOMIAN2 + 'Contact/SubmitDiagnose';
+
 API_URL.GET_INFECTED_BOUNDS = API_DOMIAN2 + 'Position/QueryGeoInfectedBounds';
 
 
@@ -332,6 +336,7 @@ let app = new Framework7({
             }*/
             self.methods.getPlusInfo();
 
+
             let account = $$("input[name='username']");
             let password = $$("input[name='password']");
 
@@ -360,7 +365,8 @@ let app = new Framework7({
                         }
                         password.val(null);
 
-                        self.data.Token = result.data.data.contactInfo.token;
+                        //self.data.Token = result.data.data.contactInfo.token;
+                        self.data.Token = result.data.data.token;
 
                         self.methods.setInStorage({
                             name: 'userInfo',
@@ -378,6 +384,14 @@ let app = new Framework7({
                                 AppEvents.emit('newNotificationCountChanged', counter)
                             }
                         });
+
+                        if(result.data.data.testState > 0){
+                            self.methods.getTestInfo({token: result.data.data.token, id: result.data.data.testID}, function (testIno) {
+
+                            });
+                        }
+
+
 
                         /*self.methods.setInStorage({
                             name: 'userInfo',
@@ -426,6 +440,60 @@ let app = new Framework7({
                     window.loginDone = 1;
                 });
         },
+        getTestInfo: function(params = {}, callback){
+            let self = this;
+
+            let data = {
+                Token: self.data.Token,
+            };
+
+            self.progressbar.show('gray');
+            self.request.promise.post(API_URL.GET_TEST_INFO, data, 'json')
+                .then(function (result) {
+                    console.log(result.data);
+
+                    if(result.data.majorCode && result.data.majorCode === '000'){
+                        /*if (Array.isArray(result.data.data) && result.data.data.length) {
+                            //adding 1 sec to las message time to not receive it again
+                            //let lastMessageTime = moment(result.data.data[ result.data.data.length-1].time, window.COM_TIMEFORMAT2).add(1,'seconds').format(window.COM_TIMEFORMAT2);
+                            let lastMessageTime = moment.unix(result.data.data[ result.data.data.length-1].time).add(1,'seconds').format(window.COM_TIMEFORMAT2);
+
+                            self.methods.setInStorage({name: 'additionalData', data: {lastNotificationTime: lastMessageTime}});
+                            result.data.data = self.methods.formatNotifications(result.data.data);
+                            let needUpdate = false;
+                            for (let i = result.data.data.length - 1; i >= 0; i--) {
+                                if(parseInt(result.data.data[i].templateID) === 2) needUpdate=true;
+                                result.data.data[i].customId = self.utils.id();
+                                list.push(result.data.data[i]);
+                            }
+                            self.methods.setInStorage({name:'notifications', data: list});
+                            if(needUpdate) self.methods.getNewData();
+                        }*/
+                        //AppEvents.emit('covidStatusChanged', result.data.data);
+                    }
+                    if(callback instanceof Function){
+                        callback(result.data.data);
+                    }
+                })
+                .finally(function () {
+                    self.utils.nextTick(()=>{
+                        self.progressbar.hide();
+                    }, 500);
+                })
+                .catch(function (err) {
+                    console.log(err);
+
+                    if(callback instanceof Function){
+                        callback({});
+                    }
+                    if (err && err.status === 404){
+                        self.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                    }else{
+                        self.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                    }
+                });
+
+        },
         getNotifications: function(params = {}, callback){
             let self = this;
             let lastMgsTimestamp = self.methods.getFromStorage('additionalData').lastNotificationTime;
@@ -445,7 +513,8 @@ let app = new Framework7({
                     if(result.data.majorCode && result.data.majorCode === '000'){
                         if (Array.isArray(result.data.data) && result.data.data.length) {
                             //adding 1 sec to las message time to not receive it again
-                            let lastMessageTime = moment(result.data.data[ result.data.data.length-1].time, window.COM_TIMEFORMAT2).add(1,'seconds').format(window.COM_TIMEFORMAT2);
+                            //let lastMessageTime = moment(result.data.data[ result.data.data.length-1].time, window.COM_TIMEFORMAT2).add(1,'seconds').format(window.COM_TIMEFORMAT2);
+                            let lastMessageTime = moment.unix(result.data.data[ result.data.data.length-1].time).add(1,'seconds').format(window.COM_TIMEFORMAT2);
 
                             self.methods.setInStorage({name: 'additionalData', data: {lastNotificationTime: lastMessageTime}});
                             result.data.data = self.methods.formatNotifications(result.data.data);
@@ -611,7 +680,8 @@ let app = new Framework7({
             let self = this;
             if (Array.isArray(messageList)) {
                 for (let i = 0; i < messageList.length; i++) {
-                    messageList[i].customTime = moment(messageList[i].time, window.COM_TIMEFORMAT2).add(self.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT);
+                    //messageList[i].customTime = moment(messageList[i].time, window.COM_TIMEFORMAT2).add(self.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT);
+                    messageList[i].customTime = moment.unix(messageList[i].time).format(window.COM_TIMEFORMAT);
                     messageList[i].customContent = self.methods.isJsonString(messageList[i].content);
 
                     messageList[i].customTitle = LANGUAGE.PROMPT_MSG082;
@@ -625,10 +695,10 @@ let app = new Framework7({
                             messageList[i].customTitle = LANGUAGE.PROMPT_MSG085;
                             messageList[i].customSubtitle = LANGUAGE.PROMPT_MSG085;
                             if(messageList[i].customContent){
-                                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr({state: messageList[i].customContent.State });
-                                messageList[i].customSubtitle = diagnoseInfoDescr.text;
-                                if(messageList[i].customContent.Time){
-                                    messageList[i].customContent.customTime = moment(messageList[i].customContent.Time).local().format(window.COM_TIMEFORMAT);
+                               // let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr({state: messageList[i].customContent.State });
+                               // messageList[i].customSubtitle = diagnoseInfoDescr.text;
+                                if(messageList[i].customContent.time){
+                                    messageList[i].customContent.customTime = moment.unix(messageList[i].customContent.time).format(window.COM_TIMEFORMAT);
                                 }
                             }
                             break;
@@ -658,6 +728,17 @@ let app = new Framework7({
                         virtualList.deleteAllItems();
                     }
                 }
+            }
+        },
+        updateNotification: function(id, data){
+            let self = this;
+            let pushList = self.methods.getFromStorage('notifications');
+            let user = localStorage.ACCOUNT;
+
+            if (pushList && pushList[user] && pushList[user].length) {
+                let index = pushList[user].map(function(e) { return e.customId; }).indexOf(id);
+                pushList[user][index] = data;
+                localStorage.setItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS", JSON.stringify(pushList));
             }
         },
 
@@ -934,7 +1015,7 @@ let app = new Framework7({
                     //alert(JSON.stringify(result.data));
                     console.log(result.data);
                     if(result.data && result.data.majorCode === '000') {
-                        self.data.Token = result.data.data.contactInfo.token;
+                        self.data.Token = result.data.data.token;
                         self.methods.setInStorage({
                             name: 'userInfo',
                             data:  result.data.data

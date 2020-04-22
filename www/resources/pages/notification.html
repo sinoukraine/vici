@@ -4,6 +4,7 @@
     <div class="page " > <!-- page-with-subnavbar -->
         <!-- Top Navbar -->
         <div class="navbar">
+            {{#unless DataLoaded}}<div class="progressbar-infinite"></div>{{/unless}}
             <div class="navbar-bg"></div>
             <div class="navbar-inner">
                 <div class="left">
@@ -18,20 +19,29 @@
 
 
         <div  class="page-content" >
-            {{#js_if "this.TemplateID == 1"}}
+            {{#js_if "this.TemplateID == this.enumPersonMessageTemplate.InfectedArea"}}
             <div id="{{MapId}}" class="map"></div>
-            {{else}}
-            <div class="block-title">
-                {{PageTitle}}
-                {{#js_if "this.NotificationData && this.NotificationData.customTime"}}
-                - {{NotificationData.customTime}}
-                {{/js_if}}
-            </div>
-            <div class="block">
-                {{PageSubtitle}}
-
-            </div>
             {{/js_if}}
+            {{#js_if "this.TemplateID == this.enumPersonMessageTemplate.TestProgress"}}
+            <div class="block-title">{{PageTitle}}</div>
+            <div class="list no-hairline-bottom">
+                <ul>
+                    {{#each PageDataList}}
+                    <li class="item-content ">
+                        <div class="item-media text-color-lightgray">{{icon}}</div>
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <div class="item-header text-color-gray">{{title}}</div>
+                                {{value}}
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+
+
+
         </div>
 
     </div>
@@ -48,7 +58,8 @@
             let self = this;
             let ret = {
                 PageTitle: LANGUAGE.COM_MSG068,
-                MapId: 'Map-' + self.$app.utils.id()
+                MapId: 'Map-' + self.$app.utils.id(),
+                enumPersonMessageTemplate: Helper.enumPersonMessageTemplate,
             };
             if(self.$route.query.id){
                 let account = localStorage.ACCOUNT;
@@ -56,39 +67,36 @@
                 if (notifications && notifications.length) {
                     let notification = notifications.find(c => c.customId === self.$route.query.id);
 
-                    if (notification) {
-                        //ret.NotificationData = self.$app.methods.formatStatusMessage(notification);
-                        ret.PageTitle = notification.customTitle;
-                        ret.PageSubtitle = notification.customSubtitle;
-                        ret.TemplateID = notification.templateID;
-                        ret.NotificationData = notification.customContent;
-                    }
+                    if (notification)  ret.NotificationData = notification;
+                    ret.PageTitle = notification.customTitle;
+                    ret.TemplateID = notification.templateID;
+
+
+                    //ret.PageSubtitle = notification.customSubtitle;
+                        //ret.TemplateID = notification.templateID;
+                        //ret.NotificationData = notification.customContent;
                 }
             }
+
 
 
             return ret;
         },
 
         methods: {
-
-
-        },
-
-        on: {
-            pageInit: function (e, page) {
+            showNotificationData(){
                 let self = this;
 
-                if(self.TemplateID === 1){
+                if(self.TemplateID === Helper.enumPersonMessageTemplate.InfectedArea){
                     self.Map = Helper.Methods.createMap({ target: self.MapId, latLng: [9.675228, -171.364896], zoom: 2 });
                     self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
                     //console.log(self.NotificationDataiLat)
-                    self.MarkerMe = L.marker([self.NotificationData.mLat, self.NotificationData.mLng], { icon: Helper.MarkerIcon[0] });
+                    self.MarkerMe = L.marker([self.NotificationData.customContent.mLat, self.NotificationData.customContent.mLng], { icon: Helper.MarkerIcon[0] });
                     self.MarkerMe
                             .bindPopup(LANGUAGE.COM_MSG070, {maxWidth: self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .addTo(self.MarkersGroup);
 
-                    self.MarkerInfected = L.marker([self.NotificationData.iLat, self.NotificationData.iLng], { icon: Helper.MarkerIcon[3] });
+                    self.MarkerInfected = L.marker([self.NotificationData.customContent.iLat, self.NotificationData.customContent.iLng], { icon: Helper.MarkerIcon[3] });
                     self.MarkerInfected
                             .bindPopup(LANGUAGE.COM_MSG071, {maxWidth: self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .addTo(self.MarkersGroup);
@@ -97,13 +105,101 @@
                     if (self.MarkersGroup.getBounds().isValid()) {
                         self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
                     }
+                }else if(self.TemplateID === Helper.enumPersonMessageTemplate.TestProgress){
+                    let PageDataList = [];
+                    if(self.NotificationData.customTime){
+                        PageDataList.push({
+                            title: LANGUAGE.INFORM_ABOUT_MSG03,
+                            value: self.NotificationData.customTime,
+                            icon: '<i class="f7-icons icon-day-of-week"></i>',
+                        })
+                    }
+                    if(self.NotificationData.number){
+                        PageDataList.push({
+                            title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
+                            value: self.NotificationData.number,
+                            icon: '',
+                        })
+                    }
+                    if(self.NotificationData.type){
+                        PageDataList.push({
+                            title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
+                            value: Helper.Methods.getTestTypeName(self.NotificationData.type),
+                            icon: '',
+                        })
+                    }
+                    if(self.NotificationData.state){
+                        PageDataList.push({
+                            title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
+                            value: Helper.Methods.getTestTypeStateDescription(self.NotificationData.state).text,
+                            icon: '',
+                        })
+                    }
+                    self.$setState({
+                        PageDataList: PageDataList,
+                    })
                 }
+            }
+        },
+
+        on: {
+            pageInit: function (e, page) {
+                let self = this;
+
+                if(self.$app.methods.isObjEmpty(self.NotificationData)){
+                    self.$app.methods.customDialog({title: LANGUAGE.PROMPT_MSG071, text: LANGUAGE.PROMPT_MSG088});
+                    return;
+                }
+            console.log(self.NotificationData.customContent)
+                if(!self.NotificationData.customContent){
+                    let data ={
+                        token: self.$app.data.Token,
+                        index: self.NotificationData.index,
+                        time: self.NotificationData.time,
+                    };
+
+                    self.$app.request.promise.post(API_URL.GET_NOTIFICATION_CONTENT, data, 'json')
+                            .then(function (result) {
+                                if (result.data.majorCode === '000') {
+                                    if(self.$app.methods.isObjEmpty(result.data.data)){
+                                        self.$app.methods.customDialog({title: LANGUAGE.PROMPT_MSG071, text: LANGUAGE.PROMPT_MSG089});
+                                        return;
+                                    }
+                                    self.$app.utils.extend(result.data.data, self.NotificationData);
+                                    let formattedMessage = self.$app.methods.formatNotifications([result.data.data]);
+                                    if(!self.$app.methods.isObjEmpty(formattedMessage) && !self.$app.methods.isObjEmpty(formattedMessage[0])){
+                                        self.$app.methods.updateNotification(self.NotificationData.customId, formattedMessage[0]);
+                                    }
+                                    self.$setState({
+                                        DataLoaded: true,
+                                        NotificationData: formattedMessage[0],
+                                    }, function () {
+                                        self.showNotificationData();
+                                    });
+
+                                }
+                            });
+                }else{
+                    self.$setState({
+                        DataLoaded: true
+                    });
+                    self.showNotificationData();
+                }
+
+
+
+            /*    */
 
 
             },
             pageBeforeRemove: function () {
                 let self = this;
-
+                if(self.TemplateID === Helper.enumPersonMessageTemplate.InfectedArea){
+                    self.MarkersGroup.clearLayers();
+                    self.MarkerMe = '';
+                    self.MarkerInfected = '';
+                    self.Map.remove();
+                }
 
             }
 

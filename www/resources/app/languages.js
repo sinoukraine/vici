@@ -79,7 +79,8 @@ window.LanguagePackages= {
 		"COM_MSG073": "POSITIVE",
 		"COM_MSG074": "km/h",
 		"COM_MSG075": "m/s",
-
+		"COM_MSG076": "Unknown",
+		"COM_MSG077": "Invalid",
 
 
 		"PROMPT_MSG000": "Nothing found",
@@ -131,7 +132,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG059": "No Position Data",
 		"PROMPT_MSG060": "Covid-19 Info",
 		"PROMPT_MSG061": "Test Date",
-		"PROMPT_MSG062": "Status",
+		"PROMPT_MSG062": "User Status",
 		"PROMPT_MSG063": "Recovery Date",
 		"PROMPT_MSG064": "Show QR-Code",
 		"PROMPT_MSG065": "Show below QR code on demand to identify you COVID-19 status",
@@ -155,10 +156,13 @@ window.LanguagePackages= {
 		"PROMPT_MSG082": "Warning",
 		"PROMPT_MSG083": "Be careful",
 		"PROMPT_MSG084": "Updated",
-		"PROMPT_MSG085": "Status Changed",
+		"PROMPT_MSG085": "Test Status Changed",
 		"PROMPT_MSG086": "Deceased Time",
 		"PROMPT_MSG087": "Awaiting Test reception approval",
-
+		"PROMPT_MSG088": "Notification not found",
+		"PROMPT_MSG089": "Notification data is empty",
+		"PROMPT_MSG090": "Test Status",
+		"PROMPT_MSG091": "Your current Test Status",
 
 
 
@@ -254,6 +258,7 @@ window.LanguagePackages= {
 		"INFORM_ABOUT_MSG05": "Lab Doctor Last Name",
 		"INFORM_ABOUT_MSG06": "Covid-19 Recovery",
 		"INFORM_ABOUT_MSG07": "Recovered Date",
+		"INFORM_ABOUT_MSG08": "Notes",
 
 		"QR_CODE_MSG00": "QR Code",
 

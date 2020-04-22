@@ -49,6 +49,38 @@ const Helper = {
             popupAnchor:  [0, -60] // point from which the popup should open relative to the iconAnchor
         }),
     ],
+    enumTestTypes:{
+        Unknown: 0,
+        Virus: 1,
+        AntiBody: 2,
+    },
+    enumTestStatus:{
+        Invalid: -1,
+        Unknown: 0,
+        Submited: 1,
+        Testing: 4,
+        Negative: 16,
+        Positive: 32,
+    },
+    enumPersonStatus:{
+        Invalid: -1,
+        Unknown: 0,
+        Unfected: 2,
+        Suspected: 4,
+        Infected: 8,
+        SevereCases: 16,
+        Observed: 32,
+        Recovered: 64,
+        Death: 128,
+    },
+    enumPersonMessageTemplate:{
+        Unknown: 0,
+        InfectedArea: 1,
+        TestProgress: 2,
+    },
+
+
+
     testEnum: {
         Untested: -1,
         Submitted: 1,
@@ -123,6 +155,28 @@ const Helper = {
         "0007": 'Input Error',
     },
     Methods: {
+        getMarkerIcon(userState, testState){
+            let ret = MarkerIcon[1];
+            if(userState === this.enumPersonStatus.Invalid || data.userState === this.enumPersonStatus.Unknown){
+                if(testState === this.enumTestStatus.Submited ){
+                    ret = MarkerIcon[7];
+                }else if(testState === this.enumTestStatus.Testing){
+                    ret = MarkerIcon[2];
+                }
+            }else if(userState === this.enumPersonStatus.Unfected){
+                ret = MarkerIcon[4];
+            }else if(userState === this.enumPersonStatus.Suspected || userState === this.enumPersonStatus.Observed){
+                ret = MarkerIcon[2];
+            }else if(userState === this.enumPersonStatus.Infected || userState === this.enumPersonStatus.SevereCases){
+                ret = MarkerIcon[3];
+            }else if(userState === this.enumPersonStatus.Recovered){
+                ret = MarkerIcon[5];
+            }else if(userState === this.enumPersonStatus.Death){
+                ret = MarkerIcon[6];
+            }
+
+            return ret;
+        },
         getDiagnoseInfoDescr: function(diagnoseInfo={}){
             let num = diagnoseInfo !== null ? diagnoseInfo.state : '';
             /*if(diagnoseInfo && diagnoseInfo.type){
@@ -448,10 +502,108 @@ const Helper = {
             return ret;
         },
 
+
+
+        getTestTypeStateDescription: function(num){
+            let ret = {
+                text: LANGUAGE.COM_MSG076,
+                textColor: 'text-color-gray',
+            };
+            num = parseInt(num);
+            switch (num) {
+                case -1:
+                    ret = {
+                        text: LANGUAGE.COM_MSG077,
+                        textColor: 'text-color-gray',
+                    };
+                    break;
+                case 0:
+                    ret = {
+                        text: LANGUAGE.COM_MSG076,
+                        textColor: 'text-color-gray',
+                    };
+                    break;
+                case 1:
+                    ret = {
+                        text: LANGUAGE.PROMPT_MSG087,
+                        textColor: 'text-color-yellow',
+                    };
+                    break;
+                case 4:
+                    ret = {
+                        text: LANGUAGE.COM_MSG063,
+                        textColor: 'text-color-orange',
+                    };
+                    break;
+                case 16:
+                    ret = {
+                        text: LANGUAGE.COM_MSG072,
+                        textColor: 'text-color-black',
+                    };
+                    break;
+                case 32:
+                    ret = {
+                        text: LANGUAGE.COM_MSG073,
+                        textColor: 'text-color-black',
+                    };
+                    break;
+            }
+            return ret;
+        },
+        getPersonStatusDescription(num){
+            let ret = {
+                text: LANGUAGE.COM_MSG041,
+                textColor: 'text-color-gray',
+            };
+            num = parseInt(num);
+            switch (num) {
+                case 0: ret = { text: LANGUAGE.COM_MSG042, textColor:'text-color-gray' }; break;
+                case 2: ret = { text: LANGUAGE.COM_MSG040, textColor:'text-color-green' }; break;
+                case 4: ret = { text: LANGUAGE.COM_MSG064, textColor:'text-color-orange' }; break;
+                case 8: ret = { text: LANGUAGE.COM_MSG039, textColor:'text-color-red' }; break;
+                case 16: ret = { text: LANGUAGE.COM_MSG067, textColor:'text-color-red' }; break;
+                case 32: ret = { text: LANGUAGE.COM_MSG066, textColor:'text-color-orange' }; break;
+                case 64: ret = { text: LANGUAGE.COM_MSG033, textColor:'text-color-blue' }; break;
+                case 128: ret = { text: LANGUAGE.COM_MSG065, textColor:'text-color-black' }; break;
+            }
+            return ret;
+        },
+      /*  getPersonStatusColor(num){
+            let ret = 'text-color-gray';
+            num = parseInt(num);
+            switch (num) {
+                case 2: ret = 'text-color-green'; break;
+                case 4: ret = 'text-color-orange'; break;
+                case 8: ret = 'text-color-red'; break;
+                case 16: ret = 'text-color-red'; break;
+                case 32: ret = 'text-color-orange'; break;
+                case 64: ret = 'text-color-blue'; break;
+                case 128: ret = 'text-color-black'; break;
+            }
+            return ret;
+        },
+        getTestStatusColor(num){
+            let ret = 'text-color-gray';
+            num = parseInt(num);
+            switch (num) {
+                case 1: ret = 'text-color-yellow'; break;
+                case 4: ret = 'text-color-orange'; break;
+                case 16: ret = 'text-color-black'; break;
+                case 32: ret = 'text-color-black'; break;
+            }
+            return ret;
+        },*/
+        getTestTypeName: function(num){
+            let ret = LANGUAGE.COM_MSG076;
+            num = parseInt(num);
+            let test = this.getTestTypeList().find( ({ Val }) => Val === num );
+            if(test) ret = test.Name;
+            return ret;
+        },
         getTestTypeList: function(){
             return [
-                { Val: 2, Name: LANGUAGE.UNIT_TEST_RESULT_MSG009 },
-                { Val: 1, Name: LANGUAGE.UNIT_TEST_RESULT_MSG010 }
+                { Val: 1, Name: LANGUAGE.UNIT_TEST_RESULT_MSG009 },
+                { Val: 2, Name: LANGUAGE.UNIT_TEST_RESULT_MSG010 },
             ]
         },
         getTypeResulList: function(){
@@ -460,32 +612,12 @@ const Helper = {
                 {Val: 1, Name: LANGUAGE.COM_MSG073 }
             ]
         },
-        getIntervalList: function(){
-            return [
-                { Val: 20, Name: 20 + LANGUAGE.TIMING_MSG06 },
-                { Val: 60, Name: 1 + LANGUAGE.TIMING_MSG07 },
-                { Val: 300, Name: 5 + LANGUAGE.TIMING_MSG07 },
-                { Val: 600, Name: 10 + LANGUAGE.TIMING_MSG07 },
-                { Val: 900, Name: 15 + LANGUAGE.TIMING_MSG07 },
-                { Val: 1200, Name: 20 + LANGUAGE.TIMING_MSG07 },
-                { Val: 1800, Name: 30 + LANGUAGE.TIMING_MSG07 },
-                { Val: 3600, Name: 60 + LANGUAGE.TIMING_MSG07 },
-            ]
-        },
         getGenderList: function(){
             return [
                 {Val: 1, Name: LANGUAGE.REGISTRATION_MSG17 },
                 {Val: 0, Name: LANGUAGE.REGISTRATION_MSG18 }
             ]
         },
-       /* getBirthYearsList: function(){
-            let min = 1920;
-            let max = 2010;
-
-            return Array.apply(null, {length: max + 1 - min}).map(function (_, idx) {
-                return idx + min;
-            });
-        },*/
         getProvinceList: function () {
             return [
                 { Val: 3238, Name: 'Eastern Cape' },
@@ -502,6 +634,7 @@ const Helper = {
                 { Val: 3249, Name: 'Table View' },
                 { Val: 3250, Name: 'Umtentweni' },
                 { Val: 3251, Name: 'Western Cape' },
+                { Val: 0, Name: 'Other' },
             ];
         },
         getCityList: function () {
@@ -609,7 +742,7 @@ const Helper = {
                 { Val:38076, ProvinceId:3240,	Name: "Westonaria" },
                 { Val:38126, ProvinceId:3245,	Name: "Witbank" },
                 { Val:38127, ProvinceId:3245,	Name: "Witrivier" },
-
+                { Val: 0, ProvinceId: 0, Name: 'Other' },
 
             ];
         },

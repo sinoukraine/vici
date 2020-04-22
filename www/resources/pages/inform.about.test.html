@@ -53,7 +53,7 @@
                     </li>
                     <li >
                         <a class="item-link smart-select smart-select-init smart-select-custom smart-select-test-type" data-open-in="popover" data-close-on-select="true" data-form-color-theme="green">
-                            <select name="diagnoseType" multiple maxlength="1" required validate >
+                            <select name="type" multiple maxlength="1" required validate >
                                 {{#each TestTypeList}}
                                 <option value="{{Val}}" {{#if Selected}}selected{{/if}} >{{Name}}</option>
                                 {{/each}}
@@ -135,11 +135,21 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG12}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="organizeStreet" value="{{OrganizeInfo.street}}" required validate>
+                                <input type="text" name="street" value="{{OrganizeInfo.street}}" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
                     </li>
+                    <li class="item-content item-input">
+                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
+                        <div class="item-inner">
+                            <div class="item-title item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG08}}</div>
+                            <div class="item-input-wrap">
+                                <textarea name="remark" placeholder="{{@global.LANGUAGE.INFORM_ABOUT_MSG08}}"></textarea>
+                            </div>
+                        </div>
+                    </li>
+
                     <!--<li >
                         <a @click="showAddressMap" href="#" class="item-link item-content">
                             <div class="item-media text-color-lightgray"><i class="f7-icons icon-tracking"></i></div>
@@ -170,9 +180,9 @@
             let provinceList = Helper.Methods.getProvinceList();
             let cityList = Helper.Methods.getCityList();
             let testTypeList = Helper.Methods.getTestTypeList();
-            let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === Helper.testEnum.Submitted;
+            //let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === Helper.testEnum.Submitted;
 
-            if(awaitingState){
+           /* if(awaitingState){
                 if(userInfo.organizeInfo && userInfo.organizeInfo.proviceID){
                     provinceList.find( ({ Val }) => Val === userInfo.organizeInfo.proviceID ).Selected = true;
                 }
@@ -187,11 +197,12 @@
                 cityList.find( ({ Val }) => Val === userInfo.contactInfo.cityID ).Selected = true;
             }
 
-
-
+*/
+            provinceList.find( ({ Val }) => Val === userInfo.provinceID ).Selected = true;
+            cityList.find( ({ Val }) => Val === userInfo.cityID ).Selected = true;
 
             let ret = {
-                DiagnoseStateAwaitingReview: awaitingState,
+               // DiagnoseStateAwaitingReview: awaitingState,
                 ProvinceList: provinceList,
                 CityList: cityList,
                 TestTypeList: testTypeList,
@@ -242,6 +253,18 @@
                 form.on('submit', function(e){
                     e.preventDefault();
 
+                  /*  public DateTime? BeginTime { get; set; }
+                    public long? OrganizeID { get; set; }
+                    public string OrganizeName { get; set; }
+                    public long? DoctorID { get; set; }
+                    public string DoctorFirstName { get; set; }
+                    public string DoctorSubName { get; set; }
+                    public int? ProvinceID { get; set; }
+                    public int? CityID { get; set; }
+                    public string Street { get; set; }
+                    public TestTypes? Type { get; set; }
+                    public string Remark { get; set; }*/
+
                     /*let data = {
                         Token: self.$app.data.Token,
                         BeginTime: moment.utc(self.CalendarTestDate.getValue()[0]).format(window.COM_TIMEFORMAT2),
@@ -261,18 +284,18 @@
                     if(data.beginTime){
                         data.beginTime = moment(data.beginTime,window.COM_TIMEFORMAT6).utc().format(window.COM_TIMEFORMAT2);
                     }
-                    if(data.diagnoseType){
-                        data.diagnoseType = data.diagnoseType.toString();
+                    if(data.type){
+                        data.type = data.type.toString();
                     }
                     data.Street = data.organizeStreet;
 
 
                     self.$app.progressbar.show();
-                    self.$app.request.promise.post(API_URL.NOTIFY_TEST, data, 'json')
+                    self.$app.request.promise.post(API_URL.TEST_SUBMIT, data, 'json')
                         .then(function (result) {
                             console.log(result.data);
                             if(result.data.majorCode === '000') {
-                                let userInfo = self.$app.methods.getFromStorage('userInfo');
+                                /*let userInfo = self.$app.methods.getFromStorage('userInfo');
                                 userInfo.diagnoseInfo = result.data.data;
                                 self.$app.methods.setInStorage({name:'userInfo', data:userInfo});
                                 self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG032});
@@ -285,9 +308,11 @@
                                     Covid19StatusType: diagnoseInfoDescr.type,
                                     Covid19Status: diagnoseInfoDescr.text,
                                     StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
-                                });
+                                });*/
                                 self.$app.view.main.router.back();
 
+                            }else if(result.data.data && typeof result.data.data == 'string' ){
+                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: result.data.data });
                             }else if(result.data.majorCode && result.data.data && result.data.data.length){
                                 let errMsg = '';
                                 for (let i = 0; i < result.data.data.length; i++) {
@@ -296,8 +321,6 @@
                                     }
                                 }
                                 self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: errMsg });
-                            }else if(result.data.data && typeof result.data.data == 'string' ){
-                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: result.data.data });
                             }else{
                                 self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG003 });
                             }

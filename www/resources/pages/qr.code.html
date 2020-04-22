@@ -20,93 +20,36 @@
 
 
         <div  class="page-content" >
-         <!--   <div class="block-title">{{@global.LANGUAGE.DEVICE_SHARE_MSG00}}</div>-->
             <div class="block">
                 <p>{{@global.LANGUAGE.PROMPT_MSG065}}</p>
-                <p>{{@global.LANGUAGE.PROMPT_MSG066}}: <span class="{{Covid19StatusColor}}">{{Covid19Status}}</span></p>
-                <!--{{#if Covid19StatusDate}}
-                <p>{{@global.LANGUAGE.INFORM_ABOUT_MSG03}}: {{Covid19StatusDate}}{{#if Covid19StatusDateCount}}({{Covid19StatusDateCount}}){{/if}}</p>
-                {{/if}}-->
+                <p>{{@global.LANGUAGE.PROMPT_MSG066}}: <span class="{{UserStatusColor}}">{{UserStatusText}}</span></p>
+                <p>{{@global.LANGUAGE.PROMPT_MSG091}}: <span class="{{TestStateColor}}">{{TestStateText}}</span></p>
             </div>
             <div class="block block-qr" id="qr-wrapper">
                 {{#unless DataLoaded}}
                 <div key="skeleton-qr-block" class="skeleton-text skeleton-effect-blink"><div class="skeleton-block margin-auto" style="width: 264px; height: 264px;"></div></div>
                 {{/unless}}
             </div>
-            {{#js_if "this.Covid19StatusType >= 1"}}
+            {{#if DataLoaded}}
+            {{#js_if "this.TestState >= 1"}}
             <div class="list">
                 <ul>
-                    <li class="item-content ">
-                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-day-of-week"></i></div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                <div class="item-header text-color-gray">{{@global.LANGUAGE.INFORM_ABOUT_MSG03}}</div>
-                                {{Covid19StatusDate}}{{#if Covid19StatusDateCount}}{{/if}}
+                    {{#each TestData}}
+                        <li class="item-content ">
+                            <div class="item-media text-color-lightgray">{{icon}}</div>
+                            <div class="item-inner">
+                                <div class="item-title">
+                                    <div class="item-header text-color-gray">{{title}}</div>
+                                    {{value}}
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                    <li class="item-content ">
-                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-labname"></i>--></div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                <div class="item-header text-color-gray">{{@global.LANGUAGE.UNIT_TEST_RESULT_MSG007}}</div>
-                                {{Covid19TestType}}
-                            </div>
-                        </div>
-                    </li>
-                    {{#if Covid19StatusTypeResult}}
-                    <li class="item-content ">
-                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-labname"></i>--></div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                <div class="item-header text-color-gray">{{@global.LANGUAGE.UNIT_TEST_RESULT_MSG008}}</div>
-                                {{Covid19StatusTypeResult}}
-                            </div>
-                        </div>
-                    </li>
-                    {{/if}}
-                    {{#if Covid19StatusTypeResultTime}}
-                    <li class="item-content ">
-                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-labname"></i>--></div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                <div class="item-header text-color-gray">{{@global.LANGUAGE.UNIT_TEST_RESULT_MSG011}}</div>
-                                {{Covid19StatusTypeResultTime}}
-                            </div>
-                        </div>
-                    </li>
-                    {{/if}}
+                        </li>
+                    {{/each}}
 
-                    <li class="item-content ">
-                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-labname"></i></div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                <div class="item-header text-color-gray">{{@global.LANGUAGE.INFORM_ABOUT_MSG01}}</div>
-                                {{OrganizeInfo.name}}
-                            </div>
-                        </div>
-                    </li>
-                    <li class="item-content ">
-                        <div class="item-media text-color-lightgray"><i class="f7-icons icon-name"></i></div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                <div class="item-header text-color-gray">{{@global.LANGUAGE.INFORM_ABOUT_MSG04}}</div>
-                                {{DoctorInfo.firstName}}
-                            </div>
-                        </div>
-                    </li>
-                    <li class="item-content ">
-                        <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
-                        <div class="item-inner">
-                            <div class="item-title">
-                                <div class="item-header text-color-gray">{{@global.LANGUAGE.INFORM_ABOUT_MSG05}}</div>
-                                {{DoctorInfo.subName}}
-                            </div>
-                        </div>
-                    </li>
                 </ul>
             </div>
             {{/js_if}}
+            {{#if}}
         </div>
 
     </div>
@@ -122,11 +65,18 @@
         data: function () {
             let self = this;
             let userInfo = self.$app.methods.getFromStorage('userInfo');
-            let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
-            let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);
+           /* let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
+            let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);*/
+            let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
+            let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
 
             let ret = {
-                Covid19Status: diagnoseInfoDescr.text,
+                UserStatusText: userStatusDescr.text,
+                UserStatusColor: userStatusDescr.textColor,
+                TestStateText: testStateDescr.text,
+                TestStateColor: testStateDescr.textColor,
+                TestState: userInfo.testState,
+               /* Covid19Status: diagnoseInfoDescr.text,
                 Covid19StatusType: diagnoseInfoDescr.type,
                 Covid19StatusTypeResult: diagnoseResult.val !== -1 ? diagnoseResult.text : '' ,
                 Covid19StatusTypeResultTime: diagnoseInfoDescr.endTime ? diagnoseInfoDescr.endTime : '' ,
@@ -135,7 +85,7 @@
                 Covid19StatusDateCount: diagnoseInfoDescr.beginTimeDaysCount,
                 Covid19TestType: diagnoseInfoDescr.diagnoseTypeText,
                 DoctorInfo: userInfo.doctorInfo ? userInfo.doctorInfo : {},
-                OrganizeInfo: userInfo.organizeInfo ? userInfo.organizeInfo : {},
+                OrganizeInfo: userInfo.organizeInfo ? userInfo.organizeInfo : {},*/
            };
 
             return ret;
@@ -149,11 +99,39 @@
         on: {
             pageInit: function (e, page) {
                 let self = this;
-                self.$app.progressbar.show('gray');
-                setTimeout(function () {
+
+
+                self.$app.methods.getTestInfo({}, function (testInfo) {
+                    console.log(testInfo);
+                    let testData = [
+                        {
+                            title: LANGUAGE.UNIT_TEST_RESULT_MSG007,
+                            value: Helper.Methods.getTestTypeName(testInfo.type),
+                            icon: '',
+                        },
+                    ];
+                    if(testInfo.beginTime){
+                        testData.push({
+                            title: LANGUAGE.INFORM_ABOUT_MSG03,
+                            value: moment(testInfo.beginTime, window.COM_TIMEFORMAT2).add(self.$app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT),
+                            icon: '<i class="f7-icons icon-day-of-week"></i>',
+                        })
+                    }
+                    if(testInfo.organizeName){
+                        testData.push({
+                            title: LANGUAGE.INFORM_ABOUT_MSG01,
+                            value: testInfo.organizeName,
+                            icon: '<i class="f7-icons icon-labname"></i>',
+                        })
+                    }
+
                     self.$setState({
                         DataLoaded: true,
+                        TestData: testData,
                     },()=>{
+                        self.$app.utils.nextTick(()=>{
+                            self.$app.progressbar.hide();
+                        },500);
                         self.QRCode = new QRCode(document.getElementById("qr-wrapper"), {
                             text: "https://vici.quiktrak.co/",
                             /*logo: self.$app.data.logoSquare,
@@ -163,9 +141,10 @@
 							logoBackgroundTransparent: false*/
 
                         });
+
                     });
-                    self.$app.progressbar.hide();
-                }, 2000);
+
+                })
 
 
             },
