@@ -296,17 +296,29 @@ const Helper = {
             }, 'json');
         },
         createMap: function(option){
-            var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { name: 'osm', attribution: '' });
-            var googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'+'&hl='+lang,{
+            var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { name: 'osm', noWrap: true, attribution: '' });
+            var googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'+'&hl='+option.lang,{
+                noWrap: true,
                 maxZoom: 22,
                 subdomains:['mt0','mt1','mt2','mt3']
             });
-            var googleSatelitte = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}'+'&hl='+lang,{
+            var googleSatelitte = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}'+'&hl='+option.lang,{
+                noWrap: true,
                 maxZoom: 20,
                 subdomains:['mt0','mt1','mt2','mt3']
             });
 
-            var map = L.map(option.target, { zoomControl: false, center: option.latLng, zoom: option.zoom, layers: [googleStreets] });
+            var map = L.map(option.target, {
+                zoomControl: false,
+                center: option.latLng,
+                zoom: option.zoom,
+                layers: [googleStreets],
+                minZoom:1,
+                maxBounds: [
+                    [-85.0, -180.0],
+                    [85.0, 180.0]
+                ]
+            });
 
             var layers = {
                 "<span class='mapSwitcherWrapper googleSwitcherWrapper'><img class='layer-icon' src='resources/images/googleRoad.png' alt='' /> <p>Map</p></span>": googleStreets,

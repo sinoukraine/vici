@@ -556,7 +556,7 @@
             pageInit: function (e, page) {
                 let self = this;
 
-                self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [10.789648, 23.611363], zoom: 2 });
+                self.Map = Helper.Methods.createMap({ target: 'homeMap', latLng: [10.789648, 23.611363], zoom: 2, lang: window.LangCode });
                 self.MarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
                 self.InfectedMarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
                 self.MarkersGroup.addTo(self.Map);

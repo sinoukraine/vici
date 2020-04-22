@@ -299,31 +299,32 @@ window.LanguagePackages= {
 		
 	}
 };
-var lang = navigator.browserLanguage ? navigator.browserLanguage.toLowerCase() : navigator.language.toLowerCase();
-if(lang.indexOf("en") >= 0) {
-	lang = "en";
+window.LangCode = navigator.browserLanguage ? navigator.browserLanguage.toLowerCase() : navigator.language.toLowerCase();
+if(window.LangCode.indexOf("en") >= 0) {
+	window.LangCode = "en";
 }
-else if(lang.indexOf("es") >= 0) {
-	lang = "en";
+else if(window.LangCode.indexOf("es") >= 0) {
+	window.LangCode = "en";
 }
-else if(lang.indexOf("zh") >= 0) {
-	lang = "en";
+else if(window.LangCode.indexOf("zh") >= 0) {
+	window.LangCode = "en";
 }	
-else if(lang.indexOf("ua") >= 0 || lang.indexOf("uk") >= 0) {
-	//lang = "ua";
-	lang = "en";	
+else if(window.LangCode.indexOf("ua") >= 0 || window.LangCode.indexOf("uk") >= 0) {
+	//window.LangCode = "ua";
+	window.LangCode = "en";
 }
-else if(lang.indexOf("ru") >= 0) {
-	//lang = "ru";
-	lang = "en";	
+else if(window.LangCode.indexOf("ru") >= 0) {
+	//window.LangCode = "ru";
+	window.LangCode = "en";
 }	
 else {
-	lang = "en";		
+	window.LangCode = "en";
 }
-window.LANGUAGE = LanguagePackages[lang];
+window.LANGUAGE = LanguagePackages[window.LangCode];
 if(!Template7.global)
 {
 	Template7.global = {};
 }
 
 Template7.global.LANGUAGE = window.LANGUAGE;
+Template7.global.LangCode = window.LangCode;
