@@ -509,25 +509,24 @@
                     Id: parseInt(userInfo.contactInfo.id),
                 },function () {
                     self.getInfectedBonds();
-                });
-                //console.log(userInfo.contactInfo.id)
+                    let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
+                    self.updateCovidStatus({
+                        Covid19StatusType: diagnoseInfoDescr.type,
+                        Covid19Status: diagnoseInfoDescr.text,
+                        StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
+                    });
 
-                //let userCovidDetails =  Helper.Methods.covid19Enum(userInfo.diagnoseInfo ? userInfo.diagnoseInfo.state : '');
-                //let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
-                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
-                self.updateCovidStatus({
-                    Covid19StatusType: diagnoseInfoDescr.type,
-                    Covid19Status: diagnoseInfoDescr.text,
-                    StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
+                    self.startTracking(userInfo);
                 });
-
-                self.startTracking(userInfo);
             },
             userSignedOut: function () {
                 let self = this;
                 self.$setState({
+                    Phone: '',
+                    Id: '',
                     LoginDone: false
                 });
+
                 if(self.MarkersGroup){
                     self.MarkersGroup.clearLayers();
                 }
