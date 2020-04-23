@@ -157,7 +157,7 @@ const Helper = {
     Methods: {
         getMarkerIcon(userState, testState){
             let ret = Helper.MarkerIcon[1];
-            if(userState === Helper.enumPersonStatus.Invalid || data.userState === Helper.enumPersonStatus.Unknown){
+            if(userState === Helper.enumPersonStatus.Invalid || userState === Helper.enumPersonStatus.Unknown){
                 if(testState === Helper.enumTestStatus.Submited ){
                     ret = Helper.MarkerIcon[7];
                 }else if(testState === Helper.enumTestStatus.Testing){
