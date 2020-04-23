@@ -42,9 +42,8 @@ API_URL.TEST_SUBMIT = API_DOMIAN5 + 'Test/Submit';
 API_URL.GET_TEST_INFO = API_DOMIAN5 + 'Person/QueryState';
 API_URL.UPLOAD_LINK = API_DOMIAN5 + 'Position/Upload';
 API_URL.GET_GEO_QUERY = API_DOMIAN5 + 'Position/GeoQuery';
-
 API_URL.EDIT_ACCOUNT = API_DOMIAN5 + 'Person/Modify';
-
+API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
 
 
 
@@ -57,7 +56,7 @@ API_URL.EDIT_ACCOUNT = API_DOMIAN5 + 'Person/Modify';
 //API_URL.GET_INFECTED_BOUNDS = API_DOMIAN2 + 'Position/QueryGeoInfectedBounds';
 
 
-API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
+
 
 
 Framework7.request.setup({
@@ -370,22 +369,6 @@ let app = new Framework7({
                             });
                         }
 
-
-
-                        /*self.methods.setInStorage({
-                            name: 'userInfo',
-                            data:  result.data.Data.User
-                        });
-                        self.data.MinorToken = result.data.Data.MinorToken;
-                        self.data.MajorToken = result.data.Data.MajorToken;
-
-                        let assetListObj = self.methods.setAssetList({list: result.data.Data.Devices});
-
-                        AppEvents.emit('signedIn', result.data.Data.User);
-
-                        UpdateAssetsPosInfoTimer = setInterval(function(){
-                            self.methods.getAssetListPosInfo(assetListObj, 1);  // '1' - means update
-                        }, 30*1000);*/
 
                         self.utils.nextFrame(()=>{
                             //self.methods.getAssetListPosInfo(assetListObj);

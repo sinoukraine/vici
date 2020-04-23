@@ -225,8 +225,9 @@
                     CenterLng: mapCenter.lng,
                     RelativeLat: boundsNorthEast.lat,
                     RelativeLng: boundsNorthEast.lng,
-                    Status: [Helper.enumPersonStatus.Recovered],
+                    Status: [Helper.enumPersonStatus.Infected, Helper.enumPersonStatus.SevereCases],
                 };
+
                 self.AddingInfectedDelayOn = true;
                 self.$app.request.promise.post(API_URL.GET_GEO_QUERY, data, 'json')
                         .then(function (result) {
