@@ -157,21 +157,21 @@ const Helper = {
     Methods: {
         getMarkerIcon(userState, testState){
             let ret = Helper.MarkerIcon[1];
-            if(userState === this.enumPersonStatus.Invalid || data.userState === this.enumPersonStatus.Unknown){
-                if(testState === this.enumTestStatus.Submited ){
+            if(userState === Helper.enumPersonStatus.Invalid || data.userState === Helper.enumPersonStatus.Unknown){
+                if(testState === Helper.enumTestStatus.Submited ){
                     ret = Helper.MarkerIcon[7];
-                }else if(testState === this.enumTestStatus.Testing){
+                }else if(testState === Helper.enumTestStatus.Testing){
                     ret = Helper.MarkerIcon[2];
                 }
-            }else if(userState === this.enumPersonStatus.Unfected){
+            }else if(userState === Helper.enumPersonStatus.Unfected){
                 ret = Helper.MarkerIcon[4];
-            }else if(userState === this.enumPersonStatus.Suspected || userState === this.enumPersonStatus.Observed){
+            }else if(userState === Helper.enumPersonStatus.Suspected || userState === Helper.enumPersonStatus.Observed){
                 ret = Helper.MarkerIcon[2];
-            }else if(userState === this.enumPersonStatus.Infected || userState === this.enumPersonStatus.SevereCases){
+            }else if(userState === Helper.enumPersonStatus.Infected || userState === Helper.enumPersonStatus.SevereCases){
                 ret = Helper.MarkerIcon[3];
-            }else if(userState === this.enumPersonStatus.Recovered){
+            }else if(userState === Helper.enumPersonStatus.Recovered){
                 ret = Helper.MarkerIcon[5];
-            }else if(userState === this.enumPersonStatus.Death){
+            }else if(userState === Helper.enumPersonStatus.Death){
                 ret = Helper.MarkerIcon[6];
             }
 
