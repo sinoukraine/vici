@@ -41,6 +41,9 @@ API_URL.GET_NOTIFICATION_CONTENT = API_DOMIAN5 + 'Person/QueryMessageContent';
 API_URL.TEST_SUBMIT = API_DOMIAN5 + 'Test/Submit';
 API_URL.GET_TEST_INFO = API_DOMIAN5 + 'Person/QueryState';
 API_URL.UPLOAD_LINK = API_DOMIAN5 + 'Position/Upload';
+API_URL.GET_GEO_QUERY = API_DOMIAN2 + 'Position/GeoQuery';
+
+
 
 
 //API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
@@ -49,7 +52,7 @@ API_URL.UPLOAD_LINK = API_DOMIAN5 + 'Position/Upload';
 
 //API_URL.NOTIFY_TEST = API_DOMIAN2 + 'Contact/SubmitDiagnose';
 
-API_URL.GET_INFECTED_BOUNDS = API_DOMIAN2 + 'Position/QueryGeoInfectedBounds';
+//API_URL.GET_INFECTED_BOUNDS = API_DOMIAN2 + 'Position/QueryGeoInfectedBounds';
 
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
