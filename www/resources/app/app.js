@@ -9,7 +9,7 @@ window.COM_TIMEFORMAT7 = 'MM dd yyyy, HH::mm'; //calendar display value
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
 const API_DOMIAN2 = "https://vici19.quiktrak.co/";
-const API_DOMIAN5 = "http://194.247.12.103:9038/";
+//const API_DOMIAN5 = "http://194.247.12.103:9038/";
 
 
 const API_DOMAIN3 = "https://app.phonetrack.co/";
@@ -29,20 +29,20 @@ const API_DOMIAN9 = "https://upload.quiktrak.co/";*/
 
 const API_URL = {};
 
-API_URL.PREREGISTRATION = API_DOMIAN5 + 'Person/PreRegister';
-API_URL.REGISTRATION = API_DOMIAN5 + 'Person/Register';
-API_URL.PRE_FORGOT_PWD = API_DOMIAN5 + 'Person/PreForgotPassword';
-API_URL.FORGOT_PWD = API_DOMIAN5 + 'Person/ForgotPassword';
-API_URL.LOGIN = API_DOMIAN5 + 'Person/Login';
-API_URL.REFRESH_TOKEN = API_DOMIAN5 + 'Person/Auth';
-API_URL.CHANGE_PASSWORD = API_DOMIAN5 + 'Person/ChangePassword';
-API_URL.GET_NOTIFICATIONS = API_DOMIAN5 + 'Person/QueryMessage';
-API_URL.GET_NOTIFICATION_CONTENT = API_DOMIAN5 + 'Person/QueryMessageContent';
-API_URL.TEST_SUBMIT = API_DOMIAN5 + 'Test/Submit';
-API_URL.GET_TEST_INFO = API_DOMIAN5 + 'Person/QueryState';
-API_URL.UPLOAD_LINK = API_DOMIAN5 + 'Position/Upload';
-API_URL.GET_GEO_QUERY = API_DOMIAN5 + 'Position/GeoQuery';
-API_URL.EDIT_ACCOUNT = API_DOMIAN5 + 'Person/Modify';
+API_URL.PREREGISTRATION = API_DOMIAN2 + 'Person/PreRegister';
+API_URL.REGISTRATION = API_DOMIAN2 + 'Person/Register';
+API_URL.PRE_FORGOT_PWD = API_DOMIAN2 + 'Person/PreForgotPassword';
+API_URL.FORGOT_PWD = API_DOMIAN2 + 'Person/ForgotPassword';
+API_URL.LOGIN = API_DOMIAN2 + 'Person/Login';
+API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Person/Auth';
+API_URL.CHANGE_PASSWORD = API_DOMIAN2 + 'Person/ChangePassword';
+API_URL.GET_NOTIFICATIONS = API_DOMIAN2 + 'Person/QueryMessage';
+API_URL.GET_NOTIFICATION_CONTENT = API_DOMIAN2 + 'Person/QueryMessageContent';
+API_URL.TEST_SUBMIT = API_DOMIAN2 + 'Test/Submit';
+API_URL.GET_TEST_INFO = API_DOMIAN2 + 'Person/QueryState';
+API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
+API_URL.GET_GEO_QUERY = API_DOMIAN2 + 'Position/GeoQuery';
+API_URL.EDIT_ACCOUNT = API_DOMIAN2 + 'Person/Modify';
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
 
 
@@ -655,7 +655,7 @@ let app = new Framework7({
                             break;
                         case 2:
                             messageList[i].customTitle = LANGUAGE.PROMPT_MSG085;
-                            messageList[i].customSubtitle = LANGUAGE.PROMPT_MSG085;
+                            messageList[i].customSubtitle = LANGUAGE.PROMPT_MSG085; // Helper.Methods.getTestTypeStateDescription(messageList[i].state).text;
                             if(messageList[i].customContent){
                                // let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr({state: messageList[i].customContent.State });
                                // messageList[i].customSubtitle = diagnoseInfoDescr.text;
