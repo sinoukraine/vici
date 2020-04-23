@@ -281,7 +281,7 @@
                 }, (errorCode) => {
                     console.log("[watchPosition] ERROR -", errorCode);
                 }, {
-                    interval: 30*1000,
+                    interval: 20*1000,
                     desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
                     persist: true,
                     timeout: 60000
@@ -598,8 +598,6 @@
                 self.InfectedMarkersGroup = L.markerClusterGroup({'maxClusterRadius':35,});
                 self.MarkersGroup.addTo(self.Map);
                 self.InfectedMarkersGroup.addTo(self.Map);
-
-
 
 
                 if(self.$app.data.Token){

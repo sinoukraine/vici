@@ -163,6 +163,7 @@ window.LanguagePackages= {
 		"PROMPT_MSG089": "Notification data is empty",
 		"PROMPT_MSG090": "Test Status",
 		"PROMPT_MSG091": "Your current Test Status",
+		"PROMPT_MSG092": "Please, select another Test Type",
 
 
 

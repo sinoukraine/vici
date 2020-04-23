@@ -299,7 +299,12 @@
                                 self.$app.view.main.router.back();
 
                             }else if(result.data.data && typeof result.data.data == 'string' ){
-                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: result.data.data });
+                                if(result.data.data === 'Has been submited'){
+                                    self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: LANGUAGE.PROMPT_MSG092 });
+                                }else{
+                                    self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: result.data.data });
+                                }
+
                             }else if(result.data.majorCode && result.data.data && result.data.data.length){
                                 let errMsg = '';
                                 for (let i = 0; i < result.data.data.length; i++) {
