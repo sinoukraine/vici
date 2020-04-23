@@ -90,6 +90,8 @@
                     return;
                 }
                 console.log(data)
+
+
                 //console.log(data.userState === Helper.enumPersonStatus.Invalid ||  data.userState === Helper.enumPersonStatus.Unknown)
                 data.StatusShieldColor = data.userState === Helper.enumPersonStatus.Invalid ||  data.userState === Helper.enumPersonStatus.Unknown ? data.testStateTextColor : data.userStateTextColor;
                 data.InformButtonLink = '/inform-about-test/';
@@ -407,8 +409,8 @@
                 markerData +=       '<td class="marker-data-caption">'+LANGUAGE.PROMPT_MSG062+'</td>';
                 markerData +=       `<td class="marker-data-value ${userStatusDescr.textColor}">${ userStatusDescr.text }</td>`;
                 markerData +=   '</tr>';
-                console.log(userInfo.testState !== Helper.enumTestStatus.Invalid || userInfo.testState !== Helper.enumTestStatus.Unknown)
-                if(userInfo.testState !== Helper.enumTestStatus.Invalid || userInfo.testState !== Helper.enumTestStatus.Unknown) {
+
+                if(userInfo.testState !== Helper.enumTestStatus.Invalid && userInfo.testState !== Helper.enumTestStatus.Unknown) {
                     markerData +=   '<tr>';
                     markerData +=       '<td class="marker-data-caption">'+LANGUAGE.UNIT_TEST_RESULT_MSG007+'</td>';
                     markerData +=       `<td class="marker-data-value">${ testType }</td>`;
