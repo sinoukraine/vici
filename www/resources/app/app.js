@@ -52,35 +52,8 @@ API_URL.UPLOAD_LINK = API_DOMIAN5 + 'Position/Upload';
 API_URL.GET_INFECTED_BOUNDS = API_DOMIAN2 + 'Position/QueryGeoInfectedBounds';
 
 
-
-
-
-//API_URL.LOGIN = API_DOMIAN1 + 'QuikTrak/V1/User/Auth';
-API_URL.LOGOUT = API_DOMIAN1 + 'QuikTrak/V1/User/Logoff2';
-API_URL.EDIT_ACCOUNT = API_DOMIAN1 + 'QuikTrak/V1/User/Edit';
-API_URL.NEW_PASSWORD = API_DOMIAN1 + 'QuikTrak/V1/User/Password';
-
-API_URL.VERIFY_BY_EMAIL = API_DOMIAN1 + "QuikProtect/V1/Client/VerifyCodeByEmail";
-API_URL.FORGOT_PASSWORD = API_DOMIAN1 + "QuikProtect/V1/Client/ForgotPassword";
-
-API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
-//API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';//http://194.247.12.103:5000/Position/Upload
-
-
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
-API_URL.ADD_NEW = API_DOMAIN3 + 'vici.activation/activate';
-//API_URL.REGISTER = API_DOMAIN3 + 'vici.activation/';
-API_URL.REGISTER = API_DOMAIN3 + 'vici.activation/register';
 
-API_URL.GET_ALL_POSITIONS = API_DOMIAN1 + "QuikTrak/V1/Device/GetPosInfos2";
-
-//API_URL.REFRESH_TOKEN = API_DOMIAN1 + "User/RefreshToken";
-
-API_URL.SET_COVID19_STATUS = API_DOMIAN1 + "PhoneProtect/V1/Client/SetNCoV19";
-API_URL.GET_COVID19_STATUS = API_DOMIAN1 + "PhoneProtect/V1/Client/GetNCoV19";
-
-
-//https://api.m2mglobaltech.com/QuikProtect/V1/Client/
 
 Framework7.request.setup({
     timeout: 40*1000

@@ -296,20 +296,6 @@
                             console.log(result.data);
                             if(result.data.majorCode === '000') {
                                 self.$app.methods.getNewData();
-                                /*let userInfo = self.$app.methods.getFromStorage('userInfo');
-                                userInfo.diagnoseInfo = result.data.data;
-                                self.$app.methods.setInStorage({name:'userInfo', data:userInfo});
-                                self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG032});
-
-                                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(result.data.data);
-                                self.$app.data.Covid19StatusType = diagnoseInfoDescr.type;
-                                self.$app.data.Covid19Status = diagnoseInfoDescr.text;
-
-                                AppEvents.emit('covidStatusChanged', {
-                                    Covid19StatusType: diagnoseInfoDescr.type,
-                                    Covid19Status: diagnoseInfoDescr.text,
-                                    StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
-                                });*/
                                 self.$app.view.main.router.back();
 
                             }else if(result.data.data && typeof result.data.data == 'string' ){

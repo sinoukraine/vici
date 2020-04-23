@@ -155,14 +155,15 @@
             },
             updateMarker: function (location) {
                 let self = this;
-                let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
-                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(diagnoseInfo);
+                /*let diagnoseInfo = self.$app.methods.getFromStorage('userInfo').diagnoseInfo;
+                let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(diagnoseInfo);*/
+                let userInfo = self.$app.methods.getFromStorage('userInfo');
                 self.$setState({
                     LastPosInfo: location,
                     LastPosInfoLocal: true
                 });
                 if(!self.Marker){
-                    self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: diagnoseInfoDescr.markerIcon });
+                    self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.Methods.getMarkerIcon(userInfo.state, userInfo.testState) });
                     self.Marker
                             .bindPopup(self.getMarkerDataTable(location), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                             .on('popupopen', function (e) {
@@ -465,6 +466,8 @@
                     self.$app.dialog.alert(LANGUAGE.PROMPT_MSG006);
                     return;
                 }
+
+                console.log(userInfo.token)
 
                 bgGeo.setConfig({
                     //distanceFilter: 10,            // Must be 0 or locationUpdateInterval is ignored!

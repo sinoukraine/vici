@@ -551,7 +551,6 @@ const Helper = {
             return ret;
         },
         getPersonStatusDescription(num){
-            console.log(num)
             let ret = {
                 text: LANGUAGE.COM_MSG041,
                 textColor: 'text-color-gray',
