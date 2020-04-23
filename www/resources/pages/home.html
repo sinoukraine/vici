@@ -467,8 +467,8 @@
                 }
 
                 bgGeo.setConfig({
-                    distanceFilter: 10,            // Must be 0 or locationUpdateInterval is ignored!
-                    //locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
+                    //distanceFilter: 10,            // Must be 0 or locationUpdateInterval is ignored!
+                    locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
                     schedule: ["1-7 00:00-23:59"],
                     params: {
                         Token: userInfo.token,
