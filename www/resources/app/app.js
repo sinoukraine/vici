@@ -43,6 +43,8 @@ API_URL.GET_TEST_INFO = API_DOMIAN5 + 'Person/QueryState';
 API_URL.UPLOAD_LINK = API_DOMIAN5 + 'Position/Upload';
 API_URL.GET_GEO_QUERY = API_DOMIAN5 + 'Position/GeoQuery';
 
+API_URL.EDIT_ACCOUNT = API_DOMIAN5 + 'Person/Modify';
+
 
 
 

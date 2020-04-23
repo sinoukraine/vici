@@ -48,7 +48,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG05}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="tel" name="PhoneNumber" value="{{phoneNumber}}" required validate >
+                                        <input type="tel" name="PhoneNumber" value="{{phoneNumber}}"  >
                                         <!-- <span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG02}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="text" name="FirstName" value="{{firstName}}" required validate >
+                                        <input type="text" name="FirstName" value="{{firstName}}" >
                                        <!-- <span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG03}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="text" name="SubName" value="{{subName}}" required validate >
+                                        <input type="text" name="SubName" value="{{subName}}" >
                                         <!--<span class="input-clear-button"></span>-->
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
                     <div class="list no-hairline-bottom">
                         <ul>
                             <li>
-                                <a class="item-link smart-select smart-select-init disabled" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
+                                <a class="item-link smart-select smart-select-init " data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
                                     <select name="Province" required validate>
                                         {{#each ProvinceList}}
                                         <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
@@ -129,7 +129,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="item-link smart-select smart-select-init disabled" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
+                                <a class="item-link smart-select smart-select-init " data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
                                     <select name="City" required validate>
                                         {{#each CityList}}
                                         <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
@@ -145,24 +145,7 @@
                                     </div>
                                 </a>
                             </li>
-                            <!--<li>
-								<a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-form-color-theme="green">
-									<select name="Region" required validate>
-										{{#each RegionList}}
-										<option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
-										{{/each}}
-									</select>
-									<div class="item-content">
-										<div class="item-media text-color-lightgray">
-											&lt;!&ndash; <i class="f7-icons icon-timing"></i>&ndash;&gt;
-										</div>
-										<div class="item-inner">
-											<div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG11}}</div>
-										</div>
-									</div>
-								</a>
-							</li>-->
-                            <li class="item-content item-input disabled">
+                            <li class="item-content item-input ">
                                 <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG12}}</div>
@@ -172,7 +155,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="item-content item-input disabled">
+                            <li class="item-content item-input ">
                                 <div class="item-media text-color-lightgray"><!--<i class="f7-icons icon-name"></i>--></div>
                                 <div class="item-inner">
                                     <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG13}}</div>
@@ -323,14 +306,24 @@
                 self.$app.preloader.show();
                 self.$app.request.promise.get(API_URL.EDIT_ACCOUNT, data, 'json')
                         .then(function (result) {
-                            if (result.data.MajorCode === '000') {
+                            if(result.data.majorCode === '000') {
                                 var userInfo = self.$app.methods.getFromStorage('userInfo');
-                                self.$app.utils.extend(userInfo, data);
+                                self.$app.utils.extend(userInfo, result.data.data);
                                 self.$app.methods.setInStorage({name: 'userInfo', data: userInfo});
                                 self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG014});
                                 self.$app.view.main.router.back();
-                            } else {
-                                self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${result.data.Data}`);
+                            }else if(result.data.data && typeof result.data.data == 'string' ){
+                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: result.data.data });
+                            }else if(result.data.majorCode && result.data.data && result.data.data.length){
+                                let errMsg = '';
+                                for (let i = 0; i < result.data.data.length; i++) {
+                                    if(result.data.data[i].messages.length){
+                                        errMsg += result.data.data[i].key + ' - ' + result.data.data[i].messages.join(", ") + '<br>';
+                                    }
+                                }
+                                self.$app.methods.customDialog({ title: LANGUAGE.PROMPT_MSG071, text: errMsg });
+                            }else{
+                                self.$app.methods.customDialog({ text: LANGUAGE.PROMPT_MSG003 });
                             }
                         })
                         .finally(function () {
@@ -463,19 +456,21 @@
                         self.$app.methods.setInStorage({name: 'emergencyList', data: emList});
                     }
 
-                    self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
-                    self.$app.view.main.router.back();
+                   /* self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
+                    self.$app.view.main.router.back();*/
 
-                   /* let data = {
-                        MajorToken: self.$root.MajorToken,
-                        MinorToken: self.$root.MinorToken,
-                        FirstName: page.$el.find('input[name="FirstName"]').val(),
-                        SubName: page.$el.find('input[name="SubName"]').val(),
-                        Mobile: page.$el.find('input[name="Mobile"]').val(),
-                        EMail: page.$el.find('input[name="EMail"]').val(),
+
+                    let data = {
+                        Token: self.$app.data.Token,
+                        ProvinceID: page.$el.find('[name="Province"]').val(),
+                        CityID: page.$el.find('[name="City"]').val(),
+                        //RegionID: page.$el.find('input[name="SubName"]').val(),
+                        Street: page.$el.find('input[name="Street"]').val(),
+                        Address: page.$el.find('input[name="AddressDetails"]').val(),
                     };
 
-                    self.saveUserDetails(data);*/
+
+                    self.saveUserDetails(data);
 
                     return false;
                 });

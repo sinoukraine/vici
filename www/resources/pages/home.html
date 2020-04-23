@@ -132,7 +132,9 @@
                                             <div class="block">
                                                 <p>${LANGUAGE.PROMPT_MSG062}: <span class="${userStatusDescr.textColor}">${ userStatusDescr.text }</span></p>`;
                 if (userInfo.testState > 0){
+                    content +=`                 <p>${ LANGUAGE.UNIT_TEST_RESULT_MSG007 }: ${ Helper.Methods.getTestTypeName(userInfo.testType) }</p>`;
                     content +=`                 <p>${ LANGUAGE.PROMPT_MSG090 }: <span class="${testStateDescr.textColor}">${ testStateDescr.text }</span></p>`;
+
                 }
                 content +=`                    <a href="/qr-code/" class="margin-top color-blue button button-outline button-raised popover-close">${ LANGUAGE.PROMPT_MSG064 }</a>
                                             </div>
@@ -218,11 +220,12 @@
                 let mapCenter = self.Map.getCenter();
                 let boundsNorthEast = self.Map.getBounds().getNorthEast();
                 let data = {
+                    Token: self.$app.data.Token,
                     CenterLat: mapCenter.lat,
                     CenterLng: mapCenter.lng,
                     RelativeLat: boundsNorthEast.lat,
                     RelativeLng: boundsNorthEast.lng,
-                    Status: Helper.enumPersonStatus.Infected,
+                    Status: [Helper.enumPersonStatus.Recovered],
                 };
                 self.AddingInfectedDelayOn = true;
                 self.$app.request.promise.post(API_URL.GET_GEO_QUERY, data, 'json')
