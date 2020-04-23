@@ -225,7 +225,6 @@
                 self.AddingInfectedDelayOn = true;
                 self.$app.request.promise.post(API_URL.GET_GEO_QUERY, data, 'json')
                         .then(function (result) {
-                           // console.log(result.data);
 
                             //self.InfectedMarkersGroup.clearLayers();
                             if(result.data.majorCode === '000' && result.data.data && result.data.data.length) {
