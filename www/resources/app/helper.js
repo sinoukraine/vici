@@ -156,23 +156,23 @@ const Helper = {
     },
     Methods: {
         getMarkerIcon(userState, testState){
-            let ret = MarkerIcon[1];
+            let ret = Helper.MarkerIcon[1];
             if(userState === this.enumPersonStatus.Invalid || data.userState === this.enumPersonStatus.Unknown){
                 if(testState === this.enumTestStatus.Submited ){
-                    ret = MarkerIcon[7];
+                    ret = Helper.MarkerIcon[7];
                 }else if(testState === this.enumTestStatus.Testing){
-                    ret = MarkerIcon[2];
+                    ret = Helper.MarkerIcon[2];
                 }
             }else if(userState === this.enumPersonStatus.Unfected){
-                ret = MarkerIcon[4];
+                ret = Helper.MarkerIcon[4];
             }else if(userState === this.enumPersonStatus.Suspected || userState === this.enumPersonStatus.Observed){
-                ret = MarkerIcon[2];
+                ret = Helper.MarkerIcon[2];
             }else if(userState === this.enumPersonStatus.Infected || userState === this.enumPersonStatus.SevereCases){
-                ret = MarkerIcon[3];
+                ret = Helper.MarkerIcon[3];
             }else if(userState === this.enumPersonStatus.Recovered){
-                ret = MarkerIcon[5];
+                ret = Helper.MarkerIcon[5];
             }else if(userState === this.enumPersonStatus.Death){
-                ret = MarkerIcon[6];
+                ret = Helper.MarkerIcon[6];
             }
 
             return ret;
