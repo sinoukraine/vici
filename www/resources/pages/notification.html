@@ -114,27 +114,30 @@
                             icon: '<i class="f7-icons icon-day-of-week"></i>',
                         })
                     }
-                    if(self.NotificationData.number){
-                        PageDataList.push({
-                            title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
-                            value: self.NotificationData.number,
-                            icon: '',
-                        })
+                    if(!self.$app.methods.isObjEmpty(self.NotificationData.customContent)){
+                        if(self.NotificationData.customContent.number){
+                            PageDataList.push({
+                                title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
+                                value: self.NotificationData.customContent.number,
+                                icon: '',
+                            })
+                        }
+                        if(self.NotificationData.customContent.type){
+                            PageDataList.push({
+                                title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
+                                value: Helper.Methods.getTestTypeName(self.NotificationData.customContent.type),
+                                icon: '',
+                            })
+                        }
+                        if(self.NotificationData.customContent.state){
+                            PageDataList.push({
+                                title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
+                                value: Helper.Methods.getTestTypeStateDescription(self.NotificationData.customContent.state).text,
+                                icon: '',
+                            })
+                        }
                     }
-                    if(self.NotificationData.type){
-                        PageDataList.push({
-                            title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
-                            value: Helper.Methods.getTestTypeName(self.NotificationData.type),
-                            icon: '',
-                        })
-                    }
-                    if(self.NotificationData.state){
-                        PageDataList.push({
-                            title: LANGUAGE.UNIT_TEST_RESULT_MSG006,
-                            value: Helper.Methods.getTestTypeStateDescription(self.NotificationData.state).text,
-                            icon: '',
-                        })
-                    }
+
                     self.$setState({
                         PageDataList: PageDataList,
                     })
