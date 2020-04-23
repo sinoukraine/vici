@@ -23,7 +23,9 @@
             <div class="block">
                 <p>{{@global.LANGUAGE.PROMPT_MSG065}}</p>
                 <p>{{@global.LANGUAGE.PROMPT_MSG066}}: <span class="{{UserStatusColor}}">{{UserStatusText}}</span></p>
-                <p>{{@global.LANGUAGE.PROMPT_MSG091}}: <span class="{{TestStateColor}}">{{TestStateText}}</span></p>
+                {{#js_if "this.TestState != 0 && this.TestState != -1 "}}
+                <p key="top-test-status">{{@global.LANGUAGE.PROMPT_MSG091}}: <span class="{{TestStateColor}}">{{TestStateText}}</span></p>
+                {{/js_if}}
             </div>
             <div class="block block-qr" id="qr-wrapper">
                 {{#unless DataLoaded}}
@@ -32,7 +34,7 @@
             </div>
             {{#if DataLoaded}}
             {{#js_if "this.TestState >= 1"}}
-            <div class="list">
+            <div key="test-data" class="list">
                 <ul>
                     {{#each TestData}}
                         <li class="item-content ">
@@ -67,9 +69,9 @@
             let userInfo = self.$app.methods.getFromStorage('userInfo');
            /* let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
             let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);*/
-            let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
+            let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state, userInfo.testState);
             let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
-
+console.log( userInfo.testState)
             let ret = {
                 UserStatusText: userStatusDescr.text,
                 UserStatusColor: userStatusDescr.textColor,
@@ -103,6 +105,10 @@
 
                 self.$app.methods.getTestInfo({}, function (testInfo) {
                     console.log(testInfo);
+                    if(self.$app.methods.isObjEmpty(testInfo)){
+                        self.$setState({DataLoaded: true});
+                        return
+                    }
                     let testData = [
                         {
                             title: LANGUAGE.UNIT_TEST_RESULT_MSG007,

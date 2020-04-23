@@ -550,14 +550,15 @@ const Helper = {
             }
             return ret;
         },
-        getPersonStatusDescription(num){
+        getPersonStatusDescription(num, testNum){
             let ret = {
                 text: LANGUAGE.COM_MSG041,
                 textColor: 'text-color-gray',
             };
             num = parseInt(num);
+            testNum = parseInt(testNum);
             switch (num) {
-                case 0: ret = { text: LANGUAGE.COM_MSG042, textColor:'text-color-gray' }; break;
+                case 0: ret = { text: LANGUAGE.COM_MSG042, textColor:'text-color-gray'  }; break;
                 case 2: ret = { text: LANGUAGE.COM_MSG040, textColor:'text-color-green' }; break;
                 case 4: ret = { text: LANGUAGE.COM_MSG064, textColor:'text-color-orange' }; break;
                 case 8: ret = { text: LANGUAGE.COM_MSG039, textColor:'text-color-red' }; break;
@@ -566,34 +567,13 @@ const Helper = {
                 case 64: ret = { text: LANGUAGE.COM_MSG033, textColor:'text-color-blue' }; break;
                 case 128: ret = { text: LANGUAGE.COM_MSG065, textColor:'text-color-black' }; break;
             }
-            console.log()
-            return ret;
-        },
-      /*  getPersonStatusColor(num){
-            let ret = 'text-color-gray';
-            num = parseInt(num);
-            switch (num) {
-                case 2: ret = 'text-color-green'; break;
-                case 4: ret = 'text-color-orange'; break;
-                case 8: ret = 'text-color-red'; break;
-                case 16: ret = 'text-color-red'; break;
-                case 32: ret = 'text-color-orange'; break;
-                case 64: ret = 'text-color-blue'; break;
-                case 128: ret = 'text-color-black'; break;
+            if(num < 2 && testNum < 1){
+                ret.text = LANGUAGE.COM_MSG041;
+            }else if(num < 2 && testNum === 1){
+                ret.text = LANGUAGE.COM_MSG042;
             }
             return ret;
         },
-        getTestStatusColor(num){
-            let ret = 'text-color-gray';
-            num = parseInt(num);
-            switch (num) {
-                case 1: ret = 'text-color-yellow'; break;
-                case 4: ret = 'text-color-orange'; break;
-                case 16: ret = 'text-color-black'; break;
-                case 32: ret = 'text-color-black'; break;
-            }
-            return ret;
-        },*/
         getTestTypeName: function(num){
             let ret = LANGUAGE.COM_MSG076;
             num = parseInt(num);

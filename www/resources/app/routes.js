@@ -43,7 +43,7 @@ var routes = [
     },
     {
         path: '/qr-code/',
-        componentUrl: './resources/pages/qr.code.html?v=2.4',
+        componentUrl: './resources/pages/qr.code.html?v=2.6',
         name: 'qr.code',
     },
 

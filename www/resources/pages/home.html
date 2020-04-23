@@ -89,8 +89,8 @@
                     console.log('obj data is empty');
                     return;
                 }
-                /*console.log(data)
-                console.log(data.userState === Helper.enumPersonStatus.Invalid ||  data.userState === Helper.enumPersonStatus.Unknown)*/
+                console.log(data)
+                //console.log(data.userState === Helper.enumPersonStatus.Invalid ||  data.userState === Helper.enumPersonStatus.Unknown)
                 data.StatusShieldColor = data.userState === Helper.enumPersonStatus.Invalid ||  data.userState === Helper.enumPersonStatus.Unknown ? data.testStateTextColor : data.userStateTextColor;
                 data.InformButtonLink = '/inform-about-test/';
                 data.InformButtonBgClass = 'bg-color-red';
@@ -121,7 +121,7 @@
                 let self = this;
                 let userInfo = self.$app.methods.getFromStorage('userInfo');
 
-                let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
+                let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state, userInfo.testState);
                 let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
 
                 let content =   `<div class="popover menu-popover" >
@@ -341,11 +341,9 @@
                 let customAddress = !self.Address ? LANGUAGE.COM_MSG029 : self.Address;
 
                 let userInfo = self.$app.methods.getFromStorage('userInfo');
-                let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
+                let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state, userInfo.testState);
                 let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
                 let testType = Helper.Methods.getTestTypeName(userInfo.testType);
-                /*let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
-                let diagnoseResult = Helper.Methods.getDiagnoseResultRevers(userInfo.diagnoseInfo.type, userInfo.diagnoseInfo.state);*/
 
                 let speed = 0 + ' ' + LANGUAGE.COM_MSG075;
                 if (objData.coords && parseInt(objData.coords.speed) > 0){
@@ -409,6 +407,7 @@
                 markerData +=       '<td class="marker-data-caption">'+LANGUAGE.PROMPT_MSG062+'</td>';
                 markerData +=       `<td class="marker-data-value ${userStatusDescr.textColor}">${ userStatusDescr.text }</td>`;
                 markerData +=   '</tr>';
+                console.log(userInfo.testState !== Helper.enumTestStatus.Invalid || userInfo.testState !== Helper.enumTestStatus.Unknown)
                 if(userInfo.testState !== Helper.enumTestStatus.Invalid || userInfo.testState !== Helper.enumTestStatus.Unknown) {
                     markerData +=   '<tr>';
                     markerData +=       '<td class="marker-data-caption">'+LANGUAGE.UNIT_TEST_RESULT_MSG007+'</td>';
@@ -508,7 +507,7 @@
                     self.getInfectedBonds();
                     //let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
 
-                    let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
+                    let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state, userInfo.testState);
                     let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
 
                     console.log(userStatusDescr)

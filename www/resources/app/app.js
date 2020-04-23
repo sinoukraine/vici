@@ -41,7 +41,7 @@ API_URL.GET_NOTIFICATION_CONTENT = API_DOMIAN5 + 'Person/QueryMessageContent';
 API_URL.TEST_SUBMIT = API_DOMIAN5 + 'Test/Submit';
 API_URL.GET_TEST_INFO = API_DOMIAN5 + 'Person/QueryState';
 API_URL.UPLOAD_LINK = API_DOMIAN5 + 'Position/Upload';
-API_URL.GET_GEO_QUERY = API_DOMIAN2 + 'Position/GeoQuery';
+API_URL.GET_GEO_QUERY = API_DOMIAN5 + 'Position/GeoQuery';
 
 
 
