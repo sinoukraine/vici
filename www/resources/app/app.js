@@ -40,9 +40,10 @@ API_URL.GET_NOTIFICATIONS = API_DOMIAN5 + 'Person/QueryMessage';
 API_URL.GET_NOTIFICATION_CONTENT = API_DOMIAN5 + 'Person/QueryMessageContent';
 API_URL.TEST_SUBMIT = API_DOMIAN5 + 'Test/Submit';
 API_URL.GET_TEST_INFO = API_DOMIAN5 + 'Person/QueryState';
+API_URL.UPLOAD_LINK = API_DOMIAN5 + 'Position/Upload';
 
 
-API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
+//API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
 //API_URL.UPLOAD_LINK = 'https://test.m2mdata.co:5000/Position/Upload';
 
 
@@ -113,7 +114,7 @@ $$('#app').append(compiledTemplate({RegisterUrl: API_URL.REGISTER}));
 
 // Init App
 let app = new Framework7({
-    id: 'com.vici.app',
+    id: 'com.viciapp.zaf',
     root: '#app',
     name: 'ViCi',
     theme: theme,
@@ -1005,12 +1006,11 @@ let app = new Framework7({
 
             self.methods.getPlusInfo();
             let data = {
-                PhoneNumber: localStorage.ACCOUNT,
-                Password: localStorage.PASSWORD,
+                Token: self.data.Token,
                 PushToken: localStorage.PUSH_DEVICE_TOKEN ? localStorage.PUSH_DEVICE_TOKEN : '',
             };
 
-            self.request.promise.post(API_URL.LOGIN, data, 'json')
+            self.request.promise.post(API_URL.REFRESH_TOKEN, data, 'json')
                 .then(function (result) {
                     //alert(JSON.stringify(result.data));
                     console.log(result.data);
@@ -1020,59 +1020,26 @@ let app = new Framework7({
                             name: 'userInfo',
                             data:  result.data.data
                         });
-                        let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(result.data.data.diagnoseInfo);
+                        let userStatusDescr = Helper.Methods.getPersonStatusDescription(result.data.data.state);
+                        let testStateDescr = Helper.Methods.getTestTypeStateDescription(result.data.data.testState);
                         AppEvents.emit('covidStatusChanged', {
-                            Covid19StatusType: diagnoseInfoDescr.type,
-                            Covid19Status: diagnoseInfoDescr.text,
-                            StatusDaysCount: diagnoseInfoDescr.beginTimeDaysCount ? diagnoseInfoDescr.beginTimeDaysCount : 0
+                            userState: result.data.data.state,
+                            userStateText: userStatusDescr.text,
+                            userStateTextColor: userStatusDescr.textColor,
+                            testNumber: result.data.data.testNumber,
+                            testState: result.data.data.testState,
+                            testStateText: testStateDescr.text,
+                            testStateTextColor: testStateDescr.textColor,
+                            testStateTime: result.data.data.testStateTime,
+                            testType: result.data.data.testType,
+                            testTypeText: Helper.Methods.getTestTypeName(result.data.data.type),
                         });
-
-                        /*self.methods.getNotifications({}, function (notificatios) {
-                            if(notificatios && notificatios.length){
-                                let counter = self.methods.getFromStorage('additionalData').newNotificationCounter;
-                                if (!counter) counter=0;
-                                counter = parseInt(counter,10) + notificatios.length;
-                                self.methods.setInStorage({name:'additionalData', data:{ newNotificationCounter: counter}});
-                                AppEvents.emit('newNotificationCountChanged', counter)
-                            }
-                        });*/
                     }
                 })
                 .catch(function (err) {
                     console.log(err);
                 });
         },
-
-        /*getNewData: function(noPosInfoUpdate = false, emitDataUpdated = false){
-            let self = this;
-            self.methods.getPlusInfo();
-
-            let data = {
-                account: localStorage.ACCOUNT,
-                password: localStorage.PASSWORD,
-
-                appKey: localStorage.PUSH_APP_KEY,
-                mobileToken: localStorage.PUSH_MOBILE_TOKEN,
-                deviceToken: localStorage.PUSH_DEVICE_TOKEN,
-                deviceType: localStorage.DEVICE_TYPE,
-            };
-
-            self.request.promise.get(API_URL.LOGIN, data, 'json')
-                .then(function (result) {
-                    if(result.data && result.data.MajorCode === '000') {
-                        self.methods.setInStorage({
-                            name: 'userInfo',
-                            data:  result.data.Data.User
-                        });
-                        self.data.MinorToken = result.data.Data.MinorToken;
-                        self.data.MajorToken = result.data.Data.MajorToken;
-                    }
-                })
-                .catch(function (err) {
-                    console.log(err);
-
-                });
-        },*/
         setGeolocationPlugin: function(){
             if(!window.BackgroundGeolocation){
                 return;

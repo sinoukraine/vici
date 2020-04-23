@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
-	id="com.vici.app"
+	id="com.viciapp.zaf"
 	version="1.0.0"
 	android-versionCode="1"
     ios-CFBundleVersion="1"
@@ -43,15 +43,15 @@
        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
            <meta-data
               android:name="com.transistorsoft.locationmanager.license_key"
-              android:value="YOUR_LICENSE_KEY_HERE" />
+              android:value="bf6c21a7e7d61b1952d6a04222eff0768385c057431904b5229d40e4f2beeb12" />
        </config-file>
         <!-- /background-geolocation -->	  	       	  	
 	</platform>
 
 	<!-- sms plugin -->        
-   <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
+   <!-- <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
        <uses-permission android:name="android.permission.SEND_SMS" />            
-   </config-file>
+   </config-file> -->
     <!-- /sms plugin -->
 
 

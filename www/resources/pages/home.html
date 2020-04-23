@@ -89,6 +89,8 @@
                     console.log('obj data is empty');
                     return;
                 }
+                /*console.log(data)
+                console.log(data.userState === Helper.enumPersonStatus.Invalid ||  data.userState === Helper.enumPersonStatus.Unknown)*/
                 data.StatusShieldColor = data.userState === Helper.enumPersonStatus.Invalid ||  data.userState === Helper.enumPersonStatus.Unknown ? data.testStateTextColor : data.userStateTextColor;
                 data.InformButtonLink = '/inform-about-test/';
                 data.InformButtonBgClass = 'bg-color-red';
@@ -233,7 +235,7 @@
                                         let point = infectedLayers.find(c => c.options.customId === points[i][Helper.posInfoEnum.id]);
                                         if(!point){
                                             let marker = L.marker([points[i][Helper.posInfoEnum.lat], points[i][Helper.posInfoEnum.lng]], {icon: Helper.MarkerIcon[3], customId:points[i][Helper.posInfoEnum.id]});
-                                            marker.bindTooltip(LANGUAGE.COM_MSG071 + ' id' + points[i][Helper.posInfoEnum.id])
+                                            marker.bindTooltip(LANGUAGE.COM_MSG071)
                                                     .addTo(self.InfectedMarkersGroup);
                                         }else{
                                             point.setLatLng([points[i][Helper.posInfoEnum.lat], points[i][Helper.posInfoEnum.lng]]);
@@ -502,8 +504,11 @@
                 },function () {
                     self.getInfectedBonds();
                     //let diagnoseInfoDescr = Helper.Methods.getDiagnoseInfoDescr(userInfo.diagnoseInfo);
+
                     let userStatusDescr = Helper.Methods.getPersonStatusDescription(userInfo.state);
                     let testStateDescr = Helper.Methods.getTestTypeStateDescription(userInfo.testState);
+
+                    console.log(userStatusDescr)
                     self.updateCovidStatus({
                         //Covid19StatusType: diagnoseInfoDescr.type,
                         //Covid19Status: diagnoseInfoDescr.text,
@@ -512,7 +517,7 @@
 
                         userState: userInfo.state,
                         userStateText: userStatusDescr.text,
-                        userStateTextColor: userStatusDescr.text,
+                        userStateTextColor: userStatusDescr.textColor,
                         testNumber: userInfo.testNumber,
                         testState: userInfo.testState,
                         testStateText: testStateDescr.text,

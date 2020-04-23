@@ -551,6 +551,7 @@ const Helper = {
             return ret;
         },
         getPersonStatusDescription(num){
+            console.log(num)
             let ret = {
                 text: LANGUAGE.COM_MSG041,
                 textColor: 'text-color-gray',
@@ -566,6 +567,7 @@ const Helper = {
                 case 64: ret = { text: LANGUAGE.COM_MSG033, textColor:'text-color-blue' }; break;
                 case 128: ret = { text: LANGUAGE.COM_MSG065, textColor:'text-color-black' }; break;
             }
+            console.log()
             return ret;
         },
       /*  getPersonStatusColor(num){

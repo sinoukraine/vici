@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1048274347661-jl8qm8gumo8bpjvhdc6d525rqnht127k.apps.googleusercontent.com</string>
+	<string>1048274347661-gbopbmls17fba46vu23vl78lkq623a17.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1048274347661-jl8qm8gumo8bpjvhdc6d525rqnht127k</string>
+	<string>com.googleusercontent.apps.1048274347661-gbopbmls17fba46vu23vl78lkq623a17</string>
 	<key>API_KEY</key>
 	<string>AIzaSyC2AA8PoaXg2ZMsKpNjxfDc1H2or-KnW8c</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.viciapp.zaf</string>
+	<string>com.vici.app</string>
 	<key>PROJECT_ID</key>
 	<string>vici-app</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1048274347661:ios:32cc89a17f0a7fee0064c4</string>
+	<string>1:1048274347661:ios:5af4a6186f1a29670064c4</string>
 	<key>DATABASE_URL</key>
 	<string>https://vici-app.firebaseio.com</string>
 </dict>

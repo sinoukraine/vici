@@ -30,6 +30,49 @@
             {
               "client_id": "1048274347661-1nmvplegtdb553i8jul2rt1248dh1qr9.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1048274347661-gbopbmls17fba46vu23vl78lkq623a17.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vici.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048274347661:android:2db4e491c7a832a70064c4",
+        "android_client_info": {
+          "package_name": "com.viciapp.zaf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048274347661-1nmvplegtdb553i8jul2rt1248dh1qr9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7SyLJxoNNHpNPjqatOpVSGMUd-UDlk-o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048274347661-1nmvplegtdb553i8jul2rt1248dh1qr9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1048274347661-gbopbmls17fba46vu23vl78lkq623a17.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vici.app"
+              }
             }
           ]
         }

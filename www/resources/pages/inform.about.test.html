@@ -295,6 +295,7 @@
                         .then(function (result) {
                             console.log(result.data);
                             if(result.data.majorCode === '000') {
+                                self.$app.methods.getNewData();
                                 /*let userInfo = self.$app.methods.getFromStorage('userInfo');
                                 userInfo.diagnoseInfo = result.data.data;
                                 self.$app.methods.setInStorage({name:'userInfo', data:userInfo});
