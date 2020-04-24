@@ -476,7 +476,7 @@ let app = new Framework7({
                         if (Array.isArray(result.data.data) && result.data.data.length) {
                             //adding 1 sec to las message time to not receive it again
                             //let lastMessageTime = moment(result.data.data[ result.data.data.length-1].time, window.COM_TIMEFORMAT2).add(1,'seconds').format(window.COM_TIMEFORMAT2);
-                            let lastMessageTime = moment.unix(result.data.data[ result.data.data.length-1].time).add(1,'seconds').format(window.COM_TIMEFORMAT2);
+                            let lastMessageTime = moment.unix(result.data.data[ result.data.data.length-1].time).add(1,'seconds').utc().format(window.COM_TIMEFORMAT2);
 
                             self.methods.setInStorage({name: 'additionalData', data: {lastNotificationTime: lastMessageTime}});
                             result.data.data = self.methods.formatNotifications(result.data.data);
