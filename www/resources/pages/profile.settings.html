@@ -112,32 +112,19 @@
                     <div class="list no-hairline-bottom">
                         <ul>
                             <li>
-                                <a class="item-link smart-select smart-select-init " data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
-                                    <select name="Province" required validate>
-                                        {{#each ProvinceList}}
-                                        <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green" data-virtual-list="true" data-virtual-list-height="48">
+                                    <select name="ProvinceCity" required validate>
+                                        {{#each ProvinceCityList}}
+                                        <optgroup label="{{Name}}">
+                                            {{#each List}}
+                                            <option value="{{CityId}}" data-province-id="{{ProvinceId}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                            {{/each}}
+                                        </optgroup>
                                         {{/each}}
                                     </select>
                                     <div class="item-content">
                                         <div class="item-media text-color-lightgray">
                                             <i class="f7-icons icon-tracking"></i>
-                                        </div>
-                                        <div class="item-inner">
-                                            <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG09}}</div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link smart-select smart-select-init " data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
-                                    <select name="City" required validate>
-                                        {{#each CityList}}
-                                        <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
-                                        {{/each}}
-                                    </select>
-                                    <div class="item-content">
-                                        <div class="item-media text-color-lightgray">
-                                            <!-- <i class="f7-icons icon-timing"></i>-->
                                         </div>
                                         <div class="item-inner">
                                             <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG10}}</div>
@@ -255,13 +242,11 @@
 
             let userInfo = self.$app.methods.getFromStorage('userInfo');
             let emListSaved = self.$app.methods.getFromStorage('emergencyList');
+            let provinceCityList = Helper.Methods.getProvinceCityList();
 
-            let provinceList = Helper.Methods.getProvinceList();
-            let cityList = Helper.Methods.getCityList();
             let genderList = Helper.Methods.getGenderList();
 
-            provinceList.find( ({ Val }) => Val === userInfo.provinceID ).Selected = true;
-            cityList.find( ({ Val }) => Val === userInfo.cityID ).Selected = true;
+
             genderList.find( ({ Val }) => Val === userInfo.gender ).Selected = true;
 
             let emList = [
@@ -286,12 +271,14 @@
                     emList[i] = emListSaved[i];
                 }
             }
+            console.log(userInfo.provinceID)
+            let province = provinceCityList.find( ({ Id }) => Id === userInfo.provinceID );
+            province.List.find( ({ CityId }) => CityId === userInfo.cityID ).Selected = true;
             let ret = {
                 ...userInfo,
                 CurrentFormButtonSubmit: 'submit-form-user',
                 EmergencyList: emList,
-                ProvinceList: provinceList,
-                CityList: cityList,
+                ProvinceCityList: provinceCityList,
                 GenderList: genderList,
             };
 
@@ -389,6 +376,7 @@
                 let tabs = page.$pageEl.find('.tab');
                 let birth = moment(self.birthday, window.COM_TIMEFORMAT2).format(window.COM_TIMEFORMAT5);
                 birth = birth.split('-');
+                let provinceCityEl = page.$el.find('[name = "ProvinceCity"]')[0];
                 //self.PickerBirthDate.setValue(birth);
 
                 self.PickerBirthDate = self.$app.picker.create({
@@ -462,8 +450,10 @@
 
                     let data = {
                         Token: self.$app.data.Token,
-                        ProvinceID: page.$el.find('[name="Province"]').val(),
-                        CityID: page.$el.find('[name="City"]').val(),
+                        ProvinceID: $$(provinceCityEl.options[provinceCityEl.selectedIndex]).data('province-id'),
+                        CityID: provinceCityEl.value,
+                       /* ProvinceID: page.$el.find('[name="Province"]').val(),
+                        CityID: page.$el.find('[name="City"]').val(),*/
                         //RegionID: page.$el.find('input[name="SubName"]').val(),
                         Street: page.$el.find('input[name="Street"]').val(),
                         Address: page.$el.find('input[name="AddressDetails"]').val(),

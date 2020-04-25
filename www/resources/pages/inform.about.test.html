@@ -71,7 +71,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG01}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="organizeName" value="{{OrganizeInfo.name}}" required validate>
+                                <input type="text" name="organizeName" value="" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -81,7 +81,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG04}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="doctorFirstName" value="{{DoctorInfo.firstName}}" required validate>
+                                <input type="text" name="doctorFirstName" value="" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -91,38 +91,25 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.INFORM_ABOUT_MSG05}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="doctorSubName" value="{{DoctorInfo.subName}}" required validate>
+                                <input type="text" name="doctorSubName" value="" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
                     </li>
                     <li>
-                        <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
-                            <select name="provinceID" required validate>
-                                {{#each ProvinceList}}
-                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
-                                {{/each}}
-                            </select>
-                            <div class="item-content">
-                                <div class="item-media text-color-lightgray">
-                                    <i class="f7-icons icon-tracking"></i>
-                                </div>
-                                <div class="item-inner">
-                                    <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG09}}</div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
-                            <select name="cityID" required validate>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green" data-virtual-list="true" data-virtual-list-height="48">
+                            <select name="CityID" required validate>
                                 {{#each CityList}}
-                                <option value="{{Val}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                <optgroup label="{{Name}}">
+                                    {{#each List}}
+                                    <option value="{{CityId}}" data-province-id="{{ProvinceId}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                    {{/each}}
+                                </optgroup>
                                 {{/each}}
                             </select>
                             <div class="item-content">
                                 <div class="item-media text-color-lightgray">
-                                    <!-- <i class="f7-icons icon-timing"></i>-->
+                                    <!--<i class="f7-icons icon-tracking"></i>-->
                                 </div>
                                 <div class="item-inner">
                                     <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG10}}</div>
@@ -135,7 +122,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">{{@global.LANGUAGE.REGISTRATION_MSG12}}</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="street" value="{{OrganizeInfo.street}}" required validate>
+                                <input type="text" name="street" value="" required validate>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -176,9 +163,8 @@
     return {
         data: function () {
             let self = this;
-            let userInfo = self.$app.methods.getFromStorage('userInfo');
-            let provinceList = Helper.Methods.getProvinceList();
-            let cityList = Helper.Methods.getCityList();
+            //let userInfo = self.$app.methods.getFromStorage('userInfo');
+            let cityList = Helper.Methods.getProvinceCityList();
             let testTypeList = Helper.Methods.getTestTypeList();
             //let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === Helper.testEnum.Submitted;
 
@@ -198,17 +184,15 @@
             }
 
 */
-            provinceList.find( ({ Val }) => Val === userInfo.provinceID ).Selected = true;
-            cityList.find( ({ Val }) => Val === userInfo.cityID ).Selected = true;
+
 
             let ret = {
                // DiagnoseStateAwaitingReview: awaitingState,
-                ProvinceList: provinceList,
                 CityList: cityList,
                 TestTypeList: testTypeList,
-                DiagnoseInfo: userInfo.diagnoseInfo ? userInfo.diagnoseInfo : {},
+                /*DiagnoseInfo: userInfo.diagnoseInfo ? userInfo.diagnoseInfo : {},
                 DoctorInfo: userInfo.doctorInfo ? userInfo.doctorInfo : {},
-                OrganizeInfo: userInfo.organizeInfo ? userInfo.organizeInfo : {},
+                OrganizeInfo: userInfo.organizeInfo ? userInfo.organizeInfo : {},*/
            };
 
             return ret;
@@ -238,10 +222,11 @@
                 let testDateEl = page.$el.find('[name="beginTime"]');
 
                 let testDate = moment().format(window.COM_TIMEFORMAT6);
-                if(self.DiagnoseInfo && self.DiagnoseInfo.state >= Helper.testEnum.Submitted && self.DiagnoseInfo.beginTime){
+                /*if(self.DiagnoseInfo && self.DiagnoseInfo.state >= Helper.testEnum.Submitted && self.DiagnoseInfo.beginTime){
                     testDate = moment(self.DiagnoseInfo.beginTime, window.COM_TIMEFORMAT2).add(self.$app.data.UTCOFFSET).format(window.COM_TIMEFORMAT6);
-                }
-                console.log(self.DiagnoseInfo)
+                }*/
+                let cityEl = page.$el.find('[name = "CityID"]')[0];
+
                 self.CalendarTestDate = self.$app.calendar.create({
                     inputEl: testDateEl,
                     timePicker: true,
@@ -280,6 +265,7 @@
                     };*/
                     let data = self.$app.form.convertToData(form);
                     data.Token = self.$app.data.Token;
+                    data.ProvinceID = $$(cityEl.options[cityEl.selectedIndex]).data('province-id');
 
                     if(data.beginTime){
                         data.beginTime = moment(data.beginTime,window.COM_TIMEFORMAT6).utc().format(window.COM_TIMEFORMAT2);
@@ -288,6 +274,7 @@
                         data.type = data.type.toString();
                     }
                     data.Street = data.organizeStreet;
+
 
 
                     self.$app.progressbar.show();

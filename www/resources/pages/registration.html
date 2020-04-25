@@ -141,6 +141,27 @@
                 <div  class="list no-hairline-bottom">
                     <ul>
                         <li>
+                            <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green" data-virtual-list="true" data-virtual-list-height="48">
+                                <select name="CityID" required validate>
+                                    {{#each CityList}}
+                                    <optgroup label="{{Name}}">
+                                        {{#each List}}
+                                        <option value="{{CityId}}" data-province-id="{{ProvinceId}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                        {{/each}}
+                                    </optgroup>
+                                    {{/each}}
+                                </select>
+                                <div class="item-content">
+                                    <div class="item-media text-color-lightgray">
+                                        <i class="f7-icons icon-tracking"></i>
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG10}}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!--<li>
                             <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green">
                                 <select name="Province" required validate>
                                     {{#each ProvinceList}}
@@ -166,14 +187,14 @@
                                 </select>
                                 <div class="item-content">
                                     <div class="item-media text-color-lightgray">
-                                        <!-- <i class="f7-icons icon-timing"></i>-->
+                                        &lt;!&ndash; <i class="f7-icons icon-timing"></i>&ndash;&gt;
                                     </div>
                                     <div class="item-inner">
                                         <div class="item-title ">{{@global.LANGUAGE.REGISTRATION_MSG10}}</div>
                                     </div>
                                 </div>
                             </a>
-                        </li>
+                        </li>-->
                         <!--<li>
                             <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-form-color-theme="green">
                                 <select name="Region" required validate>
@@ -228,16 +249,12 @@
             let countrys = Helper.Methods.getCountrys();
             countrys.find( ({ CountryCode }) => CountryCode === 'ZAF' ).Selected = true;
             let genderList = Helper.Methods.getGenderList();
-            let provinceList = Helper.Methods.getProvinceList();
-            let cityList = Helper.Methods.getCityList();
-            let regionList = '';
+            let cityList = Helper.Methods.getProvinceCityList();
 
             return {
                 Countrys: countrys,
                 GenderList: genderList,
-                ProvinceList: provinceList,
                 CityList: cityList,
-                RegionList: regionList,
                // CurrentFormButtonSubmit: 'submit-forgot-pwd-email',
             };
         },
@@ -448,11 +465,10 @@
                     }
 
                     let birthDateVal = self.PickerBirthDate.getValue();
-
+                    let cityEl = page.$el.find('[name = "CityID"]')[0];
 
                     let data = {
                         PhoneNumber: phoneVal,
-                        //IMEI:15584348655
                         VerificationCode: '123456',
                         FirstName: page.$el.find('[name = "FirstName"]').val(),
                         SubName: page.$el.find('[name = "LastName"]').val(),
@@ -460,15 +476,16 @@
                         Gender: page.$el.find('[name = "Gender"]').val(),
                         Birthday: birthDateVal[2]+'-'+birthDateVal[1]+'-'+birthDateVal[0],
                         CountryCode: page.$el.find('[name = "CountryCode"]').val(),
-                        ProvinceID: page.$el.find('[name = "Province"]').val(),
-                        CityID: page.$el.find('[name = "City"]').val(),
-                        //RegionID: '',
+                        ProvinceID: $$(cityEl.options[cityEl.selectedIndex]).data('province-id'),
+                        CityID: provinceCityEl.value,
                         Street: page.$el.find('[name = "Street"]').val(),
                         Address: page.$el.find('[name = "AddressDetails"]').val(),
                         AddressCode: '',
                         AddressLat: '0',
                         AddressLng: '0',
                     };
+
+                    console.log(data);
 
                     if(!self.PhoneVerifyCode){
                         self.preRegistration(data, form);

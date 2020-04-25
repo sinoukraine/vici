@@ -272,11 +272,11 @@ window.LanguagePackages= {
 		"REGISTRATION_MSG06": "Password Confirm",
 		"REGISTRATION_MSG07": "Gender",
 		"REGISTRATION_MSG08": "Birth Date",
-		"REGISTRATION_MSG09": "Province / Sate",
-		"REGISTRATION_MSG10": "City",
+		"REGISTRATION_MSG09": "Province ",
+		"REGISTRATION_MSG10": "Town/City",
 		"REGISTRATION_MSG11": "Region",
 		"REGISTRATION_MSG12": "Street",
-		"REGISTRATION_MSG13": "Address Details",
+		"REGISTRATION_MSG13": "Estate/Plot/Complex details",
 		"REGISTRATION_MSG14": "Account",
 		"REGISTRATION_MSG15": "Personal",
 		"REGISTRATION_MSG16": "Address",
@@ -286,6 +286,7 @@ window.LanguagePackages= {
 		"REGISTRATION_MSG20": "Zip code",
 		"REGISTRATION_MSG21": "Address Lat",
 		"REGISTRATION_MSG22": "Address Lng",
+		//"REGISTRATION_MSG23": "Province, City",
 
 		"NOTIFICATIONS_MSG00": "Notifications",
 
