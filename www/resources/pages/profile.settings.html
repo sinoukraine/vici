@@ -271,9 +271,12 @@
                     emList[i] = emListSaved[i];
                 }
             }
-            console.log(userInfo.provinceID)
+
             let province = provinceCityList.find( ({ Id }) => Id === userInfo.provinceID );
-            province.List.find( ({ CityId }) => CityId === userInfo.cityID ).Selected = true;
+            if(province){
+                province.List.find( ({ CityId }) => CityId === userInfo.cityID ).Selected = true;
+            }
+
             let ret = {
                 ...userInfo,
                 CurrentFormButtonSubmit: 'submit-form-user',
