@@ -169,7 +169,7 @@
 
             let province = cityList.find( ({ Id }) => Id === userInfo.provinceID );
             if(province){
-                cityList.List.find( ({ CityId }) => CityId === userInfo.cityID ).Selected = true;
+                province.List.find( ({ CityId }) => CityId === userInfo.cityID ).Selected = true;
             }
             //let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === Helper.testEnum.Submitted;
 
