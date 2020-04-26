@@ -163,9 +163,14 @@
     return {
         data: function () {
             let self = this;
-            //let userInfo = self.$app.methods.getFromStorage('userInfo');
+            let userInfo = self.$app.methods.getFromStorage('userInfo');
             let cityList = Helper.Methods.getProvinceCityList();
             let testTypeList = Helper.Methods.getTestTypeList();
+
+            let province = cityList.find( ({ Id }) => Id === userInfo.provinceID );
+            if(province){
+                cityList.List.find( ({ CityId }) => CityId === userInfo.cityID ).Selected = true;
+            }
             //let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === Helper.testEnum.Submitted;
 
            /* if(awaitingState){

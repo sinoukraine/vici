@@ -113,8 +113,8 @@
                         <ul>
                             <li>
                                 <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-close-on-select="true" data-scroll-to-selected-item="true" data-form-color-theme="green" data-virtual-list="true" data-virtual-list-height="48">
-                                    <select name="ProvinceCity" required validate>
-                                        {{#each ProvinceCityList}}
+                                    <select name="CityID" required validate>
+                                        {{#each CityList}}
                                         <optgroup label="{{Name}}">
                                             {{#each List}}
                                             <option value="{{CityId}}" data-province-id="{{ProvinceId}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
@@ -242,7 +242,7 @@
 
             let userInfo = self.$app.methods.getFromStorage('userInfo');
             let emListSaved = self.$app.methods.getFromStorage('emergencyList');
-            let provinceCityList = Helper.Methods.getProvinceCityList();
+            let cityList = Helper.Methods.getProvinceCityList();
 
             let genderList = Helper.Methods.getGenderList();
 
@@ -272,7 +272,7 @@
                 }
             }
 
-            let province = provinceCityList.find( ({ Id }) => Id === userInfo.provinceID );
+            let province = cityList.find( ({ Id }) => Id === userInfo.provinceID );
             if(province){
                 province.List.find( ({ CityId }) => CityId === userInfo.cityID ).Selected = true;
             }
@@ -281,7 +281,7 @@
                 ...userInfo,
                 CurrentFormButtonSubmit: 'submit-form-user',
                 EmergencyList: emList,
-                ProvinceCityList: provinceCityList,
+                CityList: cityList,
                 GenderList: genderList,
             };
 
@@ -379,7 +379,7 @@
                 let tabs = page.$pageEl.find('.tab');
                 let birth = moment(self.birthday, window.COM_TIMEFORMAT2).format(window.COM_TIMEFORMAT5);
                 birth = birth.split('-');
-                let provinceCityEl = page.$el.find('[name = "ProvinceCity"]')[0];
+                let cityEl = page.$el.find('[name = "CityID"]')[0];
                 //self.PickerBirthDate.setValue(birth);
 
                 self.PickerBirthDate = self.$app.picker.create({
@@ -453,8 +453,8 @@
 
                     let data = {
                         Token: self.$app.data.Token,
-                        ProvinceID: $$(provinceCityEl.options[provinceCityEl.selectedIndex]).data('province-id'),
-                        CityID: provinceCityEl.value,
+                        ProvinceID: $$(cityEl.options[cityEl.selectedIndex]).data('province-id'),
+                        CityID: cityEl.value,
                        /* ProvinceID: page.$el.find('[name="Province"]').val(),
                         CityID: page.$el.find('[name="City"]').val(),*/
                         //RegionID: page.$el.find('input[name="SubName"]').val(),
