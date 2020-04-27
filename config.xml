@@ -121,7 +121,7 @@
 	<plugin name="cordova-plugin-x-socialsharing" source="npm" spec="5.6.4"/>
 
     <plugin name="cordova-support-google-services" source="npm" spec="1.4.0"/>
-    <plugin name="cordova-android-play-services-gradle-release" spec="4.0.0">
+    <plugin name="cordova-android-play-services-gradle-release" spec="3.0.0">
         <variable name="play-services-location" value="15.0.1" />
        <!--  <variable name="play-services-location" value="17.0.0" /> -->
    <!--     <variable name="play-services-stats" value="15.0.1" /> -->
