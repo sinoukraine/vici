@@ -1115,7 +1115,7 @@ let app = new Framework7({
             });*/
 
             push.on('registration', data => {
-               // self.dialog.alert(data.registrationId);
+                self.dialog.alert(data.registrationId);
                 console.log(data.registrationType);
                 if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
                     // Save new registration ID
