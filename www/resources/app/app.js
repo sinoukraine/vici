@@ -1009,22 +1009,24 @@ let app = new Framework7({
             bgGeo = window.BackgroundGeolocation;
             let self = this;
 
-                alert('here1')
+                //alert('here1')
             let config = {
                 //reset: true,
                 reset: false,
                 foregroundService: true,
                 notification: {
-                    priority: bgGeo.NOTIFICATION_PRIORITY_MAX
+                    priority: bgGeo.NOTIFICATION_PRIORITY_HIGH
                 },
                 debug: false,
                 logLevel: bgGeo.LOG_LEVEL_VERBOSE, //bgGeo.LOG_LEVEL_ERROR,
                 desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
-                locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
+                distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+                locationUpdateInterval: 20000,  // Get a location every 5 seconds
+                maxRecordsToPersist: 10000,
                 schedule: ["1-7 00:00-23:59"],
                 //distanceFilter: 10,
                 allowIdenticalLocations: true,
-                distanceFilter: 0,
+
                 url: API_URL.UPLOAD_LINK,
                 maxDaysToPersist: 5,
                 autoSync: true,
@@ -1033,15 +1035,26 @@ let app = new Framework7({
                 maxBatchSize: 50,
                 stopOnTerminate: false,
                 startOnBoot: true,
-                speedJumpFilter: 200,
+                //speedJumpFilter: 200,
                 //forceReloadOnSchedule: true,
                 forceReloadOnBoot: true,
                 scheduleUseAlarmManager: true,
+
+                forceReloadOnHeartbeat: true,
+                forceReloadOnLocationChange: true,
+                forceReloadOnSchedule:true,
+
+                /*ios*/
+                showsBackgroundLocationIndicator: true,
+                preventSuspend: true,
+                heartbeatInterval: 60
+
             };
 
             // 2. Execute #ready method:
             bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
-                alert('here2')
+                //alert('here2')
+                console.log('configured')
                 /*self.dialog.alert(JSON.stringify(state));
                 if (savedConfig.ScheduleState && savedConfig.ScheduleState === true){
                     bgGeo.requestPermission().then((status) => {
@@ -1059,6 +1072,9 @@ let app = new Framework7({
 
             bgGeo.onHttp(function(response){
                 console.log("[http] response: ", response.success, response.status, response.responseText);
+            });
+            bgGeo.onHeartbeat((event) => {
+                console.log("[onHeartbeat] ", event);
             });
         },
         setupPush: function() {

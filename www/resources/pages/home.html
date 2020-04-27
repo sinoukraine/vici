@@ -475,29 +475,30 @@
                 //console.log(userInfo.token)
                 alert('home here1');
                 bgGeo.setConfig({
-                    locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
+                    schedule: ["1-7 00:00-23:59"],
+                    locationUpdateInterval: 20000,  // Get a location every 5 seconds
                     distanceFilter: 0,
                     params: {
                         Token: userInfo.token,
                     }
                 }, function (state) {
-                    alert('home here2');
+                   // alert('home here2');
                     console.log(state);
                     bgGeo.requestPermission().then((status) => {
-                        alert('home here3');
+                        //alert('home here3');
                         console.log('[requestPermission] Permission granted', status);
                         self.$app.utils.nextTick(()=>{
                             bgGeo.start(function(statusStart) {
-                                alert('home here4');
+                                //alert('home here4');
                                 console.log('started: ', statusStart);
                                 self.$app.utils.nextTick(()=>{
                                     bgGeo.startSchedule(function(statusSchedule) {
-                                        alert('home here5');
+                                       // alert('home here5');
                                         console.log('scheduled. status:', statusSchedule)
                                     });
-                                },1000);
+                                },1500);
                             });
-                        },1000);
+                        },1500);
 
                     }).catch((status) => {
                         self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
