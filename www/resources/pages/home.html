@@ -480,12 +480,22 @@
                     }
                 }, function (state) {
                     console.log(state)
-                    bgGeo.startSchedule(function() {
+                    bgGeo.requestPermission().then((status) => {
+                        bgGeo.startSchedule(function() {
+                            console.log('started. status:'+status)
+                        });
+                    }).catch((status) => {
+                        self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
+                        console.log('[requestPermission] REJECTED', status);
+                    });
+
+
+                 /*   bgGeo.startSchedule(function() {
                         //self.watchUserLocation();
                         //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
                         //self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
                         //mainView.router.back();
-                    });
+                    });*/
                     /*bgGeo.requestPermission().then((status) => {
                         bgGeo.start(function() {
                             self.$app.utils.nextTick(()=>{
