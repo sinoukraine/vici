@@ -1020,8 +1020,8 @@ let app = new Framework7({
                 debug: false,
                 logLevel: bgGeo.LOG_LEVEL_VERBOSE, //bgGeo.LOG_LEVEL_ERROR,
                 desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
-                distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
-                locationUpdateInterval: 20000,  // Get a location every 5 seconds
+                distanceFilter: 10,            // Must be 0 or locationUpdateInterval is ignored!
+                //locationUpdateInterval: 20000,  // Get a location every 5 seconds
                 maxRecordsToPersist: 10000,
                 schedule: ["1-7 00:00-23:59"],
                 //distanceFilter: 10,
