@@ -473,7 +473,7 @@
                 }
 
                 //console.log(userInfo.token)
-
+                alert('home here1');
                 bgGeo.setConfig({
                     locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
                     distanceFilter: 0,
@@ -481,15 +481,24 @@
                         Token: userInfo.token,
                     }
                 }, function (state) {
+                    alert('home here2');
                     console.log(state);
                     bgGeo.requestPermission().then((status) => {
+                        alert('home here3');
                         console.log('[requestPermission] Permission granted', status);
-                        bgGeo.start(function(statusStart) {
-                            console.log('started: ', statusStart);
-                            bgGeo.startSchedule(function(statusSchedule) {
-                                console.log('scheduled. status:', statusSchedule)
+                        self.$app.utils.nextTick(()=>{
+                            bgGeo.start(function(statusStart) {
+                                alert('home here4');
+                                console.log('started: ', statusStart);
+                                self.$app.utils.nextTick(()=>{
+                                    bgGeo.startSchedule(function(statusSchedule) {
+                                        alert('home here5');
+                                        console.log('scheduled. status:', statusSchedule)
+                                    });
+                                },1000);
                             });
-                        });
+                        },1000);
+
                     }).catch((status) => {
                         self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
                         console.log('[requestPermission] REJECTED', status);

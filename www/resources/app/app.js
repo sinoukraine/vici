@@ -1009,7 +1009,7 @@ let app = new Framework7({
             bgGeo = window.BackgroundGeolocation;
             let self = this;
 
-
+                alert('here1')
             let config = {
                 //reset: true,
                 reset: false,
@@ -1041,6 +1041,7 @@ let app = new Framework7({
 
             // 2. Execute #ready method:
             bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
+                alert('here2')
                 /*self.dialog.alert(JSON.stringify(state));
                 if (savedConfig.ScheduleState && savedConfig.ScheduleState === true){
                     bgGeo.requestPermission().then((status) => {
