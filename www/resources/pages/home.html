@@ -475,15 +475,17 @@
                 //console.log(userInfo.token)
 
                 bgGeo.setConfig({
+                    locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
+                    distanceFilter: 0,
                     params: {
                         Token: userInfo.token,
                     }
                 }, function (state) {
-                    console.log(state)
+                    console.log(state);
                     bgGeo.requestPermission().then((status) => {
                         console.log('[requestPermission] Permission granted', status);
                         bgGeo.start(function(statusStart) {
-                            console.log('started: ', statusStart)
+                            console.log('started: ', statusStart);
                             bgGeo.startSchedule(function(statusSchedule) {
                                 console.log('scheduled. status:', statusSchedule)
                             });
