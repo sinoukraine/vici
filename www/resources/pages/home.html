@@ -597,7 +597,13 @@
                 if(!bgGeo){
                     return;
                 }
-                bgGeo.stopWatchPosition();
+                bgGeo.stopWatchPosition(function () {
+                    console.log('started')
+                    bgGeo.start();
+                },function () {
+                    bgGeo.start();
+                });
+
             },
             appResumed: function() {
                 let self = this;
