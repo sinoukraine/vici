@@ -481,8 +481,12 @@
                 }, function (state) {
                     console.log(state)
                     bgGeo.requestPermission().then((status) => {
-                        bgGeo.startSchedule(function() {
-                            console.log('started. status:'+status)
+                        console.log('[requestPermission] Permission granted', status);
+                        bgGeo.start(function(statusStart) {
+                            console.log('started: ', statusStart)
+                            bgGeo.startSchedule(function(statusSchedule) {
+                                console.log('scheduled. status:', statusSchedule)
+                            });
                         });
                     }).catch((status) => {
                         self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
