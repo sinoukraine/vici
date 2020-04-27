@@ -281,7 +281,7 @@
                 }, (errorCode) => {
                     console.log("[watchPosition] ERROR -", errorCode);
                 }, {
-                    interval: 20*1000,
+                    interval: 30*1000,
                     desiredAccuracy: bgGeo.DESIRED_ACCURACY_HIGH,
                     persist: true,
                     timeout: 60000
@@ -475,7 +475,7 @@
                 //console.log(userInfo.token)
 
                 bgGeo.setConfig({
-                    //distanceFilter: 10,            // Must be 0 or locationUpdateInterval is ignored!
+                    distanceFilter: 0,
                     locationUpdateInterval: 20*1000,  // Get a location every 5 seconds
                     schedule: ["1-7 00:00-23:59"],
                     params: {

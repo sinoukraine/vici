@@ -1009,7 +1009,7 @@ let app = new Framework7({
             bgGeo = window.BackgroundGeolocation;
             let self = this;
 
-            //let savedConfig = self.methods.getFromStorage('trackingConfig'); //trackerGetSavedConfig();
+
             let config = {
                 //reset: true,
                 reset: false,
