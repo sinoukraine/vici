@@ -102,7 +102,7 @@
                                 {{#each CityList}}
                                 <optgroup label="{{Name}}">
                                     {{#each List}}
-                                    <option value="{{CityId}}" data-province-id="{{ProvinceId}}" {{#if Selected}}selected{{/if}}>{{Name}}</option>
+                                    <option value="{{CityId}}" data-province-id="{{ProvinceId}}" data-display-as="{{Name}} ({{../Name}})" {{#if Selected}}selected{{/if}}>{{Name}}</option>
                                     {{/each}}
                                 </optgroup>
                                 {{/each}}
@@ -171,33 +171,13 @@
             if(province){
                 province.List.find( ({ CityId }) => CityId === userInfo.cityID ).Selected = true;
             }
-            //let awaitingState = userInfo.diagnoseInfo && userInfo.diagnoseInfo.state === Helper.testEnum.Submitted;
-
-           /* if(awaitingState){
-                if(userInfo.organizeInfo && userInfo.organizeInfo.proviceID){
-                    provinceList.find( ({ Val }) => Val === userInfo.organizeInfo.proviceID ).Selected = true;
-                }
-                if(userInfo.organizeInfo && userInfo.organizeInfo.cityID){
-                    cityList.find( ({ Val }) => Val === userInfo.organizeInfo.cityID ).Selected = true;
-                }
-                if(userInfo.diagnoseInfo && userInfo.diagnoseInfo.type){
-                    testTypeList.find( ({ Val }) => Val === userInfo.diagnoseInfo.type ).Selected = true;
-                }
-            }else{
-                provinceList.find( ({ Val }) => Val === userInfo.contactInfo.provinceID ).Selected = true;
-                cityList.find( ({ Val }) => Val === userInfo.contactInfo.cityID ).Selected = true;
-            }
-
-*/
 
 
             let ret = {
-               // DiagnoseStateAwaitingReview: awaitingState,
+
                 CityList: cityList,
                 TestTypeList: testTypeList,
-                /*DiagnoseInfo: userInfo.diagnoseInfo ? userInfo.diagnoseInfo : {},
-                DoctorInfo: userInfo.doctorInfo ? userInfo.doctorInfo : {},
-                OrganizeInfo: userInfo.organizeInfo ? userInfo.organizeInfo : {},*/
+
            };
 
             return ret;
@@ -243,31 +223,6 @@
                 form.on('submit', function(e){
                     e.preventDefault();
 
-                  /*  public DateTime? BeginTime { get; set; }
-                    public long? OrganizeID { get; set; }
-                    public string OrganizeName { get; set; }
-                    public long? DoctorID { get; set; }
-                    public string DoctorFirstName { get; set; }
-                    public string DoctorSubName { get; set; }
-                    public int? ProvinceID { get; set; }
-                    public int? CityID { get; set; }
-                    public string Street { get; set; }
-                    public TestTypes? Type { get; set; }
-                    public string Remark { get; set; }*/
-
-                    /*let data = {
-                        Token: self.$app.data.Token,
-                        BeginTime: moment.utc(self.CalendarTestDate.getValue()[0]).format(window.COM_TIMEFORMAT2),
-                        DiagnoseType: page.$el.find('[name = "DiagnoseType"]').val().toString(),
-                        OrganizeCode: '',
-                        OrganizeName: page.$el.find('[name = "LabName"]').val(),
-                        DoctorFirstName: page.$el.find('[name = "LabDocFirstName"]').val(),
-                        DoctorSubName: page.$el.find('[name = "LabDocLastName"]').val(),
-
-                        ProvinceID: page.$el.find('[name = "Province"]').val(),
-                        CityID: page.$el.find('[name = "City"]').val(),
-                        Street: page.$el.find('[name = "Street"]').val(),
-                    };*/
                     let data = self.$app.form.convertToData(form);
                     data.Token = self.$app.data.Token;
                     data.ProvinceID = $$(cityEl.options[cityEl.selectedIndex]).data('province-id');

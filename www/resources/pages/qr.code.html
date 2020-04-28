@@ -28,11 +28,11 @@
                 {{/js_if}}
             </div>
             <div class="block block-qr" id="qr-wrapper">
-                {{#unless DataLoaded}}
+                {{#unless QRLoaded}}
                 <div key="skeleton-qr-block" class="skeleton-text skeleton-effect-blink"><div class="skeleton-block margin-auto" style="width: 264px; height: 264px;"></div></div>
                 {{/unless}}
             </div>
-            {{#if DataLoaded}}
+            {{#if QRLoaded}}
             {{#js_if "this.TestState >= 1"}}
             <div key="test-data" class="list">
                 <ul>
@@ -94,7 +94,36 @@ console.log( userInfo.testState)
         },
 
         methods: {
+            getQrCode(){
+                let self = this;
 
+                self.$app.request.promise.post(API_URL.GET_QR_CODE, {Token:self.$app.data.Token}, 'json')
+                    .then(function (result) {
+                        console.log(result.data)
+                        if (result.data.majorCode && result.data.majorCode === '000') {
+                             self.QRCode = new QRCode(document.getElementById("qr-wrapper"), {
+                                text: result.data.data,
+                                /*logo: self.$app.data.logoSquare,
+                                logoWidth: 90,
+                                logoHeight: undefined,
+                                logoBackgroundColor: '#ffffff',
+                                logoBackgroundTransparent: false*/
+
+                            });
+                        }
+                    }).finally(function () {
+                        self.$setState({QRLoaded: true});
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+
+                        if (err && err.status === 404){
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                        }
+                    });
+            },
 
         },
 
@@ -102,12 +131,12 @@ console.log( userInfo.testState)
             pageInit: function (e, page) {
                 let self = this;
 
+                self.getQrCode();
 
                 self.$app.methods.getTestInfo({}, function (testInfo) {
                     console.log(testInfo);
                     if(self.$app.methods.isObjEmpty(testInfo)){
-                        self.$setState({DataLoaded: true});
-                        return
+                        return;
                     }
                     let testData = [
                         {
@@ -132,21 +161,12 @@ console.log( userInfo.testState)
                     }
 
                     self.$setState({
-                        DataLoaded: true,
                         TestData: testData,
                     },()=>{
                         self.$app.utils.nextTick(()=>{
                             self.$app.progressbar.hide();
                         },500);
-                        self.QRCode = new QRCode(document.getElementById("qr-wrapper"), {
-                            text: "https://vici.quiktrak.co/",
-                            /*logo: self.$app.data.logoSquare,
-							logoWidth: 90,
-							logoHeight: undefined,
-							logoBackgroundColor: '#ffffff',
-							logoBackgroundTransparent: false*/
 
-                        });
 
                     });
 

@@ -22,9 +22,9 @@ var routes = [
         name: 'profile.settings',
     },
     {
-        path: '/timing-settings/',
-        componentUrl: './resources/pages/timing.settings.html?v=2.4',
-        name: 'timing.settings',
+        path: '/panic-button-settings/',
+        componentUrl: './resources/pages/panic.button.settings.html?v=2.4',
+        name: 'panic.settings',
     },
     {
         path: '/share/',

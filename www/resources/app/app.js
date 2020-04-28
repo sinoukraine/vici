@@ -12,7 +12,7 @@ const API_DOMIAN2 = "https://vici19.quiktrak.co/";
 //const API_DOMIAN5 = "http://194.247.12.103:9038/";
 
 
-const API_DOMAIN3 = "https://app.phonetrack.co/";
+//const API_DOMAIN3 = "https://app.phonetrack.co/";
 const API_DOMAIN4 = "https://maps.google.com/";
 const API_DOMIAN7 = "https://nominatim.sinopacific.com.ua/";
 const API_DOMIAN8 = "https://nominatim.openstreetmap.org/";
@@ -43,6 +43,7 @@ API_URL.GET_TEST_INFO = API_DOMIAN2 + 'Person/QueryState';
 API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
 API_URL.GET_GEO_QUERY = API_DOMIAN2 + 'Position/GeoQuery';
 API_URL.EDIT_ACCOUNT = API_DOMIAN2 + 'Person/Modify';
+API_URL.GET_QR_CODE = API_DOMIAN2 + 'Scan/CreatQR';
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
 
 
@@ -109,7 +110,7 @@ let app = new Framework7({
     },
     data: function () {
         return {
-            logoDialog: 'resources/images/logo.jpg',
+            logoDialog: 'resources/images/logo.png',
             logoSquare: 'resources/images/logo-square.jpg',
             MaxMapPopupWidth: 280,
             UTCOFFSET: moment().utcOffset(),

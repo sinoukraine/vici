@@ -68,10 +68,6 @@
     <preference name="phonegap-version" value="cli-9.0.0" />  
 	    
 	
-   <!--  <plugin name="cordova-android-play-services-gradle-release" spec="^4.0.0">
-       <variable name="play-services-location" value="17.0.0" />
-   </plugin> -->
-	
   	<plugin name="phonegap-plugin-push" source="npm" spec="2.3.0"> 
         <variable name="SENDER_ID" value="1048274347661" /> 
   	</plugin>
@@ -155,6 +151,7 @@
             <string>Device motion updates help determine when the device is stationary so the app can save power by turning off location-updates</string>
         </config-file>
         <!-- /background-geolocation -->
+
     </platform>
    
 
