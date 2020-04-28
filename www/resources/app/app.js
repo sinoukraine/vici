@@ -878,13 +878,13 @@ let app = new Framework7({
             let emergencyList = self.methods.getFromStorage('emergencyList');
             if ( self.methods.isObjEmpty(panicConfig) ){
                 self.dialog.confirm(LANGUAGE.PROMPT_MSG022, LANGUAGE.PANIC_BUTTON_MSG00, function () {
-                    mainView.router.navigate('/timing-settings/');
+                    mainView.router.navigate('/panic-button-settings/');
                 });
                 return;
             }
             if(!panicConfig.State){
                 self.dialog.confirm(LANGUAGE.PROMPT_MSG026, LANGUAGE.PANIC_BUTTON_MSG00, function () {
-                    mainView.router.navigate('/timing-settings/');
+                    mainView.router.navigate('/panic-button-settings/');
                 });
                 return;
             }
