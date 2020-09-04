@@ -129,7 +129,9 @@ let app = new Framework7({
             let self = this;
 
                 if(window.hasOwnProperty("cordova")){
-                    window.permissions = cordova.plugins.permissions;
+                    if(cordova.plugins && cordova.plugins.permissions){
+                        window.permissions = cordova.plugins.permissions;
+                    }
 
                     //fix app images and text size
                     if (window.MobileAccessibility) {

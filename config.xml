@@ -12,8 +12,8 @@
     <description>
         ViCi gps tracking app
     </description>
-    <author email="support@phonegap.com" href="http://quiktrak.com.au">
-        M2M Global Technology Limited
+    <author email="support@phonegap.com" href="https://smartostrich.co.za/">
+        DEP Technologies (PTY) LTD
     </author>
     <content src="index.html" />
     <access origin="*"  allows-arbitrary-loads-for-media='true' allows-arbitrary-loads-in-web-content='true' allows-local-networking='true' />
