@@ -8,7 +8,8 @@ window.COM_TIMEFORMAT7 = 'MM dd yyyy, HH::mm'; //calendar display value
 
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
-const API_DOMIAN2 = "https://vici19.quiktrak.co/";
+const API_DOMIAN2 = "https://viciapp.co.za/";
+//const API_DOMIAN2 = "https://vici19.quiktrak.co/";
 //const API_DOMIAN5 = "http://194.247.12.103:9038/";
 
 

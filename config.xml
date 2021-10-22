@@ -2,8 +2,8 @@
 <widget 
 	id="com.viciapp.zaf"
 	version="1.0.0"
-	android-versionCode="3"
-    ios-CFBundleVersion="3"
+	android-versionCode="4"
+    ios-CFBundleVersion="4"
 	xmlns="http://www.w3.org/ns/widgets" 
 	xmlns:cdv="http://cordova.apache.org/ns/1.0"  	
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -60,8 +60,8 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="Orientation" value="portrait" />
     <preference name="android-minSdkVersion" value="21" />
-    <preference name="android-targetSdkVersion" value="28" />
-    <preference name="deployment-target" value="10.2" />
+    <preference name="android-targetSdkVersion" value="30" />
+    <preference name="deployment-target" value="11.0" />
     <preference name="StatusBarOverlaysWebView" value="false" />
   <!--   <preference name="StatusBarBackgroundColor" value="#ee6e73" /> -->
     <preference name="StatusBarStyle" value="blacktranslucent" />
